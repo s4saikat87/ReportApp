@@ -1,0 +1,149 @@
+body {
+  /* height: 100vh !important; */
+  font-family:  'Segoe UI', 'Roboto';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.articles{
+  font-size: small;
+}
+.followers{
+  font-size: small;
+}
+.d-flex{
+  font-size: small;
+}
+
+.app {
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh !important;
+  /* flex-direction: column; */
+  /* gap: 20px; */
+  /* height: 100vh; */
+   background-image: url('Images/2-min.png') ;
+   background-size: cover;
+   background-repeat: no-repeat;
+
+  /* background-color: #fafafa; */
+}
+
+
+
+/* input[type="submit"] {
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  background: #d27e01;
+  border: 1px solid #d27801;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+input[type="submit"]:hover {
+  background: #6cf0c2;
+} */
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.login-form {
+  background-color: white;
+  padding: 1rem;
+  border-radius: 7%;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-top: 10%;
+  min-width: 350px;
+  margin-bottom: 10%;
+  
+}
+
+.css-1jbbcbn-MuiDataGrid-columnHeaderTitle {
+  font-weight: 600 !important;
+  font-size: small;
+}
+
+.list-container {
+  display: flex;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.title {
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  /* gap: 8px; */
+  margin: 5px;
+}
+
+form {
+  background: #FFFFFF!important;
+  /* padding: 1rem; */
+  border-radius: 1rem;
+  outline: none;
+  text-align: left;
+
+}
+
+
+
+/* input[type="button"] {
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  background: #006fba;
+  border: 1px solid #006fba;
+  color: #ffffff;
+  padding: 10px 20px;
+}
+
+input[type="button"]:hover {
+  background: #ffffff;
+  color: #006fba;
+} */
+
+
+
+.bg-fitek{
+  background-color: #006fba;
+}
+
+.tableheader{
+  font-weight: 600;
+  color: #006fba;
+}
+
+.title {
+  color:#006fba;
+  font-weight: 300;
+  padding-bottom: 0%;
+  margin-bottom: 0%;
+  border-bottom: 1px solid #f4f4f2;
+
+}
+
+.subheader{
+  
+  font-weight: 600;
+  color: #006fba;
+  padding-left: 40px;
+  
+}
