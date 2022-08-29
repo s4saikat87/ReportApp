@@ -29,10 +29,10 @@ const aggregates = [
 const FixdIncmFundmntlsGrid = ({data}) => {
     debugger;
     const _export = React.useRef(null);
-
+    const _grid = React.useRef();
     const excelExport = () => {
     if (_export.current !== null) {
-        _export.current.save(resultState);
+        _export.current.save(data);
     }
   };
 
@@ -60,7 +60,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
 
   const initialDataState = {
     skip: 0,
-  take: 5,
+  take: 10,
   };
   const [row, setRow] = useState(data);
   const [dataState, setDataState] = React.useState();
@@ -69,7 +69,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
   );
   //setResultState(process({data}, initialDataState))
   let total = row.length;
-  let pageSize = 5;
+  let pageSize = 10;
   const [page, setPage] = React.useState(initialDataState);
   const onDataStateChange = React.useCallback((e) => {
    debugger;
@@ -186,16 +186,18 @@ debugger
         <ExcelExport data={resultState} ref={_export}> 
        <Grid style={{ height: "650px" }}
             data={resultState}
-       
+            //data={resultState.slice(page.skip, page.skip + page.take)}
             groupable={{
               footer: "visible",
             }}
 
-            
+           
             sortable={true}
+            skip={page.skip}
             pageable={{pageSize:true}}
-            pageSize={pageSize}
-
+            pageSize={page.take}
+            total={resultState.length}
+            ref={_grid}
            // total={total}
            // filterable={true}
            onDataStateChange={onDataStateChange}
