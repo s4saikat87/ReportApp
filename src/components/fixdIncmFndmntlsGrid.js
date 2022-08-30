@@ -5,7 +5,11 @@ import { process } from "@progress/kendo-data-query";
 import { ExcelExport } from '@progress/kendo-react-excel-export';
 import Moment from 'react-moment';
 import { formatNumber, formatDate  } from '@telerik/kendo-intl';
-
+import {
+  setGroupIds,
+  getGroupIds,
+  setExpandedState,
+} from "@progress/kendo-react-data-tools";
 const aggregates = [
     {
       field: "shares",
@@ -26,8 +30,17 @@ const aggregates = [
       field: "mtrtyYr",
     }  
   ];
+
+  const processWithGroups = (data, dataState) => {
+    const newDataState = process(data, dataState);
+    setGroupIds({
+      data: newDataState.data,
+      group: dataState.group,
+    });
+    return newDataState;
+  };
 const FixdIncmFundmntlsGrid = ({data}) => {
-    debugger;
+  
     const _export = React.useRef(null);
     const _grid = React.useRef();
     const excelExport = () => {
@@ -65,14 +78,15 @@ const FixdIncmFundmntlsGrid = ({data}) => {
   const [row, setRow] = useState(data);
   const [dataState, setDataState] = React.useState();
   const [resultState, setResultState] = React.useState(
-    process(row, initialDataState)
+    processWithGroups(row, initialDataState)
   );
   //setResultState(process({data}, initialDataState))
   let total = row.length;
   let pageSize = 10;
   const [page, setPage] = React.useState(initialDataState);
+  const [collapsedState, setCollapsedState] = React.useState([]);
   const onDataStateChange = React.useCallback((e) => {
-   debugger;
+ 
     
     //let gridData = data;
     const groups = e.dataState.group;
@@ -81,7 +95,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
       groups.map((group) => (group.aggregates = aggregates));
     }
     e.dataState.group = groups;
-   setResultState( process(row,e.dataState));
+   setResultState( processWithGroups(row,e.dataState));
    setDataState(e.dataState);
   }, []);
 
@@ -164,7 +178,7 @@ const RightNameHeader = (props) => {
         );
       }
       if (cellProps.field === "yield") {
-debugger
+
         return (
           <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
             { formatNumber(cellProps.dataItem.aggregates.yield.average, "##,#.00")}
@@ -175,6 +189,27 @@ debugger
 
     return tdElement;
   };
+
+  const onExpandChange = React.useCallback(
+    (event) => {
+      debugger;
+      const item = event.dataItem;
+
+      if (item.groupId) {
+        const newCollapsedIds = !event.value
+          ? [...collapsedState, item.groupId]
+          : collapsedState.filter((groupId) => groupId !== item.groupId);
+          debugger;
+        setCollapsedState(newCollapsedIds);
+      }
+    },
+    [collapsedState]
+  );
+
+  const newData = setExpandedState({
+    data: resultState.data,
+    collapsedIds: collapsedState,
+  });
   return (
     
     <div>
@@ -185,7 +220,7 @@ debugger
         <div className="row text-center">
         <ExcelExport data={resultState} ref={_export}> 
        <Grid style={{ height: "650px" }}
-            data={resultState}
+            data={newData}
             //data={resultState.slice(page.skip, page.skip + page.take)}
             groupable={{
               footer: "visible",
@@ -202,7 +237,8 @@ debugger
            // filterable={true}
            onDataStateChange={onDataStateChange}
            {...dataState}
-
+           onExpandChange={onExpandChange}
+           expandField="expanded"
             cellRender={cellRender}
           >
             <GridToolbar>
