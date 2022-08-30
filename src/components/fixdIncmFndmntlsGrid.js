@@ -5,6 +5,7 @@ import { process } from "@progress/kendo-data-query";
 import { ExcelExport } from '@progress/kendo-react-excel-export';
 import Moment from 'react-moment';
 import { formatNumber, formatDate  } from '@telerik/kendo-intl';
+import { ColumnMenu } from "./columnMenu";
 import {
   setGroupIds,
   getGroupIds,
@@ -237,7 +238,7 @@ const RightNameHeader = (props) => {
             pageable={{
               pageSizes: true,
             }}
-            pageSize={10}
+            pageSize={page.take}
             total={data.length}
            
             ref={_grid}
@@ -258,10 +259,10 @@ const RightNameHeader = (props) => {
             Export to Excel
           </button>
         </GridToolbar>
-            <Column field="mtrtyYr" menu={true} title="Maturity Year" cell={NumberCell} headerCell={RightNameHeader} width="150px"  />
+            <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} width="150px"  />
             {/*<Column field="couponRate" menu={true} title="Coupon Rate" width="150px" />
             <Column field="maturityDt"  menu={true}  filter="date" title="Maturity Date" width="150px" />*/}
-            <Column field="astShrtNm" menu={true}  title="Description" width="300px" />
+            <Column field="astShrtNm" menu={true}  title="Description" width="300px" columnMenu={ColumnMenu} />
 
 
 
@@ -276,12 +277,12 @@ const RightNameHeader = (props) => {
         <Column field="investmentOfficer" title="Inv Officer" width="150px" />*/}
             
 
-            <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
-            <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
-            <Column field="yield" title="Yield%" width="150px" filter="numeric" format="{0:n2}" cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+            <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
+            <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
+            <Column field="yield" title="Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
 
-            <Column field="moodyRating" menu={true} title="Moody Rating" width="150px" />
-            <Column field="sPRating" menu={true} title="SP Rating" width="150px" />
+            <Column field="moodyRating" menu={true} title="Moody Rating" width="150px" columnMenu={ColumnMenu} />
+            <Column field="sPRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
             
 
             {/* <Column
