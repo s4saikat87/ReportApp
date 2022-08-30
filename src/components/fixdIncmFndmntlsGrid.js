@@ -31,6 +31,11 @@ const aggregates = [
     }  
   ];
 
+  const initialDataState = {
+    skip: 0,
+  take: 10,
+  };
+
   const processWithGroups = (data, dataState) => {
     const newDataState = process(data, dataState);
     setGroupIds({
@@ -71,18 +76,14 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     );
   }; 
 
-  const initialDataState = {
-    skip: 0,
-  take: 10,
-  };
+  
   const [row, setRow] = useState(data);
   const [dataState, setDataState] = React.useState();
   const [resultState, setResultState] = React.useState(
     processWithGroups(row, initialDataState)
   );
   //setResultState(process({data}, initialDataState))
-  let total = row.length;
-  let pageSize = 10;
+  
   const [page, setPage] = React.useState(initialDataState);
   const [collapsedState, setCollapsedState] = React.useState([]);
   const onDataStateChange = React.useCallback((e) => {
@@ -190,6 +191,10 @@ const RightNameHeader = (props) => {
     return tdElement;
   };
 
+  const pageChange = (event) => {
+    setPage(event.page);
+  };
+
   const onExpandChange = React.useCallback(
     (event) => {
       debugger;
@@ -229,9 +234,12 @@ const RightNameHeader = (props) => {
            
             sortable={true}
             skip={page.skip}
-            pageable={{pageSize:true}}
-            pageSize={page.take}
-            total={resultState.length}
+            pageable={{
+              pageSizes: true,
+            }}
+            pageSize={10}
+            total={data.length}
+           
             ref={_grid}
            // total={total}
            // filterable={true}

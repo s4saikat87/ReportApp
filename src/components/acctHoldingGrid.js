@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
 import { process } from "@progress/kendo-data-query";
 import { ExcelExport } from '@progress/kendo-react-excel-export';
+import { formatNumber, formatDate  } from '@telerik/kendo-intl';
 
 const aggregates = [
   {
@@ -43,6 +44,8 @@ const AcctHoldingGrid = ({data}) => {
   const handleClick = () => {
     setLocked(!locked);
   };
+  
+  const _grid = React.useRef();
   const _export = React.useRef(null);
 
     const excelExport = () => {
@@ -55,12 +58,15 @@ const AcctHoldingGrid = ({data}) => {
     const field = props.field || "";
     const total = data.reduce((acc, current) => acc + current[field], 0).toFixed(2);
     return (
-      <td colSpan={props.colSpan} style={props.style}>
+      <td colSpan={props.colSpan} style={{textAlign:'right'}}>
          {total}
       </td>
     );
   };
-  const initialDataState = {};
+  const initialDataState = {
+    skip: 0,
+    take: 10,
+  };
   const [row, setRow] = useState(data);
   const [dataState, setDataState] = React.useState();
   const [resultState, setResultState] = React.useState(
@@ -87,7 +93,31 @@ const AcctHoldingGrid = ({data}) => {
   }, []);
 
   
+  const NumberCell = (props) => {
+    return (
+        <td style={{ textAlign: 'right' }}>
+            {formatNumber(props.dataItem[props.field], "##,#.00")}
+        </td>
+    )
+  }
 
+  const RightNameHeader = (props) => {
+    return (
+        <a className="k-link" style={{
+            float: "right",
+        }} onClick={props.onClick}>
+            {/* <span className="k-icon k-i-cart" /> */}
+            <span
+                style={{
+                    // color: "#53d2fa",
+                }}
+            >
+                {props.title}
+            </span>
+            {props.children}
+        </a>
+      );
+  };
   
 
   const cellRender = (tdElement, cellProps) => {
@@ -164,7 +194,6 @@ const AcctHoldingGrid = ({data}) => {
 
             </div>
 
-
         </div>
         /* <div className="card mx-2 my-2">
             <div className="card-header tableheader">Account Transaction Report</div>
@@ -179,7 +208,8 @@ const AcctHoldingGrid = ({data}) => {
               footer: "visible",
             }}
             sortable={true}
-           // pageSize={pageSize}
+            pageable={{pageSize:true}}
+            pageSize={pageSize}
            // total={total}
            // filterable={true}
            onDataStateChange={onDataStateChange}
@@ -195,23 +225,23 @@ const AcctHoldingGrid = ({data}) => {
             <Column field="tckrSymbl" menu={true} title="Ticker" width="150px" />
             <Column field="cusip" menu={true} title="Cusip" width="150px" />
             <Column field="pmrDesc" menu={true} title="PMR" width="150px" />
-            <Column field="shares" title="Shares" format="{0:n2}" width="150px" filter="numeric" filterable={false} />
-            <Column field="cost" title="Cost" width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
-            <Column field="market" title="Market" width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
+            <Column field="shares" title="Shares" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="150px" filter="numeric" filterable={false} />
+            <Column field="cost" title="Cost" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
+            <Column field="market" title="Market" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
 
-            <Column field="unrGainLoss" title="Unr Gain Loss" footerCell={totalSum} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
-            <Column field="estAnnInc" title="Est Ann Inc"format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
-            <Column field="yield" title="Yield" width="150px" format="{0:n2}" filter="numeric" filterable={false}/>
-            <Column field="accruedInterest" title="Acc Int" format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
-            <Column field="principalCash" title="PCash" width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
-            <Column field="incomeCash" title="ICash" width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
-            <Column field="investedIncome" title="Invested Income" footerCell={totalSum} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
+            <Column field="unrGainLoss" title="Unr Gain Loss" cell={NumberCell} headerCell={RightNameHeader} footerCell={totalSum} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
+            <Column field="estAnnInc" title="Est Ann Inc" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
+            <Column field="yield" title="Yield" cell={NumberCell} headerCell={RightNameHeader} width="150px" format="{0:n2}" filter="numeric" filterable={false}/>
+            <Column field="accruedInterest" title="Acc Int" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
+            <Column field="principalCash" title="PCash" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
+            <Column field="incomeCash" title="ICash" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
+            <Column field="investedIncome" title="Invested Income" cell={NumberCell} headerCell={RightNameHeader} footerCell={totalSum} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
             <Column field="investmentObjective" title="Inv Objective" width="150px" filter="numeric" filterable={false}/>
             <Column field="administrator" title="Administrator" width="150px" />
             <Column field="investmentOfficer" title="Inv Officer" width="150px" />
-            <Column field="rate" title="Rate" format="{0:n2}" filter="numeric" filterable={false} width="150px" />
-            <Column field="txCstAmt" title="Tax Cost" format="{0:n2}" filter="numeric" filterable={false} width="150px" />
-            <Column field="yldToCost" title="Yeild To Cost" format="{0:n2}" filter="numeric" filterable={false} width="150px" />
+            <Column field="rate" title="Rate" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" filter="numeric" filterable={false} width="150px" />
+            <Column field="txCstAmt" title="Tax Cost" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" filter="numeric" filterable={false} width="150px" />
+            <Column field="yldToCost" title="Yeild To Cost" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" filter="numeric" filterable={false} width="150px" />
 
            
           </Grid>
@@ -223,3 +253,5 @@ const AcctHoldingGrid = ({data}) => {
 }
 
 export default AcctHoldingGrid
+
+
