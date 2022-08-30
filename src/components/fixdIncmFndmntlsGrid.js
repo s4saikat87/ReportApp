@@ -88,7 +88,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
   const NumberCell = (props) => {
     return (
         <td style={{ textAlign: 'right' }}>
-            {props.dataItem[props.field].toFixed(2)}
+            {formatNumber(props.dataItem[props.field], "##,#.00")}
         </td>
     )
 }

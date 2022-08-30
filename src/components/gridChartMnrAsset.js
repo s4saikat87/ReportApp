@@ -19,6 +19,7 @@ import {
     ChartValueAxisItem,
     ChartTooltip,
 } from "@progress/kendo-react-charts";
+import { formatNumber, formatDate  } from '@telerik/kendo-intl';
 const GridChartMnrAsset = ({ data, astData }) => {
     debugger;
     const labelContent = (e) => `${e.value.toFixed(2)}`;
@@ -69,7 +70,7 @@ const GridChartMnrAsset = ({ data, astData }) => {
     const NumberCell = (props) => {
         return (
             <td style={{ textAlign: 'right' }}>
-                {props.dataItem[props.field].toFixed(2)}
+                {formatNumber(props.dataItem[props.field], "##,#.00")}
             </td>
         )
     }

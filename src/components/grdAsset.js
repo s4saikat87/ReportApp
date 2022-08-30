@@ -1,17 +1,15 @@
 import React from 'react'
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
-
+import { formatNumber, formatDate  } from '@telerik/kendo-intl';
 const GrdAsset = ({ data }) => {
-  debugger;
+  
   const NumberCell = (props) => {
     return (
-      <td style={{textAlign: 'right'}}>
-        {props.dataItem[props.field].toFixed(2)}
-      </td>
+        <td style={{ textAlign: 'right' }}>
+            {formatNumber(props.dataItem[props.field], "##,#.00")}
+        </td>
     )
-
-    
-  }
+}
 
   const RightNameHeader = (props) => {
     return (
