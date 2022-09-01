@@ -4,7 +4,12 @@ import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-g
 import { process } from "@progress/kendo-data-query";
 import { ExcelExport } from '@progress/kendo-react-excel-export';
 import { formatNumber, formatDate  } from '@telerik/kendo-intl';
-
+import { ColumnMenu } from "./columnMenu";
+import {
+  setGroupIds,
+  getGroupIds,
+  setExpandedState,
+} from "@progress/kendo-react-data-tools";
 const aggregates = [
   {
     field: "cost",
@@ -38,6 +43,14 @@ const initialGroup = [
   }
 
 ];
+const processWithGroups = (data, dataState) => {
+  const newDataState = process(data, dataState);
+  setGroupIds({
+    data: newDataState.data,
+    group: dataState.group,
+  });
+  return newDataState;
+};
 const AcctHoldingGrid = ({data}) => {
   const [locked, setLocked] = React.useState(false);
 
@@ -50,7 +63,7 @@ const AcctHoldingGrid = ({data}) => {
 
     const excelExport = () => {
     if (_export.current !== null) {
-        _export.current.save(resultState);
+        _export.current.save(data);
     }
   };
 
@@ -69,8 +82,9 @@ const AcctHoldingGrid = ({data}) => {
   };
   const [row, setRow] = useState(data);
   const [dataState, setDataState] = React.useState();
+  const [collapsedState, setCollapsedState] = React.useState([]);
   const [resultState, setResultState] = React.useState(
-    process(row, initialDataState)
+    processWithGroups(row, initialDataState)
   );
   //setResultState(process({data}, initialDataState))
   let total = row.length;
@@ -89,7 +103,8 @@ const AcctHoldingGrid = ({data}) => {
       groups.map((group) => (group.aggregates = aggregates));
     }
     e.dataState.group = groups;
-   setResultState( process(row,e.dataState));
+    setResultState( processWithGroups(row,e.dataState));
+    setDataState(e.dataState);
   }, []);
 
   
@@ -176,7 +191,30 @@ const AcctHoldingGrid = ({data}) => {
 
     return tdElement;
   };
-   
+  const pageChange = (event) => {
+    setPage(event.page);
+  };
+  
+  const onExpandChange = React.useCallback(
+    (event) => {
+      debugger;
+      const item = event.dataItem;
+
+      if (item.groupId) {
+        const newCollapsedIds = !event.value
+          ? [...collapsedState, item.groupId]
+          : collapsedState.filter((groupId) => groupId !== item.groupId);
+          debugger;
+        setCollapsedState(newCollapsedIds);
+      }
+    },
+    [collapsedState]
+  );
+
+  const newData = setExpandedState({
+    data: resultState.data,
+    collapsedIds: collapsedState,
+  });
   return (
     
     <div>
@@ -200,31 +238,36 @@ const AcctHoldingGrid = ({data}) => {
         </div> */}
         <div className="card-body">
         <div className="mx-1 my-1 py-1">
-        <ExcelExport data={resultState} ref={_export}> 
+        <ExcelExport data={data} ref={_export}> 
        <Grid style={{ height: "600px" }}
-            data={resultState}
+            data={newData}
        
             groupable={{
               footer: "visible",
             }}
             sortable={true}
-            pageable={{pageSize:true}}
-            pageSize={pageSize}
+            skip={page.skip}
+            pageable={{
+              pageSizes: true,
+            }}
+            pageSize={page.take}
+            total={data.length}
            // total={total}
            // filterable={true}
            onDataStateChange={onDataStateChange}
            {...dataState}
-
+           onExpandChange={onExpandChange}
+           expandField="expanded"
             cellRender={cellRender}
           >
             
-            <Column field="branch" menu={true} title="Branch" width="150px" locked={true} />
-            <Column field="accountType" menu={true} title="Account Type" width="150px"  locked={true}/>
-            <Column field="accountName" menu={true} title="Account Name" width="150px" locked={true} />
-            <Column field="asset" menu={true} title="Asset Description" width="150px" />
-            <Column field="tckrSymbl" menu={true} title="Ticker" width="150px" />
-            <Column field="cusip" menu={true} title="Cusip" width="150px" />
-            <Column field="pmrDesc" menu={true} title="PMR" width="150px" />
+            <Column field="branch" menu={true} title="Branch" width="150px" locked={true} columnMenu={ColumnMenu}/>
+            <Column field="accountType" menu={true} title="Account Type" width="150px" locked={true} columnMenu={ColumnMenu}/>
+            <Column field="accountName" menu={true} title="Account Name" width="150px"  locked={true} columnMenu={ColumnMenu}/>
+            <Column field="asset" menu={true} title="Asset Description" width="150px" columnMenu={ColumnMenu}/>
+            <Column field="tckrSymbl" menu={true} title="Ticker" width="150px" columnMenu={ColumnMenu}/>
+            <Column field="cusip" menu={true} title="Cusip" width="150px" columnMenu={ColumnMenu}/>
+            <Column field="pmrDesc" menu={true} title="PMR" width="150px" columnMenu={ColumnMenu}/>
             <Column field="shares" title="Shares" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="150px" filter="numeric" filterable={false} />
             <Column field="cost" title="Cost" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
             <Column field="market" title="Market" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>

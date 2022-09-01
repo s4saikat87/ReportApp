@@ -3,9 +3,11 @@ import { useState, useEffect, useRef } from 'react';
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
 import { process } from "@progress/kendo-data-query";
 import { ExcelExport } from '@progress/kendo-react-excel-export';
-
-
-
+import {
+  setGroupIds,
+  getGroupIds,
+  setExpandedState,
+} from "@progress/kendo-react-data-tools";
 const aggregates = [
     {
       field: "pCash",
@@ -27,6 +29,15 @@ const aggregates = [
     }
   
   ];
+
+  const processWithGroups = (data, dataState) => {
+    const newDataState = process(data, dataState);
+    setGroupIds({
+      data: newDataState.data,
+      group: dataState.group,
+    });
+    return newDataState;
+  };
 const AcctTransactionGrid = ({data}) => {
     debugger;
     const [locked, setLocked] = React.useState(false);
@@ -38,7 +49,7 @@ const AcctTransactionGrid = ({data}) => {
 
     const excelExport = () => {
     if (_export.current !== null) {
-        _export.current.save(resultState);
+        _export.current.save(data);
     }
   };
 
@@ -52,12 +63,16 @@ const AcctTransactionGrid = ({data}) => {
     );
   };
 
-  const initialDataState = {};
+  const initialDataState = {
+    skip: 0,
+    take: 10,
+  };
   const [row, setRow] = useState(data);
   const [dataState, setDataState] = React.useState();
   const [resultState, setResultState] = React.useState(
-    process(row, initialDataState)
+    processWithGroups(row, initialDataState)
   );
+  const [collapsedState, setCollapsedState] = React.useState([]);
   //setResultState(process({data}, initialDataState))
   let total = row.length;
   let pageSize = 10;
@@ -75,7 +90,7 @@ const AcctTransactionGrid = ({data}) => {
       groups.map((group) => (group.aggregates = aggregates));
     }
     e.dataState.group = groups;
-   setResultState( process(row,e.dataState));
+   setResultState( processWithGroups(row,e.dataState));
   }, []);
 
   
@@ -83,7 +98,7 @@ const AcctTransactionGrid = ({data}) => {
   
 
   const cellRender = (tdElement, cellProps) => {
-    debugger;
+   
     
     if (cellProps.rowType === "groupFooter") {
 
@@ -115,6 +130,27 @@ const AcctTransactionGrid = ({data}) => {
 
     return tdElement;
   };
+
+  const onExpandChange = React.useCallback(
+    (event) => {
+      debugger;
+      const item = event.dataItem;
+
+      if (item.groupId) {
+        const newCollapsedIds = !event.value
+          ? [...collapsedState, item.groupId]
+          : collapsedState.filter((groupId) => groupId !== item.groupId);
+          debugger;
+        setCollapsedState(newCollapsedIds);
+      }
+    },
+    [collapsedState]
+  );
+
+  const newData = setExpandedState({
+    data: resultState.data,
+    collapsedIds: collapsedState,
+  });
   return (
     
     <div>
@@ -131,27 +167,32 @@ const AcctTransactionGrid = ({data}) => {
 
             </div>
 
-
         </div>
         /* <div className="card mx-2 my-2">
             <div className="card-header tableheader">Account Transaction Report</div>
         </div> */}
         <div className="card-body">
         <div className="mx-1 px-1 my-1 py-1">
-        <ExcelExport data={resultState} ref={_export}> 
+        <ExcelExport data={data} ref={_export}> 
        <Grid style={{ height: "600px" }}
-            data={resultState}
+            data={newData}
        
             groupable={{
               footer: "visible",
             }}
             sortable={true}
-            //pageSize={pageSize}
+            skip={page.skip}
+            pageable={{
+              pageSizes: true,
+            }}
+            pageSize={page.take}
+            total={data.length}
            // total={total}
            // filterable={true}
            onDataStateChange={onDataStateChange}
            {...dataState}
-
+           onExpandChange={onExpandChange}
+           expandField="expanded"
             cellRender={cellRender}
           >
             {/* <GridToolbar>
@@ -164,7 +205,7 @@ const AcctTransactionGrid = ({data}) => {
             Export to Excel
           </button>
         </GridToolbar> */}
-            <Column field="branchName" menu={true} title="Branch" width="150px" locked={true}/>
+            <Column field="branchName" menu={true} title="Branch" width="150px"  locked={true}/>
             <Column field="accountType" menu={true} title="Account Type" width="150px" locked={true}/>
             <Column field="accountName" menu={true} title="Account Name" width="150px" locked={true}/>
             {/* <Column field="prcsDt" menu={true} title="Trans. Date" width="150px" /> */}
@@ -209,3 +250,4 @@ const AcctTransactionGrid = ({data}) => {
 }
 
 export default AcctTransactionGrid
+
