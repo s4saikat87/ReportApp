@@ -11,6 +11,10 @@ import {
   getGroupIds,
   setExpandedState,
 } from "@progress/kendo-react-data-tools";
+import { textAlign } from '@mui/system';
+//import FormGroup from '@mui/material/FormGroup';
+//import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 const aggregates = [
     {
       field: "shares",
@@ -54,12 +58,15 @@ const FixdIncmFundmntlsGrid = ({data}) => {
         _export.current.save(data);
     }
   };
+  const showMaturityCall=()=>{
+
+  }
 
   const totalSum = (props) => {
     const field = props.field || "";
     const total = data.reduce((acc, current) => acc + current[field], 0);
     return (
-      <td colSpan={props.colSpan} style={props.style}>
+      <td colSpan={props.colSpan} style={{textAlign:"right"}}>
        { formatNumber(total, "##,#.00")}
         
       </td>
@@ -71,7 +78,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     const len=data.length;
     const average = data.reduce((acc, current) => acc + current[field],0)/len;
     return (
-      <td colSpan={props.colSpan} style={props.style}>
+      <td colSpan={props.colSpan} style={{textAlign:"right"}}>
          { formatNumber(average, "##,#.00")}
       </td>
     );
@@ -107,6 +114,13 @@ const FixdIncmFundmntlsGrid = ({data}) => {
             {formatNumber(props.dataItem[props.field], "##,#.00")}
         </td>
     )
+}
+const IntCell = (props) => {
+  return (
+      <td style={{ textAlign: 'right' }}>
+          {props.dataItem[props.field]}
+      </td>
+  )
 }
 const RightNameHeader = (props) => {
     return (
@@ -258,8 +272,11 @@ const RightNameHeader = (props) => {
           >
             Export to Excel
           </button>
+         {/* <FormGroup>
+      <FormControlLabel control={<Checkbox defaultChecked onClick={showMaturityCall} />} label="Duration to Maturity/Call" />
+          </FormGroup>*/}
         </GridToolbar>
-            <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} width="150px"  />
+            <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="150px"  />
             {/*<Column field="couponRate" menu={true} title="Coupon Rate" width="150px" />
             <Column field="maturityDt"  menu={true}  filter="date" title="Maturity Date" width="150px" />*/}
             <Column field="astShrtNm" menu={true}  title="Description" width="300px" columnMenu={ColumnMenu} />
