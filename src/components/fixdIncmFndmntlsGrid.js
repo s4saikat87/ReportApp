@@ -12,8 +12,8 @@ import {
   setExpandedState,
 } from "@progress/kendo-react-data-tools";
 import { textAlign } from '@mui/system';
-//import FormGroup from '@mui/material/FormGroup';
-//import FormControlLabel from '@mui/material/FormControlLabel';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 const aggregates = [
     {
@@ -58,9 +58,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
         _export.current.save(data);
     }
   };
-  const showMaturityCall=()=>{
 
-  }
 
   const totalSum = (props) => {
     const field = props.field || "";
@@ -79,7 +77,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     const average = data.reduce((acc, current) => acc + current[field],0)/len;
     return (
       <td colSpan={props.colSpan} style={{textAlign:"right"}}>
-         { formatNumber(average, "##,#.00")}
+        Avg: { formatNumber(average, "##,#.00")}
       </td>
     );
   }; 
@@ -94,6 +92,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
   
   const [page, setPage] = React.useState(initialDataState);
   const [collapsedState, setCollapsedState] = React.useState([]);
+  const[ChkBoxState,setChkBoxState]=useState(true);
   const onDataStateChange = React.useCallback((e) => {
  
     
@@ -106,6 +105,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     e.dataState.group = groups;
    setResultState( processWithGroups(row,e.dataState));
    setDataState(e.dataState);
+   //setChkBoxState(true);
   }, []);
 
   const NumberCell = (props) => {
@@ -122,6 +122,7 @@ const IntCell = (props) => {
       </td>
   )
 }
+
 const RightNameHeader = (props) => {
     return (
         <a className="k-link" style={{
@@ -142,9 +143,43 @@ const RightNameHeader = (props) => {
 
   const cellRender = (tdElement, cellProps) => {    
     
+    
     if (cellProps.rowType === "data")
     {
     let cpnRate="", matrtyDate="";
+
+    if(cellProps.field==="yldToMtrty" || cellProps.field==="yldCalPut")
+      {
+        return (
+          (ChkBoxState===true)?
+          <>
+          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem["yldToMtrty"], "##,#.00")}
+          </td>
+          </>:
+          <>
+          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem["yldCalPut"], "##,#.00")}
+          </td>
+          </>
+      );
+      }
+      if(cellProps.field==="duration" || cellProps.field==="calPutDuration")
+      {
+        return (
+          (ChkBoxState===true)?
+          <>
+          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem["duration"], "##,#.00")}
+          </td>
+          </>:
+          <>
+          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem["calPutDuration"], "##,#.00")}
+          </td>
+          </>
+      );
+      }
     
     if(cellProps.field==="maturityDt")
     {
@@ -205,6 +240,10 @@ const RightNameHeader = (props) => {
 
     return tdElement;
   };
+  const ShowMaturityCallPut=(e)=>{
+    setChkBoxState(e.target.checked);
+    setDataState(e.dataState);
+  };
 
   const pageChange = (event) => {
     setPage(event.page);
@@ -236,8 +275,11 @@ const RightNameHeader = (props) => {
         <div className="card mx-2 my-2">
             <div className="card-header tableheader">Fixed Income Fundamentals Report</div>
         </div>
+        
+        
         <div className="container-fluid">
         <div className="row text-center">
+        {ChkBoxState?
         <ExcelExport data={resultState} ref={_export}> 
        <Grid style={{ height: "650px" }}
             data={newData}
@@ -272,9 +314,9 @@ const RightNameHeader = (props) => {
           >
             Export to Excel
           </button>
-         {/* <FormGroup>
-      <FormControlLabel control={<Checkbox defaultChecked onClick={showMaturityCall} />} label="Duration to Maturity/Call" />
-          </FormGroup>*/}
+          <FormGroup>
+      <FormControlLabel control={<Checkbox name='chkShwMtrtyCall' defaultChecked onChange={ShowMaturityCallPut}/>} label="Duration to Maturity/Call" />
+    </FormGroup>
         </GridToolbar>
             <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="150px"  />
             {/*<Column field="couponRate" menu={true} title="Coupon Rate" width="150px" />
@@ -296,34 +338,76 @@ const RightNameHeader = (props) => {
 
             <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
             <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
-            <Column field="yield" title="Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
-
+            
+            <Column field="yldToMtrty" title="YTM%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+            <Column field="duration" title="Duration To Maturity" width="200px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+            
+            <Column field="yield" title="Current Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
             <Column field="moodyRating" menu={true} title="Moody Rating" width="150px" columnMenu={ColumnMenu} />
             <Column field="sPRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
             
-
-            {/* <Column
-            field="PriceHistory"
-            title="Price history"
-            cell={SparkLineChartCell}
-          /> */}
-            {/* <Column
-            field="Discontinued"
-            width="130px"
-            cell={props => (
-              <td>
-                <input
-                  className="k-checkbox"
-                  type="checkbox"
-                  disabled
-                  defaultChecked={props.dataItem[props.field]}
-                />
-                <label className="k-checkbox-label" />
-              </td>
-            )}
-          /> */}
           </Grid>
           </ExcelExport>   
+:
+<ExcelExport data={resultState} ref={_export}> 
+<Grid style={{ height: "650px" }}
+     data={newData}
+     //data={resultState.slice(page.skip, page.skip + page.take)}
+     groupable={{
+       footer: "visible",
+     }}
+
+    
+     sortable={true}
+     skip={page.skip}
+     pageable={{
+       pageSizes: true,
+     }}
+     pageSize={page.take}
+     total={data.length}
+    
+     ref={_grid}
+    // total={total}
+    // filterable={true}
+    onDataStateChange={onDataStateChange}
+    {...dataState}
+    onExpandChange={onExpandChange}
+    expandField="expanded"
+     cellRender={cellRender}
+   >
+     <GridToolbar>
+   <button
+     title="Export Excel"
+     className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+     onClick={excelExport}
+   >
+     Export to Excel
+   </button>
+   <FormGroup>
+<FormControlLabel control={<Checkbox name='chkShwMtrtyCall' defaultChecked onChange={ShowMaturityCallPut}/>} label="Duration to Maturity/Call" />
+</FormGroup>
+ </GridToolbar>
+     <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="150px"  />
+     {/*<Column field="couponRate" menu={true} title="Coupon Rate" width="150px" />
+     <Column field="maturityDt"  menu={true}  filter="date" title="Maturity Date" width="150px" />*/}
+     <Column field="astShrtNm" menu={true}  title="Description" width="300px" columnMenu={ColumnMenu} />
+
+
+     <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
+     <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
+     
+     <Column field="yldCalPut" title="YTW%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+     <Column field="calPutDuration" title="Duration To Call/Put" width="200px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+     
+     <Column field="yield" title="Current Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+     <Column field="moodyRating" menu={true} title="Moody Rating" width="150px" columnMenu={ColumnMenu} />
+     <Column field="sPRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
+     
+
+   </Grid>
+   </ExcelExport>       
+    }
+
           </div>
           </div>
     </div>
