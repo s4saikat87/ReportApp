@@ -81,9 +81,17 @@ const PortfolioHoldingsRpt = () => {
   
   
   if (loading) {
-    return <Loading />
-  }
   
+    return(
+      <>
+        <Header></Header>
+      <Loading />
+   </>
+    )
+   
+ 
+
+}
     return (
       <div>
         <Header></Header>

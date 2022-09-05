@@ -70,7 +70,12 @@ const FixdIncmFndmntlsRpt = () => {
       
       }
       if (loading) {
-        return <Loading />
+        return(
+            <>
+              <Header></Header>
+            <Loading />
+         </>
+          )
       }
   return (
     <div>

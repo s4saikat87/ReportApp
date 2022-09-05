@@ -31,7 +31,14 @@ const GridChartMnrAsset = ({ data, astData }) => {
     const [updatedAssetData, setUpdatedAssetData] = useState(astData);
     
     const [assetFlag, setAssetFlag] = useState(JSON.parse(localStorage.getItem('changeSelect')));
-   
+    const chartDefaultV4Colors = [
+        "#0275d8",
+    "#5bc0de",
+    "#5cb85c",
+    "#f0ad4e",
+    "#e67d4a",
+    "#d9534f",
+      ];
     const handleSetBarMnr = () => {
         setMnrArea(0);
         setMnrBar(1);
@@ -248,7 +255,7 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                         </ChartSeries>
                                     </Chart>
                                     : mnrArea === 1 ?
-                                        <Chart style={{ height: "500px" }}>
+                                        <Chart   style={{ height: "500px" }}>
                                             {/* <ChartTitle text="Major Asset Chart" /> */}
                                             <ChartLegend position="bottom" />
                                             <ChartCategoryAxis>

@@ -131,6 +131,15 @@ const PortfolioHoldingsGrid = ({data}) => {
       take: pageSize,
     });
 
+    const chartDefaultV4Colors = [
+      "#0275d8",
+  "#5bc0de",
+  "#5cb85c",
+  "#f0ad4e",
+  "#e67d4a",
+  "#d9534f",
+    ];
+
     const handleSetDataChecked = () => {
       
       setgridChartCheck('checked');
@@ -143,7 +152,7 @@ const PortfolioHoldingsGrid = ({data}) => {
 }
 
     const onDataStateChange = React.useCallback((e) => {
-     debugger;
+   
       setDataState(e.dataState);
       //let gridData = data;
       const groups = e.dataState.group;
@@ -350,7 +359,7 @@ const PortfolioHoldingsGrid = ({data}) => {
   
 
             </div>
-            <Chart style={{ height: "440px" }}
+            <Chart seriesColors={chartDefaultV4Colors} style={{ height: "440px" }}
               onPlotAreaClick={(e) => 
                 console.log(e)
               
@@ -396,7 +405,7 @@ const PortfolioHoldingsGrid = ({data}) => {
                 <p className='tableheader h6'>Portfolio Holdings - Minor Asset</p>
               </div>
               <div className='col'></div>
-              <Chart style={{ height: "500px" }}>
+              <Chart seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
                                         {/* <ChartTitle text="Major Asset Chart" /> */}
                 <ChartLegend position="bottom" />
 

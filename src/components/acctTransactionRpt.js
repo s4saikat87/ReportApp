@@ -73,7 +73,12 @@ const AcctTransactionRpt = () => {
   
   }
   if (loading) {
-    return <Loading />
+    return(
+      <>
+        <Header></Header>
+      <Loading />
+   </>
+    )
   }
   
     return (
