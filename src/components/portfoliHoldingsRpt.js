@@ -6,12 +6,12 @@ import SelectControl from './selectcontrol';
 
 import Loading from './loading';
 import Header  from './header';
-import AcctTransactionGrid from './acctTransactionGrid';
-// import "@progress/kendo-theme-material/dist/all.css";
-//import "@progress/kendo-theme-default/dist/all.css";
-const AcctTransactionRpt = () => {
+import PortfolioHoldingsGrid from './portfolioHoldingsGrid';
+
+import Enumerable from 'linq';
+const PortfolioHoldingsRpt = () => {
   
-    const [AcctTransactionRptData, populateAcctTransactionRptData] = useState([]);
+    const [PortfolioHoldingsRptData, populatePortfolioHoldingsRptData] = useState([]);
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
@@ -24,7 +24,7 @@ const AcctTransactionRpt = () => {
               let userId = JSON.parse(localStorage.getItem('userId'));// data.Email;
              
               //setEmail(email);
-              GetAcctTransactionData();
+              GetPortFolioHoldingsData();
             
               //  console.log(data);
           } catch (error) {
@@ -36,15 +36,13 @@ const AcctTransactionRpt = () => {
   }, [])
   
   
-  const GetAcctTransactionData = async () => {
-    debugger;
+  const GetPortFolioHoldingsData = async () => {
     setLoading(true);
-  
+  debugger;
      let token = JSON.parse(localStorage.getItem('token'));
-     let userId = JSON.parse(localStorage.getItem('userId'));
-     let startDate = "06/30/2021";
+     let AsOfId = JSON.parse(localStorage.getItem('userId'));
      let pageId = 1;
-     const postData = {userId, startDate, pageId};
+     const postData = {AsOfId, pageId};
      const config = {
         headers: {
           'authorization': `Bearer ${token.token}`,
@@ -53,16 +51,21 @@ const AcctTransactionRpt = () => {
         }
       
   };
-    await axios.post('/AcctTransactDateRange',
+    await axios.post('/PortfolioHoldings',
         postData,
        config
     )
         .then(response => {
-          
+          debugger;
             //  console.log(response);
-  debugger;
-            const rowData = response.data;
-            populateAcctTransactionRptData(rowData.ocAcctTransaction)
+  
+            //const rowData = response.data;
+
+            const rowData = Enumerable.from(response.data.ocPortFolioHoldingsMainOutPut).where(w => w.totMarket !== 0)
+            .toArray();
+
+
+            populatePortfolioHoldingsRptData(rowData)
             setLoading(false);
   
         })
@@ -72,6 +75,11 @@ const AcctTransactionRpt = () => {
         });
   
   }
+  
+  
+  
+  
+  
   if (loading) {
     return <Loading />
   }
@@ -79,11 +87,13 @@ const AcctTransactionRpt = () => {
     return (
       <div>
         <Header></Header>
-        <AcctTransactionGrid data={AcctTransactionRptData} />
+  
+         
+         <PortfolioHoldingsGrid data={PortfolioHoldingsRptData} />
          
          
       </div>
     )
   }
   
-  export default AcctTransactionRpt
+  export default PortfolioHoldingsRpt

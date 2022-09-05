@@ -7,6 +7,7 @@ import Loading from './loading';
 import GridMjrAsset from './gridMjrAsset';
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
 import axios from 'axios';
+import Enumerable from 'linq';
 import {
   AutoComplete,
   ComboBox,
@@ -15,9 +16,12 @@ import {
   MultiSelect,
   DropDownTree,
 } from "@progress/kendo-react-dropdowns";
-import { FaSyncAlt } from 'react-icons/fa';
+import { FaFunnelDollar, FaMoneyBill, FaPrint, FaSyncAlt } from 'react-icons/fa';
 import { filterBy } from '@progress/kendo-data-query';
 import { useState, useEffect } from 'react';
+
+import { FaSignOutAlt, FaChalkboard, FaListAlt, FaRegChartBar,FaDonate,FaChartLine,FaDice, FaUserAlt, FaCogs } from 'react-icons/fa';
+
 const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
   const [selAcct, SetselAcct] = useState('');
   const [dataAcct, setDataAcct] = React.useState(data.slice());
@@ -80,9 +84,16 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
         debugger;
         const rowData = response.data;
 
-        setUpdatedMjrData(rowData.t2);
-        setUpdatedMnrData(rowData.t3);
-        setUpdatedAssetData(rowData.t4);
+        let mjrData=Enumerable.from(rowData.t2).where(w => w.mvPercent !== 0)
+        .toArray();
+        let mnrData=Enumerable.from(rowData.t3).where(w => w.mvPercent !== 0)
+        .toArray();
+        let assetData=Enumerable.from(rowData.t4).where(w => w.mvPercent !== 0)
+        .toArray();
+
+        setUpdatedMjrData(mjrData);
+        setUpdatedMnrData(mnrData);
+        setUpdatedAssetData(assetData);
         setAvailableCash(rowData.t1[0].availableCash);
         setExcludedCash(rowData.t1[0].excludedCash);
         setMrktVlAmt(rowData.t1[0].mrktVlAmt);
@@ -132,13 +143,13 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
   //   return <Loading />
   // }
   return (
-    <div className='my-2'>
+    <div className='my-1'>
 
-      <div className="row d-flex justify-content-start align-items-center pt-2 mt-2 bg-light">
+      <div className="rounded">
 
-
-        <div className='subheader text-right col-md-1'> &nbsp; Account(s):</div>
-        <div className='col-md-4 text-left'>
+        <div className='row d-flex justify-content-start align-items-center py-2 mt-1 px-2 mx-2 bg-light shadow-sm rounded'>
+        <div className='subheader text-end col-md-1'> &nbsp; Account(s):</div>
+        <div className='col-md-4 text-start'>
           <ComboBox
             style={{
               width: "350px",
@@ -161,24 +172,45 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
          // defaultValue={["Basketball", "Cricket"]}
         /> */}
         </div>
+        <div className='col-md-2'>
+          <button className='btn btn-sm btn-outline-secondary px-2'><FaPrint></FaPrint> &nbsp; Export to PDF</button>
+        </div>
+        </div>
         {
           chngeSelect===1 ?
           <>
-          <div className='col-md-2 text-right'>
-          <label>Market Value:</label>  <label id='lblMrktVal'>${availableCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</label>
+          <div className='row d-flex justify-content-center align-item-center px-2 my-2'>
+
+
+          
+          <div className='col-sm-10 col-lg-3 card text-left m-1'>
+            <div className='card-body'>
+            <div className='d-block'><FaChartLine /></div>
+            <div className='d-block'><label>Market Value:</label></div>
+            <div className='d-block'><h4 id='lblMrktVal'>${availableCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
+            </div>
           </div>
-          <div className='col-md-2 text-right'>
-          <label>Avaialble Cash:</label>  <label id='lblAvlCash'>${excludedCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</label>
+          <div className='col-sm-10 col-lg-3 card text-left m-1'>
+            <div className='card-body'>
+            <div className='d-block'><FaMoneyBill /></div>
+            <div className='d-block'><label>Avaialble Cash:</label></div>
+            <div className='d-block'><h4 id='lblAvlCash'>${excludedCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
+            </div>
           </div>
-          <div className='col-md-2 text-right'>
-          <label>Exclude Cash:</label>  <label id='lblExcludeCash'>${mrktVlAmt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</label>
+          <div className='col-sm-10 col-lg-3 card text-left m-1'>
+            <div className='card-body'>
+            <div className='d-block'><FaFunnelDollar /></div>
+            <div className='d-block'><label>Exclude Cash:</label></div>
+            <div className='d-block'><h4 id='lblExcludeCash'>${mrktVlAmt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
+            </div>
+          </div>
+
+
           </div>
           </>
           :
           <>
-          <div className='col-md-2 text-right'>
-          <label>All Accounts</label> 
-          </div>
+          
           
           </>
 

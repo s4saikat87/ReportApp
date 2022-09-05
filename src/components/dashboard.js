@@ -8,8 +8,8 @@ import Loading from './loading';
 import Header  from './header';
 import GridMjrAsset from './gridMjrAsset';
 import BerryDash from './berryDash';
-
- import "@progress/kendo-theme-default/dist/all.css";
+import Enumerable from 'linq';
+ //import "@progress/kendo-theme-default/dist/all.css";
  //import "@progress/kendo-theme-bootstrap/dist/all.css";
  //import "@progress/kendo-theme-material/dist/all.css";
 
@@ -115,11 +115,20 @@ const GetADVAccountProfile = async (roleId,cntctId) => {
 
           const rowData = response.data;
          
-         debugger;
+        
           setAccountGet(rowData.t1);
-          setMjrAcctDtls(rowData.t2);
-          setMnrAcctDtls(rowData.t3);
-          setAssetDtls(rowData.t4);
+          localStorage.setItem('acctData', JSON.stringify(rowData.t1));
+        
+          let mjrData=Enumerable.from(rowData.t2).where(w => w.mvPercent !== 0)
+          .toArray();
+          let mnrData=Enumerable.from(rowData.t3).where(w => w.mvPercent !== 0)
+          .toArray();
+          let assetData=Enumerable.from(rowData.t4).where(w => w.mvPercent !== 0)
+          .toArray();
+
+          setMjrAcctDtls(mjrData);
+          setMnrAcctDtls(mnrData);
+          setAssetDtls(assetData);
           setLoading(false);
 
       })

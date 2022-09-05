@@ -5,6 +5,7 @@ import "../index.css";
 
 
 
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -27,7 +28,8 @@ import AcctHoldingRpt from './acctHoldingRpt';
 import AcctTransactionRpt from './acctTransactionRpt';
 import PageNotFound  from './pageNotFound'; 
 import FixdIncmFndmntlsRpt from './fixdIncmFndmntlsRpt'
-
+import AccountProfile from './accountProfile';
+import PortfolioHoldingsRpt from './portfoliHoldingsRpt';
 
 function Login() {
       return (
@@ -38,6 +40,8 @@ function Login() {
               <Route path='/acctHoldingRpt' element={<AcctHoldingRpt />}/>
               <Route path='/acctTransactionRpt' element={<AcctTransactionRpt />}/>
               <Route path='/fixdIncmFndmntlsRpt' element={<FixdIncmFndmntlsRpt />}/>
+              <Route path='/accountProfile' element={<AccountProfile />}/>
+              <Route path='/portfoliHoldingsRpt' element={<PortfolioHoldingsRpt />}/>
               <Route path='*' element={<PageNotFound />}/>
               
               

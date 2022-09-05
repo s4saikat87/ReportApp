@@ -13,14 +13,14 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import LogoPage from './logoPage';
-import { FaSignOutAlt, FaChalkboard, FaListAlt, FaRegChartBar,FaDonate,FaChartLine,FaDice } from 'react-icons/fa';
+import { FaSignOutAlt, FaChalkboard, FaListAlt, FaRegChartBar,FaDonate,FaChartLine,FaDice, FaUserAlt, FaCogs } from 'react-icons/fa';
 
 const Header = () => {
     const location = useLocation();
     const state = location.state;
     const navigate = useNavigate();
     const pages = [];
-    const settings = ['Dashboard', 'AcctHoldingRpt','AcctTransactionRpt', 'Logout'];
+    const settings = ['Dashboard', 'AcctHoldingRpt','AcctTransactionRpt','PortfolioHolding','Logout'];
       
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -55,6 +55,13 @@ const Header = () => {
      
       navigate("/fixdIncmFndmntlsRpt");
     }
+    const openPortfolioHoldingsRpt=()=>{
+    
+      navigate("/portfoliHoldingsRpt");
+    }
+    const openAccountProfilePage=()=>{
+      navigate("/accountProfile");
+    }
     const signOut=()=>{
  
         navigate("/");
@@ -63,137 +70,60 @@ const Header = () => {
     }
   return (
     <div>
-      <AppBar position="static">
-          <Container maxWidth="xl" className='bg-white'>
-            <Toolbar disableGutters>
-              {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
-              <Typography
-                variant="h6"
-                noWrap
-                component="a"
-                //href="/"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'none', md: 'flex' },
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: 'inherit',
-                  textDecoration: 'none',
-                }}
-              >
-               <LogoPage></LogoPage>
-              </Typography>                               
+      
+      <nav className="navbar navbar-expand-md navbar-light bg-white shadow-sm" aria-label="Fourth navbar example">
+    <div className="container-fluid">
+      <a className="" onClick={openDashBoardPage}><LogoPage /></a>
+      <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="navbar-toggler-icon"></span>
+      </button>
 
-              <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                {/* <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleOpenNavMenu}
-                  color="inherit"
-                >
-                  <MenuIcon />
-                </IconButton>  */}
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorElNav}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                  }}
-                  open={Boolean(anchorElNav)}
-                  onClose={handleCloseNavMenu}
-                  sx={{
-                    display: { xs: 'block', md: 'none' },
-                  }}
-                >
-                  {/* {pages.map((page) => (
-                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">{page}</Typography>
-                    </MenuItem>
-                  ))} */}
-                  <MenuItem onClick={openDashBoardPage}>Dashboard</MenuItem>               
-                  <MenuItem onClick={openAcctHoldingRpt}>Account Holding Report</MenuItem>
-                </Menu>
-              </Box>
-              {/* <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} /> */}
-              <Typography
-              variant="h5"
-              noWrap
-              component="a"
-              href=""
-              sx={{
-                mr: 2,
-                display: { xs: 'flex', md: 'none' },
-                flexGrow: 1,
-                //fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-              }}
-            >
-              <LogoPage/>
-            </Typography> 
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
+      <div className="collapse navbar-collapse" id="navbarsExample04">
+        <ul className="navbar-nav ms-auto mb-2 mb-md-0 mx-2">
+          
+          <li className="nav-item dropdown dropdown-menu-end">
+            <a className="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown04">
+              <li><a className="dropdown-item" onClick={openAccountProfilePage}>Profile</a></li>
+              <li><a className="dropdown-item" onClick={openAcctTransactionRpt}>Transaction</a></li>
+              <li><a className="dropdown-item"onClick={openAcctHoldingRpt}>Holding</a></li>
+              <hr />
+              <li><a className="dropdown-item" href="#">Sector Comparison</a></li>
+              <li><a className="dropdown-item" href="#">Performance Summary</a></li>    
+            </ul>
+          </li>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
-                  <Avatar   />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {/* {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
-                ))} */}
-                <MenuItem onClick={openDashBoardPage}><div className='px-1'><FaChalkboard /></div>Dashboard</MenuItem> 
-                <MenuItem onClick={openAcctHoldingRpt}><div className='px-1'><FaRegChartBar /></div>Account Holding Report</MenuItem>
-                <MenuItem onClick={openAcctTransactionRpt}><div className='px-1'><FaListAlt /></div>Account Transaction Report</MenuItem>  
-                <MenuItem onClick={openFixdIncmFndmntlsRpt}><div className='px-1'><FaDonate/></div>Fixed Income Fundamentals Report</MenuItem>     
-                <MenuItem ><div className='px-1'><FaChartLine /></div>Maturity Ladder Report</MenuItem>     
-                <MenuItem ><div className='px-1'><FaDice /></div>Account Sectors Comparison Report</MenuItem>        
-                <MenuItem onClick={signOut}><div className='px-1'><FaSignOutAlt /></div>Logout</MenuItem>
-              </Menu>
-            </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+          <li className="nav-item dropdown dropdown-menu-end">
+            <a className="nav-link dropdown-toggle" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false">Fixed Income</a>
+            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown05">
+              <li><a className="dropdown-item" href="#">Portfolio Overview</a></li>
+              <hr />
+              <li><a className="dropdown-item" href="#">Maturity Ladder</a></li>
+              <li><a className="dropdown-item" onClick={openFixdIncmFndmntlsRpt}>Fundementals</a></li>   
+            </ul>
+          </li>
+
+          <li className='nav-item'><a className='nav-link' onClick={openPortfolioHoldingsRpt}>Portfolio Holdings</a></li>
+
+          </ul>
+
+          <div className="nav-item dropdown dropdown-menu-end">
+            <a className="btn btn-outline-primary btn-sm dropdown-toggle px-1" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false"><FaUserAlt className='mx-2'></FaUserAlt></a>
+            <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown05">
+              <li><a className="dropdown-item" href="#"><FaCogs className='mx-2'></FaCogs>Settings</a></li>
+              
+              <li><a className="dropdown-item" onClick={signOut}><FaSignOutAlt className='mx-2'></FaSignOutAlt>Logout</a></li>   
+            </ul>
+          </div>
+
+        
+        
+      </div>
+    </div>
+  </nav>
+
+
+
     </div>
   )
 }

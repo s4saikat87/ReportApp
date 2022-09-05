@@ -32,6 +32,7 @@ const aggregates = [
   ];
   const initialGroup = [
     {
+      field: "accountNumber",
       field: "mtrtyYr",
     }  
   ];
@@ -318,33 +319,20 @@ const RightNameHeader = (props) => {
       <FormControlLabel control={<Checkbox name='chkShwMtrtyCall' defaultChecked onChange={ShowMaturityCallPut}/>} label="Duration to Maturity/Call" />
     </FormGroup>
         </GridToolbar>
-            <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="150px"  />
-            {/*<Column field="couponRate" menu={true} title="Coupon Rate" width="150px" />
-            <Column field="maturityDt"  menu={true}  filter="date" title="Maturity Date" width="150px" />*/}
+            <Column field="accountNumber" menu={true} title="Account Number" columnMenu={ColumnMenu}  width="150px"  />
+            <Column field="accountName" menu={true} title="Account Name" columnMenu={ColumnMenu}  width="170px"  />
+            <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="120px"  />
             <Column field="astShrtNm" menu={true}  title="Description" width="300px" columnMenu={ColumnMenu} />
-
-
-
-           {/* <Column field="BranchName" menu={true} title="Branch" width="150px" />
-            <Column field="AccountType" menu={true} title="Account Type" width="150px" />
-            <Column field="AccountName" menu={true} title="Account Name" width="150px" />
-             <Column field="prcsDt" menu={true} title="Trans. Date" width="150px" />
-            <Column field="tranTypNm" menu={true} title="Trans. Type" width="150px" />
-            
-            <Column field="totalLine" menu={true} title="Description" width="300px" />
-            <Column field="administrator" title="Administrator" width="150px" />
-        <Column field="investmentOfficer" title="Inv Officer" width="150px" />*/}
-            
 
             <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
             <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
             
-            <Column field="yldToMtrty" title="YTM%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
-            <Column field="duration" title="Duration To Maturity" width="200px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+            <Column field="yldToMtrty" title="YTM%" width="85px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+            <Column field="duration" title="Duration To Maturity" width="160px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
             
             <Column field="yield" title="Current Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
             <Column field="moodyRating" menu={true} title="Moody Rating" width="150px" columnMenu={ColumnMenu} />
-            <Column field="sPRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
+            <Column field="spRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
             
           </Grid>
           </ExcelExport>   
@@ -387,7 +375,9 @@ const RightNameHeader = (props) => {
 <FormControlLabel control={<Checkbox name='chkShwMtrtyCall' defaultChecked onChange={ShowMaturityCallPut}/>} label="Duration to Maturity/Call" />
 </FormGroup>
  </GridToolbar>
-     <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="150px"  />
+     <Column field="accountNumber" menu={true} title="Account Number" columnMenu={ColumnMenu}  width="150px"  />
+     <Column field="accountName" menu={true} title="Account Name" columnMenu={ColumnMenu}  width="170px"  />
+     <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="120px"  />
      {/*<Column field="couponRate" menu={true} title="Coupon Rate" width="150px" />
      <Column field="maturityDt"  menu={true}  filter="date" title="Maturity Date" width="150px" />*/}
      <Column field="astShrtNm" menu={true}  title="Description" width="300px" columnMenu={ColumnMenu} />
@@ -396,12 +386,12 @@ const RightNameHeader = (props) => {
      <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
      <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
      
-     <Column field="yldCalPut" title="YTW%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
-     <Column field="calPutDuration" title="Duration To Call/Put" width="200px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+     <Column field="yldCalPut" title="YTW%" width="85px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+     <Column field="calPutDuration" title="Duration To Call/Put" width="160px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
      
      <Column field="yield" title="Current Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
      <Column field="moodyRating" menu={true} title="Moody Rating" width="150px" columnMenu={ColumnMenu} />
-     <Column field="sPRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
+     <Column field="spRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
      
 
    </Grid>

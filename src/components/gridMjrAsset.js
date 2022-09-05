@@ -22,7 +22,7 @@ import {
 } from "@progress/kendo-react-charts";
 import { formatNumber, formatDate  } from '@telerik/kendo-intl';
 const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
-    debugger;
+   
     //const labelContent = (e) => `${e.category}: \n  ${e.value}%`;
     const labelContent = (e) => `${e.value.toFixed(2)}`;
     // const labelContent = (e) => e.category;
@@ -31,9 +31,9 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
     const [mjrRadioStat, setMjrRadioStat] = useState('checked');
     const [updatedMnrDataNew, setUpdatedMnrDataNew] = useState(mnrData);
     const [updatedAssetDataNew, setUpdatedAssetDataNew] = useState(astData);
-    debugger;
+   
     const[changeSelect,setChangeSelect]=useState(JSON.parse(localStorage.getItem('changeSelect')));
-    debugger;
+    
     
     // useEffect(() => {
     //     debugger;
@@ -59,7 +59,7 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
 
     }
     const onRowClick = e => {
-        debugger;
+       
         var mjrAsetType = e.dataItem.mjrAstTypId;
         var mnrAstdata = Enumerable.from(mnrData).where(w => w.mjrAstTypId === mjrAsetType)
             .toArray();
@@ -105,6 +105,41 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
         setMjrPie(0);
         setMjrRadioStat('');
     }
+
+
+    const FormatLongNumber=({value})=> {
+       
+        if(value == 0) {
+          return 0;
+        }
+        else
+        {
+              // for testing
+            //value = Math.floor(Math.random()*1001);
+       
+            // hundreds
+            if(value <= 999){
+              return value;
+            }
+            // thousands
+            else if(value >= 1000 && value <= 999999){
+              return (value / 1000) + 'K';
+            }
+            // millions
+            else if(value >= 1000000 && value <= 999999999){
+              return (value / 1000000) + 'M';
+            }
+            // billions
+            else if(value >= 1000000000 && value <= 999999999999){
+              return (value / 1000000000) + 'B';
+            }
+            else
+              return value;
+        }
+      }
+
+
+
     if (loading) {
         return <Loading />
     }
@@ -181,7 +216,22 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
                                 ? <Chart style={{ height: "440px" }}>
                                     {/* <ChartTitle text="Major Asset Chart" /> */}
                                     <ChartLegend position="bottom" />
-
+                                    <ChartValueAxis>
+                                        <ChartValueAxisItem
+                                            // title={{
+                                            //     text: "Percentage",
+                                            // }}
+                                            min={0}
+                                           labels={{
+                                            visible: true,
+                                          
+                                           // rotation: 85,
+                                            //format: "d",
+                                           content:FormatLongNumber
+                                         
+                                        }}
+                                        />
+                                    </ChartValueAxis>
                                     <ChartSeries>
                                         <ChartSeriesItem
                                             type="pie"

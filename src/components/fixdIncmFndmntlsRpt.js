@@ -6,7 +6,7 @@ import SelectControl from './selectcontrol';
 import Loading from './loading';
 import Header  from './header';
 import FixdIncmFndmntlsGrid from './fixdIncmFndmntlsGrid';
-import "@progress/kendo-theme-material/dist/all.css";
+//import "@progress/kendo-theme-material/dist/all.css";
 
 const FixdIncmFndmntlsRpt = () => {
     const [FixedIncmFundmntlRptData, populateFixedIncmFundmntlRptData] = useState([]);

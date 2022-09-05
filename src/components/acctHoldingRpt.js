@@ -8,7 +8,7 @@ import Loading from './loading';
 import Header  from './header';
 import AcctHoldingGrid from './acctHoldingGrid';
 // import "@progress/kendo-theme-material/dist/all.css";
-import "@progress/kendo-theme-default/dist/all.css";
+//import "@progress/kendo-theme-default/dist/all.css";
  const AcctHoldingRpt = () => {
   
   const [AcctHoldingRptData, populateAcctHoldingRptData] = useState([]);
