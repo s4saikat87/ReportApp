@@ -72,7 +72,7 @@ const AcctHoldingGrid = ({data}) => {
     const total = data.reduce((acc, current) => acc + current[field], 0).toFixed(2);
     return (
       <td colSpan={props.colSpan} style={{textAlign:'right'}}>
-         {total}
+          {formatNumber(total, "##,#.00")}
       </td>
     );
   };
@@ -262,9 +262,9 @@ const AcctHoldingGrid = ({data}) => {
           >
             
             <Column field="branch" menu={true} title="Branch" width="150px" locked={true} columnMenu={ColumnMenu}/>
-            <Column field="accountType" menu={true} title="Account Type" width="150px" locked={true} columnMenu={ColumnMenu}/>
-            <Column field="accountName" menu={true} title="Account Name" width="150px"  locked={true} columnMenu={ColumnMenu}/>
-            <Column field="asset" menu={true} title="Asset Description" width="150px" columnMenu={ColumnMenu}/>
+            <Column field="accountType" menu={true} title="Acct. Type" width="150px" locked={true} columnMenu={ColumnMenu}/>
+            <Column field="accountName" menu={true} title="Account#" width="150px"  locked={true} columnMenu={ColumnMenu}/>
+            <Column field="asset" menu={true} title="Description" width="150px" columnMenu={ColumnMenu}/>
             <Column field="tckrSymbl" menu={true} title="Ticker" width="150px" columnMenu={ColumnMenu}/>
             <Column field="cusip" menu={true} title="Cusip" width="150px" columnMenu={ColumnMenu}/>
             <Column field="pmrDesc" menu={true} title="PMR" width="150px" columnMenu={ColumnMenu}/>

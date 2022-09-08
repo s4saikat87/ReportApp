@@ -30,6 +30,7 @@ import PageNotFound  from './pageNotFound';
 import FixdIncmFndmntlsRpt from './fixdIncmFndmntlsRpt'
 import AccountProfile from './accountProfile';
 import PortfolioHoldingsRpt from './portfoliHoldingsRpt';
+import FixdIncmMaturityLadrRpt from './fixdIncmMtrtyLadrRpt';
 
 function Login() {
       return (
@@ -42,6 +43,7 @@ function Login() {
               <Route path='/fixdIncmFndmntlsRpt' element={<FixdIncmFndmntlsRpt />}/>
               <Route path='/accountProfile' element={<AccountProfile />}/>
               <Route path='/portfoliHoldingsRpt' element={<PortfolioHoldingsRpt />}/>
+              <Route path='/fixdIncmMtrtyLadrRpt' element={<FixdIncmMaturityLadrRpt />}/>
               <Route path='*' element={<PageNotFound />}/>
               
               

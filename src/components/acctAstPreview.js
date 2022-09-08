@@ -35,7 +35,8 @@ import { orderBy } from "@progress/kendo-data-query";
 import Loading from './loading';
 import { FaSyncAlt } from 'react-icons/fa';
 import Enumerable from 'linq';
-const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData, selModelId, selDrdAcct, loading }) => {
+import { parseJSON } from 'jquery';
+const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selModelId, selDrdAcct, loading }) => {
 
     const [dataAcct, setDataAcct] = React.useState(data.slice());
     const [astModelData, setAstMdlData] = useState(astVsModelData);
@@ -66,6 +67,9 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
     const [invMixVal, setInvMixVal] = useState(false);
     const [chartType,setChartType]=useState("pie");
     const[chartTypeLabel,setChartTypeLabel]=useState("");
+    debugger;
+    const [showInvMix,setShowInvMix]=useState(localStorage.getItem('invMixVal'));
+
     const RightNameHeader = (props) => {
         return (
             <a className="k-link" style={{
@@ -145,7 +149,7 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
     const handleInvMix = (e) => {
        
         setInvMixVal(e.target.checked)
-        localStorage.setItem('invMixVal',e.target.checked);
+        localStorage.setItem("invMix",e.target.checked);
         getChangeInfo(selChangeModel.modelId)
     }
 
@@ -323,7 +327,11 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
 
                             <div className='row my-1'>
                             <div className='col text-left mx-2 my-1'>
-                                <DropDownList
+                                {
+                                    showInvMix?
+                                    selChangeModel.modelNm:<></>
+                                }
+                                {/* <DropDownList
                                     style={{
                                         width: "320px",
                                     }}
@@ -337,15 +345,19 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
                                     value={selChangeModel}
                                     onChange={handleChangeAllocModel}
 
-                                />
+                                /> */}
                             </div>
                             </div>
                             <div className='row my-1 mx-2'>
                             <div className='form-check' >
 
+                               {
+                                     showInvMix==="true"?<input className='form-check-input' type='checkbox' name='chkInvTrgMix' checked='true'  disabled ></input>
+                                                   :<input className='form-check-input' type='checkbox' name='chkInvTrgMix' checked='false' disabled></input> 
+                               }
+                               <label className='form-check-label'>Compare against Investment Target Mix </label>  
+                                
                                
-                                <input className='form-check-input' type='checkbox' name='chkInvTrgMix' checked={invMixVal} onChange={handleInvMix} ></input>
-                                <label className='form-check-label'>Compare against Investment Target Mix </label>  
                             
                         </div>
                         </div>
@@ -460,7 +472,7 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
 
                             <div className="w-100">
 
-                                <Grid style={{ height: "240px" }}
+                                <Grid style={{ height: "400px" }}
                                     data={astModelData}
                                 //sortable={true}
                                 // sort={sort}
@@ -496,7 +508,7 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
 
                             <div className="w-100">
 
-                                <Grid style={{ height: "480px" }}
+                                <Grid style={{ height: "750px" }}
                                     data={topHoldingsData}
                                 //sortable={true}
                                 // sort={sort}
@@ -533,4 +545,4 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
         )
 }
 
-export default AccountProfAssetClass
+export default AcctAstPreview

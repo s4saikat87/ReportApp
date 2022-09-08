@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useRef  } from 'react';
 import axios from 'axios';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import SelectControl from './selectcontrol';
@@ -11,6 +11,7 @@ import {
   MultiSelect,
   DropDownTree,
 } from "@progress/kendo-react-dropdowns";
+import { GridPDFExport, PDFExport,savePDF  } from "@progress/kendo-react-pdf";
 import { filterBy } from '@progress/kendo-data-query';
 import Loading from './loading';
 import Header from './header';
@@ -21,6 +22,7 @@ import AcctHoldingGrid from './acctHoldingGrid';
 //import "@progress/kendo-theme-material/dist/all.css";
 //import "@progress/kendo-theme-default/dist/all.css";
 import AccountProfAssetClass from './accountProfAssetClass';
+import AcctAstPreview from './acctAstPreview';
 const AccountProfile = () => {
   const [acctProfileRptData, setAcctProfileRptData] = useState([]);
   const [acctPortVsModelData, setAcctPortVsModelData] = useState([]);
@@ -33,6 +35,7 @@ const[acctUpdateStat,setAcctUpdateStat]=useState(0);
 
   const [selAcct, SetselAcct] = useState(JSON.parse(localStorage.getItem('acctData'))[0]);
   const [selectedAcct,setSelectedAcct]=useState(0);
+  const [preview,SetPreview]=useState(false);
   useEffect(() => {
 
     const fetchData = async () => {
@@ -88,7 +91,7 @@ const[acctUpdateStat,setAcctUpdateStat]=useState(0);
         //  populateAcctHoldingRptData(rowData.ocAcctHolding)
       
         const rowData = response.data;
-        debugger;
+        
        setModelData(rowData.model) ;
        // setLoading(false);
         let modelId=rowData.acctMdl[0].modelId;
@@ -168,6 +171,7 @@ const[acctUpdateStat,setAcctUpdateStat]=useState(0);
     }
     else {
       SetselAcct(event.target.value);
+      localStorage.setItem('changeInvMix',JSON.stringify(event.target.value) );
       GetAcctProfileData();
       //GetUpdatedAccountProfile(event.target.value.acctId);
     }
@@ -187,12 +191,33 @@ const[acctUpdateStat,setAcctUpdateStat]=useState(0);
     setSelAcctData(filterData(event.filter));
   };
 
+  const container = useRef(null);
+
+  const exportPDFWithMethod = () => {
+    
+    let element = container.current || document.body;
+    savePDF(element, {
+      paperSize: "auto",
+      margin: 40,
+      fileName: `Report for ${new Date().getFullYear()}`,
+    });
+  };
+
+  const handlePreview=()=>{
+    SetPreview(true);
+
+  }
+
+  const handlePage=()=>{
+    SetPreview(false);
+  }
+
 if (loading) {
   
         return(
         <>
          <Header />
-         <div className='my-1'>
+         <div  className='my-1'>
 
       <div className="rounded"></div>
 
@@ -213,9 +238,9 @@ if (loading) {
             onFilterChange={filterChange}
           />
         </div>
-        <div className='col-md-2'>
-          <button className='btn btn-sm btn-outline-secondary px-2'><FaPrint></FaPrint> &nbsp; Export to PDF</button>
-        </div>
+        {/* <div className='col-md-2'>
+          <button className='btn btn-sm btn-outline-secondary px-2' ><FaPrint></FaPrint> &nbsp; Export to PDF</button>
+        </div> */}
         </div>
         
 
@@ -269,6 +294,7 @@ if (loading) {
   return (
     <div>
       <Header />
+      <div ref={container}>
       <div className='row d-flex justify-content-start align-items-center py-2 mt-1 px-2 mx-2 bg-light shadow-sm rounded'>
         <div className='subheader text-end col-md-1'> &nbsp; Account(s):</div>
         <div className='col-md-4 text-start'>
@@ -285,11 +311,23 @@ if (loading) {
             onFilterChange={filterChange}
           />
         </div>
+        {
+           preview?<div className='col-md-2'>
+           <button className='btn btn-sm btn-outline-secondary px-2' onClick={exportPDFWithMethod}><FaPrint></FaPrint> &nbsp; Export to PDF</button>
+         </div>
+         :<></>
+
+        }
+        
         <div className='col-md-2'>
-          <button className='btn btn-sm btn-outline-secondary px-2'><FaPrint></FaPrint> &nbsp; Export to PDF</button>
+          {
+            !preview? <button className='btn btn-sm btn-outline-secondary px-2' onClick={handlePreview} ><FaPrint></FaPrint> &nbsp; Preview</button>
+            : <button className='btn btn-sm btn-outline-secondary px-2' onClick={handlePage} ><FaPrint></FaPrint> &nbsp; Page</button>
+          }
+          
         </div>
 
-        <div className='row d-flex justify-content-center align-item-center px-2 my-2'>
+        <div  className='row d-flex justify-content-center align-item-center px-2 my-2'>
 
 
           
@@ -319,10 +357,15 @@ if (loading) {
           </div>
       </div>
             {
-              acctUpdateStat===1?<AccountProfAssetClass data={acctProfileRptData} astVsModelData={acctPortVsModelData} topHoldData={topHoldingData} allmodelData={modelData} selModelId={modelId} selDrdAcct={selectedAcct} loading={loading}/>:<></>
+              acctUpdateStat===1 && !preview?
+              <AccountProfAssetClass data={acctProfileRptData} astVsModelData={acctPortVsModelData} topHoldData={topHoldingData} allmodelData={modelData} selModelId={modelId} selDrdAcct={selectedAcct} loading={loading}/>
+              :acctUpdateStat===1 && preview?
+              <AcctAstPreview data={acctProfileRptData} astVsModelData={acctPortVsModelData} topHoldData={topHoldingData} allmodelData={modelData} selModelId={modelId} selDrdAcct={selectedAcct} loading={loading}/>
+              :<></>
               
             }
       
+    </div>
     </div>
   )
 }

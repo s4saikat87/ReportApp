@@ -32,12 +32,12 @@ const GridChartMnrAsset = ({ data, astData }) => {
     
     const [assetFlag, setAssetFlag] = useState(JSON.parse(localStorage.getItem('changeSelect')));
     const chartDefaultV4Colors = [
-        "#0275d8",
-    "#5bc0de",
-    "#5cb85c",
-    "#f0ad4e",
-    "#e67d4a",
-    "#d9534f",
+        "#00876c",
+    "#6e9b75",
+    "#a5af90",
+    "#cbc6b9",
+    "#c9a47e",
+    "#d07958",
       ];
     const handleSetBarMnr = () => {
         setMnrArea(0);
@@ -209,7 +209,7 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                 mnrBar === 1
                                     ?
 
-                                    <Chart style={{ height: "500px" }}>
+                                    <Chart seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
                                         {/* <ChartTitle text="Major Asset Chart" /> */}
                                         <ChartLegend position="bottom" />
 
@@ -255,7 +255,7 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                         </ChartSeries>
                                     </Chart>
                                     : mnrArea === 1 ?
-                                        <Chart   style={{ height: "500px" }}>
+                                        <Chart seriesColors={chartDefaultV4Colors}  style={{ height: "500px" }}>
                                             {/* <ChartTitle text="Major Asset Chart" /> */}
                                             <ChartLegend position="bottom" />
                                             <ChartCategoryAxis>
@@ -284,7 +284,7 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                             </ChartSeries>
                                         </Chart>
                                         :
-                                        <Chart style={{ height: "500px" }}>
+                                        <Chart seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
                                             {/* <ChartTitle text="Major Asset Chart" /> */}
                                             <ChartLegend position="bottom" />
                                             <ChartCategoryAxis>

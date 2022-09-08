@@ -107,8 +107,8 @@ const PortfolioHoldingsGrid = ({data}) => {
       const field = props.field || "";
       const total = data.reduce((acc, current) => acc + current[field], 0).toFixed(2);
       return (
-        <td colSpan={props.colSpan} style={{textAlign:'right'}}>
-           {total}
+        <td colSpan={props.colSpan} style={{textAlign:'right'} } cell={NumberCell} >
+          {formatNumber(total, "##,#.00")}
         </td>
       );
     };
@@ -254,18 +254,18 @@ const PortfolioHoldingsGrid = ({data}) => {
         }
         // thousands
         else if(value >= 1000 && value <= 999999){
-          return (value / 1000) + 'K';
+          return (value / 1000).toFixed(2) + 'K';
         }
         // millions
         else if(value >= 1000000 && value <= 999999999){
-          return (value / 1000000) + 'M';
+          return (value / 1000000).toFixed(2) + 'M';
         }
         // billions
         else if(value >= 1000000000 && value <= 999999999999){
-          return (value / 1000000000) + 'B';
+          return (value / 1000000000).toFixed(2) + 'B';
         }
         else
-          return value;
+          return value.toFixed(2);
     }
   };
     return (
@@ -324,26 +324,26 @@ const PortfolioHoldingsGrid = ({data}) => {
                   cellRender={cellRender}
                 >
                 <Column field="invstmntObj" menu={true} title="Inv. Objective" width="150px" locked={true} columnMenu={ColumnMenu}/>
-                <Column field="accountType" menu={true} title="Account Type" width="150px" locked={true} columnMenu={ColumnMenu}/>
+                <Column field="accountType" menu={true} title="Acct Type" width="150px" locked={true} columnMenu={ColumnMenu}/>
                 <Column field="account" menu={true} title="Account#" width="150px" locked={true} columnMenu={ColumnMenu}/>
                 <Column field="tckerCusip" title="Ticker/Cusip " width="150px" locked={true} columnMenu={ColumnMenu}/>
                 
-                <Column field="assetShrtNm" title="Asst Short Name" width="150px" columnMenu={ColumnMenu}/>
+                <Column field="assetShrtNm" title="Description" width="150px" columnMenu={ColumnMenu}/>
                 
                 <Column field="units" title="Units" width="150px" columnMenu={ColumnMenu} cell={NumberCell}  format="{0:n2}"/>
                 <Column field="txcstAmt" title="Cost" width="150px" columnMenu={ColumnMenu} cell={NumberCell} format="{0:n2}"/>
                 <Column field="price" title="Price" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="totMarket" title="Market" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
+                <Column field="totMarket" title="Market" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}" filter="numeric"/>
                 <Column field="gainLoss" title="Gain Loss" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
                 <Column field="income" title="Income" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/> 
                 <Column field="yield" title="Yield" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:p2}"/>
                 
                 <Column field="p1CashBlncAmt" title="Principal" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="p2P3CashBlncAmt" title="Income Cash" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="unExecCashAmt" title="UnExecCashAmt" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
+                <Column field="p2P3CashBlncAmt" title="Invested Income" width="180px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
+                <Column field="unExecCashAmt" title="UnEx. Cash" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
                 <Column field="tradeCash" title="Trade Cash" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="excldCashAmt" title="ExcldCashAmt" width="150px" columnMenu={ColumnMenu} cell={NumberCell}  format="{0:n2}"/>
-                <Column field="equityPercent" title="Equity Percent" width="150px" columnMenu={ColumnMenu} cell={NumberCell}  format="{0:n2}"/>
+                <Column field="excldCashAmt" title="Excld Cash" width="150px" columnMenu={ColumnMenu} cell={NumberCell}  format="{0:n2}"/>
+                <Column field="equityPercent" title="Equity %" width="150px" columnMenu={ColumnMenu} cell={NumberCell}  format="{0:n2}"/>
 
                 
                 </Grid>
@@ -353,101 +353,104 @@ const PortfolioHoldingsGrid = ({data}) => {
             <div className='card-header row d-flex justify-content-between align-items-center my-2'>
   
               <div className='col'>
-                <p className='tableheader h6'>Portfolio Holdings - Major Asset</p>
+                <p className='tableheader h6'>Portfolio Holdings - By Major Asset</p>
               </div>
               <div className='col'></div>
   
 
             </div>
-            <Chart seriesColors={chartDefaultV4Colors} style={{ height: "440px" }}
-              onPlotAreaClick={(e) => 
-                console.log(e)
-              
-              }
-              
-            >
-              
-              {/* <ChartTitle text="Major Asset Chart" /> */}
-                <ChartLegend position="bottom" />
-                <ChartValueAxis>
-                                        <ChartValueAxisItem
-                                            // title={{
-                                            //     text: "Percentage",
-                                            // }}
-                                            min={0}
-                                           labels={{
-                                            visible: true,
-                                          
-                                           // rotation: 85,
-                                            //format: "d",
-                                           content:FormatLongNumber
-                                         
-                                        }}
-                                        />
-                                    </ChartValueAxis>
-                  <ChartSeries>
-                      <ChartSeriesItem
-                          type="column"
-                          data={data}
-                          field="totMarket"
-                          categoryField="majorAssetType"
-                          aggregate='sum'
-                          labels={{
+            <div className="card-body">
+            <div className="mx-1 my-1 py-1">
+              <Chart seriesColors={chartDefaultV4Colors} style={{ height: "440px" }}
+                
+                
+              >
+                
+                {/* <ChartTitle text="Major Asset Chart" /> */}
+                  <ChartLegend position="bottom" />
+                  <ChartValueAxis>
+                    <ChartValueAxisItem
+                                              
+                        min={0}
+                        labels={{
                           visible: true,
-                          content: labelContent1,
-                          }}
-                        />
-                    </ChartSeries>
-              </Chart>
+                                            
+                            // rotation: 85,
+                            //format: "d",
+                            content:FormatLongNumber
+                                          
+                            }}
+                      />
+                    </ChartValueAxis>
+                    <ChartSeries>
+                        <ChartSeriesItem
+                            type="column"
+                            data={data}
+                            field="totMarket"
+                            categoryField="majorAssetType"
+                            aggregate='sum'
+                            labels={{
+                            visible: true,
+                            content: FormatLongNumber,
+                            }}
+                          />
+                      </ChartSeries>
+                </Chart>
+              </div>
+              </div>
               <div className='card-header row d-flex justify-content-between align-items-center my-2'>
   
                 <div className='col'>
-                <p className='tableheader h6'>Portfolio Holdings - Minor Asset</p>
+                <p className='tableheader h6'>Portfolio Holdings - By Minor Asset</p>
               </div>
               <div className='col'></div>
-              <Chart seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
-                                        {/* <ChartTitle text="Major Asset Chart" /> */}
-                <ChartLegend position="bottom" />
+              </div>
+              <div className="card-body">
+            <div className="mx-1 my-1 py-1">
+                <Chart seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
+                                          {/* <ChartTitle text="Major Asset Chart" /> */}
+                  <ChartLegend position="bottom" />
 
-                  <ChartValueAxis>
-                    <ChartValueAxisItem
-                                            
-                      min={0}
-                      labels={{
-                      visible: true,
-                                          
-                                           
-                      content:FormatLongNumber
-                                           
-                      }}
-                     />
-                    </ChartValueAxis>
-                    <ChartCategoryAxis>
-                      <ChartCategoryAxisItem
+                    <ChartValueAxis>
+                      <ChartValueAxisItem
+                                              
+                        min={0}
                         labels={{
-                          visible: true,
-                          rotation: 85,
-                          format: "d",
+                        visible: true,
+                                            
+                                            
+                        content:FormatLongNumber
+                                            
                         }}
-                        //  categories={categoryAxis} 
                       />
-                    </ChartCategoryAxis>
-                    <ChartTooltip render={defaultTooltipRender} />
-                    <ChartSeries>
-                      <ChartSeriesItem
-                          type="column"
-                          data={data}
-                          field="marketPercent"
-                          categoryField="minorAssetType"
-
+                      </ChartValueAxis>
+                      <ChartCategoryAxis>
+                        <ChartCategoryAxisItem
                           labels={{
-                            visible: false,
-                            content: labelContent,
+                            visible: true,
+                            rotation: 85,
+                            format: "d",
                           }}
+                          //  categories={categoryAxis} 
                         />
-                      </ChartSeries>
-                </Chart>
-               
+                      </ChartCategoryAxis>
+                      <ChartTooltip render={defaultTooltipRender} />
+                      <ChartSeries>
+                        <ChartSeriesItem
+                            type="column"
+                            data={data}
+                            field="totMarket"
+                            categoryField="minorAssetType"
+
+                            labels={{
+                              visible: false,
+                              content: labelContent,
+                            }}
+                          />
+                        </ChartSeries>
+                  </Chart>
+                </div>
+               </div>
                 {/* <div className='col'>
                   <p className='tableheader h6'>Portfolio Holdings - Asset</p>
                 </div>
@@ -485,7 +488,7 @@ const PortfolioHoldingsGrid = ({data}) => {
               
   
 
-        </div>
+        
       </div>
     )
   }

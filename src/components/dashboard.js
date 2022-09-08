@@ -114,7 +114,7 @@ const GetADVAccountProfile = async (roleId,cntctId) => {
           //  console.log(response);
 
           const rowData = response.data;
-         
+         debugger;
         
           setAccountGet(rowData.t1);
           localStorage.setItem('acctData', JSON.stringify(rowData.t1));

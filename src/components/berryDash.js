@@ -1,7 +1,7 @@
 import React from 'react'
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import SelectControl from './selectcontrol';
-
+import Test from './test';
 
 import { FaSyncAlt } from 'react-icons/fa';
 
@@ -11,7 +11,7 @@ const BerryDash = ({data,mjrData,mnrData,astData}) => {
     <div>
 
 
-
+{/* <Test></Test> */}
       
 <SelectControl data={data} mjrAllData={mjrData} mnrAllData={mnrData} assetAllData={astData} />
 

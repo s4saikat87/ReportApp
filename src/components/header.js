@@ -62,6 +62,10 @@ const Header = () => {
     const openAccountProfilePage=()=>{
       navigate("/accountProfile");
     }
+    const openFixdIncmMaturityLadderRpt=()=>{
+     
+      navigate("/fixdIncmMtrtyLadrRpt");
+    }
     const signOut=()=>{
  
         navigate("/");
@@ -98,7 +102,7 @@ const Header = () => {
             <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown05">
               <li><a className="dropdown-item" href="#">Portfolio Overview</a></li>
               <hr />
-              <li><a className="dropdown-item" href="#">Maturity Ladder</a></li>
+              <li><a className="dropdown-item" onClick={openFixdIncmMaturityLadderRpt}>Maturity Ladder</a></li>
               <li><a className="dropdown-item" onClick={openFixdIncmFndmntlsRpt}>Fundementals</a></li>   
             </ul>
           </li>

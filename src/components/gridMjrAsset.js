@@ -33,7 +33,14 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
     const [updatedAssetDataNew, setUpdatedAssetDataNew] = useState(astData);
    
     const[changeSelect,setChangeSelect]=useState(JSON.parse(localStorage.getItem('changeSelect')));
-    
+    const chartDefaultV4Colors = [
+        "#00876c",
+    "#6e9b75",
+    "#a5af90",
+    "#cbc6b9",
+    "#c9a47e",
+    "#d07958",
+      ];
     
     // useEffect(() => {
     //     debugger;
@@ -213,7 +220,7 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
                         {
 
                             mjrPie === 1
-                                ? <Chart style={{ height: "440px" }}>
+                                ? <Chart seriesColors={chartDefaultV4Colors} style={{ height: "440px" }}>
                                     {/* <ChartTitle text="Major Asset Chart" /> */}
                                     <ChartLegend position="bottom" />
                                     <ChartValueAxis>
@@ -246,7 +253,7 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
                                         />
                                     </ChartSeries>
                                 </Chart>
-                                : <Chart>
+                                : <Chart seriesColors={chartDefaultV4Colors}>
                                     {/* <ChartTitle text="Major Asset Chart" /> */}
                                     <ChartLegend position="bottom" />
                                     <ChartCategoryAxis>
