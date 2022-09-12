@@ -138,14 +138,18 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
     const handleChangeAllocModel = (e) => {
         setSelChangeModel(e.target.value);
         // e.preventDefault();
-        getChangeInfo(selChangeModel.modelId)
+        localStorage.setItem('StatusInv','false');
+        debugger;
+        localStorage.setItem('ModelNm',e.target.value.modelNm);
+        
+        getChangeInfo(e.target.value.modelId)
 
     }
 
     const handleInvMix = (e) => {
        
         setInvMixVal(e.target.checked)
-        localStorage.setItem('invMixVal',e.target.checked);
+        localStorage.setItem('StatusInv',e.target.checked);
         getChangeInfo(selChangeModel.modelId)
     }
 
@@ -218,7 +222,9 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
         // Good!
         debugger;
         setSelChangeModel(initialModelDropdown);
+        localStorage.setItem('ModelNm',initialModelDropdown.modelNm);
         setLoadingChild(false);
+        localStorage.setItem('StatusInv','false');
        // setChartTypeLabel(labelContent1);
         // Side-effect!
     }, []);

@@ -35,7 +35,7 @@ import { orderBy } from "@progress/kendo-data-query";
 import Loading from './loading';
 import { FaSyncAlt } from 'react-icons/fa';
 import Enumerable from 'linq';
-import { parseJSON } from 'jquery';
+
 const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selModelId, selDrdAcct, loading }) => {
 
     const [dataAcct, setDataAcct] = React.useState(data.slice());
@@ -68,7 +68,8 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
     const [chartType,setChartType]=useState("pie");
     const[chartTypeLabel,setChartTypeLabel]=useState("");
     debugger;
-    const [showInvMix,setShowInvMix]=useState(localStorage.getItem('invMixVal'));
+    const [showInvMix,setShowInvMix]=useState(localStorage.getItem('StatusInv'));
+    const[showModelNm,setShowModelName]=useState(localStorage.getItem('ModelNm'));
 
     const RightNameHeader = (props) => {
         return (
@@ -328,8 +329,8 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
                             <div className='row my-1'>
                             <div className='col text-left mx-2 my-1'>
                                 {
-                                    showInvMix?
-                                    selChangeModel.modelNm:<></>
+                                    showInvMix==='false'?
+                               <> Model Name :  {showModelNm}</>  :<></>
                                 }
                                 {/* <DropDownList
                                     style={{
@@ -352,8 +353,8 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
                             <div className='form-check' >
 
                                {
-                                     showInvMix==="true"?<input className='form-check-input' type='checkbox' name='chkInvTrgMix' checked='true'  disabled ></input>
-                                                   :<input className='form-check-input' type='checkbox' name='chkInvTrgMix' checked='false' disabled></input> 
+                                     showInvMix==='true'?<input className='form-check-input' type='checkbox' name='chkInvTrgMix' checked='true'  disabled ></input>
+                                                   :<input className='form-check-input' type='checkbox' name='chkInvTrgMix'  disabled></input> 
                                }
                                <label className='form-check-label'>Compare against Investment Target Mix </label>  
                                 

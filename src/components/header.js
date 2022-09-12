@@ -66,6 +66,14 @@ const Header = () => {
      
       navigate("/fixdIncmMtrtyLadrRpt");
     }
+    const openAccountSectBenchRpt=()=>{
+     
+      navigate("/AcctSectBenchRpt");
+    }
+
+    const openReportDesignerRpt=()=>{
+      navigate("/ReportDesignerRpt");
+    }
     const signOut=()=>{
  
         navigate("/");
@@ -91,8 +99,8 @@ const Header = () => {
               <li><a className="dropdown-item" onClick={openAccountProfilePage}>Profile</a></li>
               <li><a className="dropdown-item" onClick={openAcctTransactionRpt}>Transaction</a></li>
               <li><a className="dropdown-item"onClick={openAcctHoldingRpt}>Holding</a></li>
+              <li><a className="dropdown-item"onClick={openAccountSectBenchRpt}>Sectors Comparison</a></li>
               <hr />
-              <li><a className="dropdown-item" href="#">Sector Comparison</a></li>
               <li><a className="dropdown-item" href="#">Performance Summary</a></li>    
             </ul>
           </li>
@@ -108,7 +116,7 @@ const Header = () => {
           </li>
 
           <li className='nav-item'><a className='nav-link' onClick={openPortfolioHoldingsRpt}>Portfolio Holdings</a></li>
-
+          <li className='nav-item'><a className='nav-link' onClick={openReportDesignerRpt}>Report Designer</a></li>
           </ul>
 
           <div className="nav-item dropdown dropdown-menu-end">

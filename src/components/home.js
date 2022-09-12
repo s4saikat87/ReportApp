@@ -72,11 +72,21 @@ const Home = () => {
 
    
     var { uname, pass } = document.forms[0];
+
+    if (uname.value == '') {
+      setErrorMessages({ name: "uname", message: 'Username cant be blank.' });
+  } 
+  else if(pass.value== '')
+  {
+      setErrorMessages({ name: "pass", message: 'Password cant be blank.' });
+  }
+  else{
+
     let Username = uname.value;
-    //let Username = CryptoJS.AES.encrypt(JSON.stringify(Username), "FiTe11OAu20p164").toString();
+    
 
     let Password = pass.value;
-    //let Password = CryptoJS.AES.encrypt(JSON.stringify(Password), "FiTe11OAu20p164").toString();
+    
     let IsSso = '0';
     const data = { Username, Password };
     
@@ -104,6 +114,10 @@ const Home = () => {
         // debugger;
         console.log("my error is " + error);
       })
+
+  }
+
+    
 
   }
 
@@ -146,40 +160,40 @@ const Home = () => {
     }
     else {
       debugger;
-      let tokenM = user.accessToken;
+      let tokenM = user.accessToken+'==MS';
       localStorage.setItem('tokenMicrosoft', JSON.stringify(tokenM));
-      let email = user.email;
+      
+     // let email = user.email;
       //let Username=CryptoJS.AES.encrypt(JSON.stringify(email), process.env.REACT_APP_SEC_KEY).toString();
-      let Password = process.env.REACT_APP_PASS;
-      let IsSso = '1';
-      const postData = { email, Password, IsSso };
+      let Username=user.email;
+      let Password =tokenM; //process.env.REACT_APP_PASS;
+     
+      const data = { email, Password};
 
-      // axios.post('/login', postData)
-      // .then((response) => {
+      axios.post('/login', data)
+      .then((response) => {
+        debugger;
+        console.log(response);
+       
+        if (response.statusText === '') {
 
-      //   //  console.log(response);
+          let token = response.data;
 
-      //   if (response.statusText === 'OK') {
-      //     debugger;
-      //     let token = response.data;
-
-      //     const postData = { token };
-      //  //   navigate("/dashboard", { state: postData });
-
-
-      //     // navigate("/dashboard",{state:1});
-      //   }
+          const postData = { token };
+          localStorage.setItem('token', JSON.stringify(token));
+          localStorage.setItem('email', JSON.stringify(Username));
+          navigate("/dashboard", { state: postData });
 
 
-      // })
-      // .catch((error) => {
-      //   // debugger;
-      //   console.log("my error is " + error);
-      // })
-      //localStorage.setItem('email', email);
-      // navigate("/dashboard", { state: postData });
-      navigate("/dashboard", { state: postData });
-      // authorizeandRedirect();
+          // navigate("/dashboard",{state:1});
+        }
+
+
+      })
+      .catch((error) => {
+        // debugger;
+        console.log("my error is " + error);
+      })
     }
   }
 
@@ -230,8 +244,14 @@ const Home = () => {
                       variant="outlined" label='Username' size="small"
 
                     ></TextField>
-                    {renderErrorMessage("uname")}
+                    
+
+                    
                   </div>
+                  <div className='row mb-1 text-md'>
+
+                    {renderErrorMessage("uname")}
+                    </div>
 
                 </div>
                 <div className="input-container">
@@ -246,8 +266,13 @@ const Home = () => {
                     ></TextField>
 
                     {/* <input className='form-control' type="password" name="pass" required /> */}
-                    {renderErrorMessage("pass")}
+                    
                   </div>
+
+                  <div className='row mb-1 text-md'>
+
+                  {renderErrorMessage("pass")}
+                    </div>
                 </div>
                 <div className="button-container pt-2">
 

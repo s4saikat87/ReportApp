@@ -117,6 +117,14 @@ const FixdIncmMaturityLadrGrd = ({data, callDetails, matVsCallPut}) => {
       </td>
     );
   }; 
+  const ftrText = (props) => {
+    
+    return (
+      <td colSpan={2} style={{textAlign:"left"}}>
+        Total Fixed Income Portfolio
+      </td>
+    );
+  };
 
   
   const [row, setRow] = useState(data);
@@ -302,7 +310,7 @@ const RightNameHeader = (props) => {
       if(cellProps.field==="accountNumber")
     {
       return (
-        <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+        <td aria-colindex={cellProps.columnIndex} colSpan={2} role={"gridcell"}>
           Total Fixed Income Portfolio
         </td>
     );
@@ -341,8 +349,8 @@ const RightNameHeader = (props) => {
     data: resultState.data,
     collapsedIds: collapsedState,
   });
-  const defaultTooltipRender = ({ point }) => `${point.value.toFixed(2)}`;
-  const labelContent = (e) => `${e.value.toFixed(2)}`;
+  const defaultTooltipRender = ({ point }) => `${formatNumber(point.value, "##,#.00")}`;
+  const labelContent = (e) => `${formatNumber(e.value, "##,#.00")}`;
 
   const onRowClick = e => {
     debugger;
@@ -363,6 +371,37 @@ const RightNameHeader = (props) => {
     //console.log( Data);
 
 };
+
+const FormatLongNumber=({value})=> {
+       
+  if(value == 0) {
+    return 0;
+  }
+  else
+  {
+        // for testing
+      //value = Math.floor(Math.random()*1001);
+ 
+      // hundreds
+      if(value <= 999){
+        return value;
+      }
+      // thousands
+      else if(value >= 1000 && value <= 999999){
+        return (value / 1000) + 'K';
+      }
+      // millions
+      else if(value >= 1000000 && value <= 999999999){
+        return (value / 1000000) + 'M';
+      }
+      // billions
+      else if(value >= 1000000000 && value <= 999999999999){
+        return (value / 1000000000) + 'B';
+      }
+      else
+        return value;
+  }
+}
 
   return (
     
@@ -394,6 +433,8 @@ const RightNameHeader = (props) => {
             ref={_grid}
            // total={total}
            // filterable={true}
+           resizable={true}
+           reorderable={true}
            onDataStateChange={onDataStateChange}
            {...dataState}
            onExpandChange={onExpandChange}
@@ -412,14 +453,14 @@ const RightNameHeader = (props) => {
       <FormControlLabel control={<Checkbox name='chkShwMtrtyCall' onChange={ShowCallPutDetails}/>} label="Show Call Details" />
     </FormGroup>
         </GridToolbar>
-            <Column field="accountNumber" menu={true} title="Account Number" columnMenu={ColumnMenu}  width="150px"  />
+            <Column field="accountNumber" menu={true} title="Account Number" columnMenu={ColumnMenu}  width="150px"  footerCell={ftrText} />
             <Column field="accountName" menu={true} title="Account Name" columnMenu={ColumnMenu}  width="170px"  />
             <Column field="mtrtyYr" menu={true}  title="Description(Based On Maturity Date)" width="300px" columnMenu={ColumnMenu} />
             
-            <Column field="shares" title="Par Value" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  filterable={false}/>
-            <Column field="market" title="Market Value" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} headerCell={RightNameHeader}   filterable={false}/>
-            <Column field="income" title="Income" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} headerCell={RightNameHeader}  filterable={false}/>
-            <Column field="yield" title="Yield%" width="120px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}   filterable={false} />
+            <Column field="shares" title="Par Value" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  filterable={false} footerCell={totalSum}/>
+            <Column field="market" title="Market Value" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} headerCell={RightNameHeader}   filterable={false} footerCell={totalSum}/>
+            <Column field="income" title="Income" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} headerCell={RightNameHeader}  filterable={false} footerCell={totalSum}/>
+            <Column field="yield" title="Yield%" width="120px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}   filterable={false} footerCell={avgYield}/>
             <Column field="marketPercent" title="Percent" width="120px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  filterable={false} />
                         
           </Grid>
@@ -439,6 +480,22 @@ const RightNameHeader = (props) => {
                                             />
                                         </ChartCategoryAxis>
                                         <ChartTooltip render={defaultTooltipRender} />
+                                        <ChartValueAxis>
+                                        <ChartValueAxisItem
+                                            // title={{
+                                            //     text: "Percentage",
+                                            // }}
+                                            min={0}
+                                           labels={{
+                                            visible: true,
+                                          
+                                           // rotation: 85,
+                                            //format: "d",
+                                           content:FormatLongNumber
+                                         
+                                        }}
+                                        />
+                                    </ChartValueAxis>
                                         <ChartSeries>
                                             <ChartSeriesItem
                                                 type="column"
@@ -476,6 +533,22 @@ const RightNameHeader = (props) => {
                                             />
                                         </ChartCategoryAxis>
                                         <ChartTooltip render={defaultTooltipRender} />
+                                        <ChartValueAxis>
+                                        <ChartValueAxisItem
+                                            // title={{
+                                            //     text: "Percentage",
+                                            // }}
+                                            min={0}
+                                           labels={{
+                                            visible: true,
+                                          
+                                           // rotation: 85,
+                                            //format: "d",
+                                           content:FormatLongNumber
+                                         
+                                        }}
+                                        />
+                                    </ChartValueAxis>
                                         <ChartSeries>
                                             <ChartSeriesItem
                                                 type="column"

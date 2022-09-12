@@ -6,14 +6,15 @@ import SelectControl from './selectcontrol';
 
 import Loading from './loading';
 import Header  from './header';
+import DateRange  from './dateRange';
 import AcctTransactionGrid from './acctTransactionGrid';
-// import "@progress/kendo-theme-material/dist/all.css";
-//import "@progress/kendo-theme-default/dist/all.css";
+
 const AcctTransactionRpt = () => {
   
     const [AcctTransactionRptData, populateAcctTransactionRptData] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+   
+    const[firstFlag,setFirstFlag]=useState(0);
     useEffect(() => {
       
       const fetchData = async () => {
@@ -39,7 +40,7 @@ const AcctTransactionRpt = () => {
   const GetAcctTransactionData = async () => {
     debugger;
     setLoading(true);
-  
+    
      let token = JSON.parse(localStorage.getItem('token'));
      let userId = JSON.parse(localStorage.getItem('userId'));
      let startDate = "06/30/2021";
@@ -62,7 +63,9 @@ const AcctTransactionRpt = () => {
             //  console.log(response);
   debugger;
             const rowData = response.data;
+            
             populateAcctTransactionRptData(rowData.ocAcctTransaction)
+            setFirstFlag(1);
             setLoading(false);
   
         })
@@ -72,6 +75,7 @@ const AcctTransactionRpt = () => {
         });
   
   }
+  
   if (loading) {
     return(
       <>
@@ -84,8 +88,10 @@ const AcctTransactionRpt = () => {
     return (
       <div>
         <Header></Header>
-        <AcctTransactionGrid data={AcctTransactionRptData} />
-         
+        
+       {firstFlag===1?<DateRange data={AcctTransactionRptData} loadFlag={firstFlag}/>:<></>}
+         {/* {!isClicked?<AcctTransactionGrid data={AcctTransactionRptData} />:<></>}  */}
+       
          
       </div>
     )

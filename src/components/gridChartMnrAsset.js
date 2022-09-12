@@ -23,7 +23,7 @@ import { formatNumber, formatDate  } from '@telerik/kendo-intl';
 const GridChartMnrAsset = ({ data, astData }) => {
     
     const labelContent = (e) => `${e.value.toFixed(2)}`;
-    const defaultTooltipRender = ({ point }) => `${point.value.toFixed(2)}`;
+    const defaultTooltipRender = ({ point }) => `$${formatNumber(point.value, "##,#.00")}`;
     const [mnrArea, setMnrArea] = useState(0);
     const [mnrBar, setMnrBar] = useState(1);
     const [mnrLine, setMnrLine] = useState(0);
@@ -258,6 +258,22 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                         <Chart seriesColors={chartDefaultV4Colors}  style={{ height: "500px" }}>
                                             {/* <ChartTitle text="Major Asset Chart" /> */}
                                             <ChartLegend position="bottom" />
+                                            <ChartValueAxis>
+                                        <ChartValueAxisItem
+                                            // title={{
+                                            //     text: "Percentage",
+                                            // }}
+                                            min={0}
+                                           labels={{
+                                            visible: true,
+                                          
+                                           // rotation: 85,
+                                            //format: "d",
+                                           content:FormatLongNumber
+                                         
+                                        }}
+                                        />
+                                    </ChartValueAxis>
                                             <ChartCategoryAxis>
                                                 <ChartCategoryAxisItem
                                                     labels={{
@@ -287,6 +303,22 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                         <Chart seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
                                             {/* <ChartTitle text="Major Asset Chart" /> */}
                                             <ChartLegend position="bottom" />
+                                            <ChartValueAxis>
+                                        <ChartValueAxisItem
+                                            // title={{
+                                            //     text: "Percentage",
+                                            // }}
+                                            min={0}
+                                           labels={{
+                                            visible: true,
+                                          
+                                           // rotation: 85,
+                                            //format: "d",
+                                           content:FormatLongNumber
+                                         
+                                        }}
+                                        />
+                                    </ChartValueAxis>
                                             <ChartCategoryAxis>
                                                 <ChartCategoryAxisItem
                                                     labels={{

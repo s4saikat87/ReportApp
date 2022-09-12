@@ -27,9 +27,26 @@ const aggregates = [
     {
         field: "yield",
         aggregate: "average",
+    },
+    {
+        field: "yldToMtrty",
+        aggregate: "average",
+    },
+    {
+        field: "yldCalPut",
+        aggregate: "average",
+    },
+    {
+        field: "duration",
+        aggregate: "average",
+    },
+    {
+        field: "calPutDuration",
+        aggregate: "average",
     }
   
   ];
+
   const initialGroup = [
     {
       field: "accountNumber",
@@ -93,7 +110,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
   
   const [page, setPage] = React.useState(initialDataState);
   const [collapsedState, setCollapsedState] = React.useState([]);
-  const[ChkBoxState,setChkBoxState]=useState(true);
+  const[ChkBoxState,setChkBoxState]=useState(false);
   const onDataStateChange = React.useCallback((e) => {
  
     
@@ -149,37 +166,84 @@ const RightNameHeader = (props) => {
     {
     let cpnRate="", matrtyDate="";
 
-    if(cellProps.field==="yldToMtrty" || cellProps.field==="yldCalPut")
+    if(cellProps.field==="mtrtyYr")
+    {
+      return (
+        <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+           { formatNumber(cellProps.dataItem[cellProps.field], "###")}
+        </td>
+    );
+    }
+
+    if(cellProps.field==="shares")
+      {
+        return (
+         
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }}  role={"gridcell"}>
+            { formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+      );
+      }
+    
+    if(cellProps.field==="market")
+      {
+        return (
+          
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }}  role={"gridcell"}>
+            { formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>          
+      );
+      }
+
+    if(cellProps.field==="yldToMtrty")
+      {
+        return (          
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem["yldToMtrty"], "##,#.00")}
+          </td>          
+      );
+      }
+      if(cellProps.field==="yldCalPut")
       {
         return (
           (ChkBoxState===true)?
           <>
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-            { formatNumber(cellProps.dataItem["yldToMtrty"], "##,#.00")}
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem["yldCalPut"], "##,#.00")}
           </td>
           </>:
           <>
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-            { formatNumber(cellProps.dataItem["yldCalPut"], "##,#.00")}
-          </td>
           </>
       );
       }
-      if(cellProps.field==="duration" || cellProps.field==="calPutDuration")
+      if(cellProps.field==="duration")
+      {
+        return (          
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem["duration"], "##,#.00")}
+          </td>
+      );
+      }
+      if(cellProps.field==="calPutDuration")
       {
         return (
           (ChkBoxState===true)?
           <>
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-            { formatNumber(cellProps.dataItem["duration"], "##,#.00")}
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem["calPutDuration"], "##,#.00")}
           </td>
           </>:
           <>
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-            { formatNumber(cellProps.dataItem["calPutDuration"], "##,#.00")}
-          </td>
           </>
       );
+      }
+      if (cellProps.field === "yield") {
+
+        return (
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            { (cellProps.dataItem[cellProps.field]).toFixed(2)}
+          </td>
+        );
       }
     
     if(cellProps.field==="maturityDt")
@@ -216,26 +280,67 @@ const RightNameHeader = (props) => {
       if (cellProps.field === "shares") {
 
         return (
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-            {cellProps.dataItem.aggregates.shares.sum}
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem.aggregates.shares.sum, "##,#.00")}
           </td>
         );
       }
       if (cellProps.field === "market") {
 
         return (
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-            {cellProps.dataItem.aggregates.market.sum}
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            { formatNumber(cellProps.dataItem.aggregates.market.sum, "##,#.00")}
           </td>
         );
       }
       if (cellProps.field === "yield") {
-
         return (
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-            { formatNumber(cellProps.dataItem.aggregates.yield.average, "##,#.00")}
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            Avg:&nbsp; { (cellProps.dataItem.aggregates.yield.average).toFixed(2)}
           </td>
         );
+      }
+      if(cellProps.field==="yldToMtrty")
+      {
+        return (          
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            Avg:&nbsp; { (cellProps.dataItem.aggregates.yldToMtrty.average).toFixed(2)}
+          </td>          
+      );
+      }
+      if(cellProps.field==="yldCalPut")
+      {
+        return (
+          (ChkBoxState===true)?
+          <>
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            Avg:&nbsp; { (cellProps.dataItem.aggregates.yldCalPut.average).toFixed(2)}
+          </td>
+          </>:
+          <>
+          </>
+      );
+      }
+      if(cellProps.field==="duration")
+      {
+        return (          
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            Avg:&nbsp; { (cellProps.dataItem.aggregates.duration.average).toFixed(2)}
+          </td>
+      );
+      }
+      if(cellProps.field==="calPutDuration")
+      {
+        return (
+          (ChkBoxState===true)?
+          <>
+          <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
+            Avg:&nbsp; { (cellProps.dataItem.aggregates.calPutDuration.average).toFixed(2)}
+          </td>
+          </>:
+          <>
+          </>
+      );
       }
     }
 
@@ -301,6 +406,8 @@ const RightNameHeader = (props) => {
             ref={_grid}
            // total={total}
            // filterable={true}
+           resizable={true}
+           reorderable={true}
            onDataStateChange={onDataStateChange}
            {...dataState}
            onExpandChange={onExpandChange}
@@ -316,21 +423,23 @@ const RightNameHeader = (props) => {
             Export to Excel
           </button>
           <FormGroup>
-      <FormControlLabel control={<Checkbox name='chkShwMtrtyCall' defaultChecked onChange={ShowMaturityCallPut}/>} label="Duration to Maturity/Call" />
+      <FormControlLabel control={<Checkbox name='chkShwMtrtyCall' onChange={ShowMaturityCallPut}/>} label="Duration to Call" />
     </FormGroup>
         </GridToolbar>
             <Column field="accountNumber" menu={true} title="Account Number" columnMenu={ColumnMenu}  width="150px"  />
             <Column field="accountName" menu={true} title="Account Name" columnMenu={ColumnMenu}  width="170px"  />
-            <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="120px"  />
+            <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} headerCell={RightNameHeader} width="130px"  />
             <Column field="astShrtNm" menu={true}  title="Description" width="300px" columnMenu={ColumnMenu} />
 
-            <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
-            <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
-            
-            <Column field="yldToMtrty" title="YTM%" width="85px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
-            <Column field="duration" title="Duration To Maturity" width="160px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
-            
-            <Column field="yield" title="Current Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+            <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
+            <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/> 
+
+            <Column field="yldToMtrty" title="YTM%" width="100px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+            <Column field="yldCalPut" title="YTW%" width="100px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+            <Column field="duration" title="Duration To Maturity" width="160px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />            
+            <Column field="calPutDuration" title="Duration To Call/Put" width="160px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />     
+
+            <Column field="yield" title="Current Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
             <Column field="moodyRating" menu={true} title="Moody Rating" width="150px" columnMenu={ColumnMenu} />
             <Column field="spRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
             
@@ -343,10 +452,10 @@ const RightNameHeader = (props) => {
      //data={resultState.slice(page.skip, page.skip + page.take)}
      groupable={{
        footer: "visible",
-     }}
-
-    
+     }}    
      sortable={true}
+     resizable={true}
+     reorderable={true}
      skip={page.skip}
      pageable={{
        pageSizes: true,
@@ -357,6 +466,7 @@ const RightNameHeader = (props) => {
      ref={_grid}
     // total={total}
     // filterable={true}
+    
     onDataStateChange={onDataStateChange}
     {...dataState}
     onExpandChange={onExpandChange}
@@ -372,24 +482,22 @@ const RightNameHeader = (props) => {
      Export to Excel
    </button>
    <FormGroup>
-<FormControlLabel control={<Checkbox name='chkShwMtrtyCall' defaultChecked onChange={ShowMaturityCallPut}/>} label="Duration to Maturity/Call" />
+<FormControlLabel control={<Checkbox name='chkShwMtrtyCall' onChange={ShowMaturityCallPut}/>} label="Duration to Call" />
 </FormGroup>
  </GridToolbar>
      <Column field="accountNumber" menu={true} title="Account Number" columnMenu={ColumnMenu}  width="150px"  />
      <Column field="accountName" menu={true} title="Account Name" columnMenu={ColumnMenu}  width="170px"  />
-     <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} cell={IntCell} headerCell={RightNameHeader} width="120px"  />
-     {/*<Column field="couponRate" menu={true} title="Coupon Rate" width="150px" />
-     <Column field="maturityDt"  menu={true}  filter="date" title="Maturity Date" width="150px" />*/}
+     <Column field="mtrtyYr" menu={true} title="Maturity Year" columnMenu={ColumnMenu} headerCell={RightNameHeader} width="130px"  />
      <Column field="astShrtNm" menu={true}  title="Description" width="300px" columnMenu={ColumnMenu} />
 
 
-     <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
-     <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
+     <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
+     <Column field="market" title="Market($)" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  footerCell={totalSum} filterable={false}/>
      
-     <Column field="yldCalPut" title="YTW%" width="85px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
-     <Column field="calPutDuration" title="Duration To Call/Put" width="160px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
-     
-     <Column field="yield" title="Current Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+     <Column field="yldToMtrty" title="YTM%" width="100px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
+     <Column field="duration" title="Duration To Maturity" width="160px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />            
+
+     <Column field="yield" title="Current Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  footerCell={avgYield}  filterable={false} />
      <Column field="moodyRating" menu={true} title="Moody Rating" width="150px" columnMenu={ColumnMenu} />
      <Column field="spRating" menu={true} title="SP Rating" width="150px" columnMenu={ColumnMenu} />
      

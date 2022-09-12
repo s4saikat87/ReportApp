@@ -24,7 +24,7 @@ import { formatNumber, formatDate  } from '@telerik/kendo-intl';
 const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
    
     //const labelContent = (e) => `${e.category}: \n  ${e.value}%`;
-    const labelContent = (e) => `${e.value.toFixed(2)}`;
+    const labelContent = (e) => `$${formatNumber(e.value, "##,#.00")}`;
     // const labelContent = (e) => e.category;
     const [mjrPie, setMjrPie] = useState(1);
     const [mjrBar, setMjrBar] = useState(0);
