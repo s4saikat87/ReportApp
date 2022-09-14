@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Loading from './loading';
 import GridMjrAsset from './gridMjrAsset';
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
+import { GridPDFExport, PDFExport,savePDF  } from "@progress/kendo-react-pdf";
 import axios from 'axios';
 import Enumerable from 'linq';
 import {
@@ -18,11 +19,11 @@ import {
 } from "@progress/kendo-react-dropdowns";
 import { FaFunnelDollar, FaMoneyBill, FaPrint, FaSyncAlt } from 'react-icons/fa';
 import { filterBy } from '@progress/kendo-data-query';
-import { useState, useEffect } from 'react';
+import { useState, useEffect,useRef } from 'react';
 
 import { FaSignOutAlt, FaChalkboard, FaListAlt, FaRegChartBar,FaDonate,FaChartLine,FaDice, FaUserAlt, FaCogs } from 'react-icons/fa';
 
-const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
+const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCash }) => {
   const [selAcct, SetselAcct] = useState('');
   const [dataAcct, setDataAcct] = React.useState(data.slice());
   const [updatedMjrData, setUpdatedMjrData] = useState(mjrAllData);
@@ -33,6 +34,7 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
   const [excludedCash, setExcludedCash] = useState(0);
   const [mrktVlAmt, setMrktVlAmt] = useState(0);
   const[chngeSelect,setChngSelect]=useState(0);
+  
 
 
 
@@ -138,12 +140,22 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
     setUpdatedAssetData(assetAllData);
 
   }
+  const container = useRef(null);
+  const exportPDFWithMethod = () => {
+    
+    let element = container.current || document.body;
+    savePDF(element, {
+      paperSize: "auto",
+      margin: 40,
+      fileName: `Report for ${new Date().getFullYear()}`,
+    });
+  };
 
   // if (loading) {
   //   return <Loading />
   // }
   return (
-    <div className='my-1'>
+    <div className='my-1' ref={container}>
 
       <div className="rounded">
 
@@ -173,7 +185,7 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
         /> */}
         </div>
         <div className='col-md-2'>
-          <button className='btn btn-sm btn-outline-secondary px-2'><FaPrint></FaPrint> &nbsp; Export to PDF</button>
+          <button className='btn btn-sm btn-outline-secondary px-2' onClick={exportPDFWithMethod}><FaPrint></FaPrint> &nbsp; Export to PDF</button>
         </div>
         </div>
         {
@@ -193,7 +205,7 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaMoneyBill /></div>
-            <div className='d-block'><label>Avaialble Cash:</label></div>
+            <div className='d-block'><label>Available Cash:</label></div>
             <div className='d-block'><h4 id='lblAvlCash'>${excludedCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
@@ -211,7 +223,28 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData }) => {
           :
           <>
           
+          <div className='row d-flex justify-content-center align-item-center px-2 my-2'>
+
+
           
+<div className='col-sm-10 col-lg-3 card text-left m-1'>
+  <div className='card-body'>
+  <div className='d-block'><FaChartLine /></div>
+  <div className='d-block'><label>Market Value:</label></div>
+  <div className='d-block'><h4 id='lblMrktVal'>${allMV.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
+  </div>
+</div>
+<div className='col-sm-10 col-lg-3 card text-left m-1'>
+  <div className='card-body'>
+  <div className='d-block'><FaMoneyBill /></div>
+  <div className='d-block'><label>Available Cash:</label></div>
+  <div className='d-block'><h4 id='lblAvlCash'>${allCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
+  </div>
+</div>
+
+
+
+</div>
           </>
 
         }

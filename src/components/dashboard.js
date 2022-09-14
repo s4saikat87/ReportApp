@@ -9,6 +9,7 @@ import Header  from './header';
 import GridMjrAsset from './gridMjrAsset';
 import BerryDash from './berryDash';
 import Enumerable from 'linq';
+
  //import "@progress/kendo-theme-default/dist/all.css";
  //import "@progress/kendo-theme-bootstrap/dist/all.css";
  //import "@progress/kendo-theme-material/dist/all.css";
@@ -22,7 +23,8 @@ import Enumerable from 'linq';
   const [mnrAcctDtls, setMnrAcctDtls] = useState([]);
   const [assetDtls, setAssetDtls] = useState([]);
   const [loading, setLoading] = useState(true);
-  
+  const[initMV,setInitMV]=useState(0);
+  const[initCash,setInitCash]=useState(0);
   useEffect(() => {
     const fetchData = async () => {
          setLoading(true);
@@ -125,10 +127,14 @@ const GetADVAccountProfile = async (roleId,cntctId) => {
           .toArray();
           let assetData=Enumerable.from(rowData.t4).where(w => w.mvPercent !== 0)
           .toArray();
-
+          debugger;
+          let cash=rowData.t5[0].cash;
+          let mv=rowData.t5[0].mv;
           setMjrAcctDtls(mjrData);
           setMnrAcctDtls(mnrData);
           setAssetDtls(assetData);
+         setInitCash(cash);
+         setInitMV(mv);
           setLoading(false);
 
       })
@@ -148,8 +154,8 @@ if (loading) {
   return (
     <div>
       <Header></Header>
-
-     <BerryDash data={accountGet} mjrData={mjrAcctDtls} mnrData={mnrAcctDtls} astData={assetDtls}/>
+      
+     <BerryDash data={accountGet} mjrData={mjrAcctDtls} mnrData={mnrAcctDtls} astData={assetDtls} initMV={initMV} initCash={initCash}/>
 
 
 

@@ -47,12 +47,12 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
         },
     ];
     const chartDefaultV4Colors = [
-        "#00876c",
-    "#6e9b75",
-    "#a5af90",
-    "#cbc6b9",
-    "#c9a47e",
-    "#d07958",
+        "#014ce6",
+    "#9b9eb2",
+    "#bbbdcc",
+    "#505465",
+    "#d8dbe5",
+    "#f4f4f2",
       ];
     
     const initialModelDropdown = {

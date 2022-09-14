@@ -5,7 +5,7 @@ import SelectControl from './selectcontrol';
 
 import { FaSyncAlt } from 'react-icons/fa';
 
-const BerryDash = ({data,mjrData,mnrData,astData}) => {
+const BerryDash = ({data,mjrData,mnrData,astData,initMV,initCash}) => {
   return (
    
     <div>
@@ -13,7 +13,7 @@ const BerryDash = ({data,mjrData,mnrData,astData}) => {
 
 {/* <Test></Test> */}
       
-<SelectControl data={data} mjrAllData={mjrData} mnrAllData={mnrData} assetAllData={astData} />
+<SelectControl data={data} mjrAllData={mjrData} mnrAllData={mnrData} assetAllData={astData} allMV={initMV} allCash={initCash} />
 
 
 

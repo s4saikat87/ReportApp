@@ -13,6 +13,7 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import LogoPage from './logoPage';
+//import Sidebar from './sidebar';
 import { FaSignOutAlt, FaChalkboard, FaListAlt, FaRegChartBar,FaDonate,FaChartLine,FaDice, FaUserAlt, FaCogs } from 'react-icons/fa';
 
 const Header = () => {
@@ -74,6 +75,14 @@ const Header = () => {
     const openReportDesignerRpt=()=>{
       navigate("/ReportDesignerRpt");
     }
+    const openAcctPerfRpt=()=>{
+     
+      navigate("/AcctPerfRpt");
+    }
+    const openFixedIncomePortfolioOverviewRpt=()=>{
+     
+      navigate("/fixedIncomePortfolioOverviewRpt");
+    }
     const signOut=()=>{
  
         navigate("/");
@@ -81,11 +90,13 @@ const Header = () => {
        
     }
   return (
+    
     <div>
-      
+   {/* <Sidebar></Sidebar> */}
       <nav className="navbar navbar-expand-md navbar-light bg-white shadow-sm" aria-label="Fourth navbar example">
     <div className="container-fluid">
       <a className="" onClick={openDashBoardPage}><LogoPage /></a>
+      
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
       </button>
@@ -100,15 +111,15 @@ const Header = () => {
               <li><a className="dropdown-item" onClick={openAcctTransactionRpt}>Transaction</a></li>
               <li><a className="dropdown-item"onClick={openAcctHoldingRpt}>Holding</a></li>
               <li><a className="dropdown-item"onClick={openAccountSectBenchRpt}>Sectors Comparison</a></li>
-              <hr />
-              <li><a className="dropdown-item" href="#">Performance Summary</a></li>    
+              <li><a className="dropdown-item"onClick={openAcctPerfRpt}>Performance</a></li>
+              <hr />  
             </ul>
           </li>
 
           <li className="nav-item dropdown dropdown-menu-end">
             <a className="nav-link dropdown-toggle" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false">Fixed Income</a>
             <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown05">
-              <li><a className="dropdown-item" href="#">Portfolio Overview</a></li>
+              <li><a className="dropdown-item" onClick={openFixedIncomePortfolioOverviewRpt}>Portfolio Overview</a></li>
               <hr />
               <li><a className="dropdown-item" onClick={openFixdIncmMaturityLadderRpt}>Maturity Ladder</a></li>
               <li><a className="dropdown-item" onClick={openFixdIncmFndmntlsRpt}>Fundementals</a></li>   
@@ -116,7 +127,7 @@ const Header = () => {
           </li>
 
           <li className='nav-item'><a className='nav-link' onClick={openPortfolioHoldingsRpt}>Portfolio Holdings</a></li>
-          <li className='nav-item'><a className='nav-link' onClick={openReportDesignerRpt}>Report Designer</a></li>
+          {/* <li className='nav-item'><a className='nav-link' onClick={openReportDesignerRpt}>Report Designer</a></li> */}
           </ul>
 
           <div className="nav-item dropdown dropdown-menu-end">
@@ -134,7 +145,7 @@ const Header = () => {
     </div>
   </nav>
 
-
+  
 
     </div>
   )

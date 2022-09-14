@@ -241,7 +241,7 @@ const RightNameHeader = (props) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            { (cellProps.dataItem[cellProps.field]).toFixed(2)}
+            { formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
           </td>
         );
       }
@@ -274,6 +274,29 @@ const RightNameHeader = (props) => {
     );
     }
   }
+//   if (tdElement && tdElement.props.children && cellProps.rowType === "groupHeader") {
+//     debugger;
+//     let children="";
+//     // children = (
+//     //   <span>
+//     //     {tdElement.props.children.props.children} 
+//     //   </span> 
+//     // );
+//     if (cellProps.field === "shares") {
+//       {
+//         children = (
+          
+//           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"headercell"}>
+           
+//                 { formatNumber(cellProps.dataItem.aggregates.shares.sum, "##,#.00")}
+//               </td>
+//         );
+//       }
+     
+//     // tdElement= React.cloneElement(tdElement, tdElement.props, children);
+//   }
+// }
+  
 
     if (cellProps.rowType === "groupFooter") {
 
@@ -296,7 +319,7 @@ const RightNameHeader = (props) => {
       if (cellProps.field === "yield") {
         return (
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            Avg:&nbsp; { (cellProps.dataItem.aggregates.yield.average).toFixed(2)}
+            Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.yield.average, "##,#.00")}
           </td>
         );
       }
@@ -304,7 +327,7 @@ const RightNameHeader = (props) => {
       {
         return (          
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            Avg:&nbsp; { (cellProps.dataItem.aggregates.yldToMtrty.average).toFixed(2)}
+            Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.yldToMtrty.average, "##,#.00")}
           </td>          
       );
       }
@@ -314,7 +337,7 @@ const RightNameHeader = (props) => {
           (ChkBoxState===true)?
           <>
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            Avg:&nbsp; { (cellProps.dataItem.aggregates.yldCalPut.average).toFixed(2)}
+            Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.yldCalPut.average, "##,#.00")}
           </td>
           </>:
           <>
@@ -325,7 +348,7 @@ const RightNameHeader = (props) => {
       {
         return (          
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            Avg:&nbsp; { (cellProps.dataItem.aggregates.duration.average).toFixed(2)}
+            Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.duration.average, "##,#.00")}
           </td>
       );
       }
@@ -335,7 +358,7 @@ const RightNameHeader = (props) => {
           (ChkBoxState===true)?
           <>
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            Avg:&nbsp; { (cellProps.dataItem.aggregates.calPutDuration.average).toFixed(2)}
+            Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.calPutDuration.average, "##,#.00")}
           </td>
           </>:
           <>
@@ -347,6 +370,7 @@ const RightNameHeader = (props) => {
     return tdElement;
   };
   const ShowMaturityCallPut=(e)=>{
+    debugger;
     setChkBoxState(e.target.checked);
     setDataState(e.dataState);
   };

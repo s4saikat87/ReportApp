@@ -170,8 +170,7 @@ const PercentCell = (props) => {
     
   return (      
     <td style={{ textAlign: 'right' }}>
-        {/* {formatNumber(reslt, "##,#.00")} */}
-        {(props.dataItem[props.field]*100).toFixed(2)}
+        {formatNumber((props.dataItem[props.field]*100), "##,#.00")}
     </td>      
 )
   }
@@ -249,7 +248,7 @@ const RightNameHeader = (props) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            { (cellProps.dataItem[cellProps.field]).toFixed(2)}
+            { formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
           </td>
         );
       }
@@ -294,7 +293,7 @@ const RightNameHeader = (props) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            {(cellProps.dataItem.aggregates.marketPercent.sum*100).toFixed(2)}
+            { formatNumber((cellProps.dataItem.aggregates.marketPercent.sum*100), "##,#.00")}
           </td>
         );
       }
@@ -303,7 +302,7 @@ const RightNameHeader = (props) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-           Avg:&nbsp; { (cellProps.dataItem.aggregates.yield.average).toFixed(2)}
+           Avg:&nbsp;{ formatNumber((cellProps.dataItem.aggregates.yield.average), "##,#.00")}
           </td>
         );
       }
@@ -374,7 +373,7 @@ const RightNameHeader = (props) => {
 
 const FormatLongNumber=({value})=> {
        
-  if(value == 0) {
+  if(value === 0) {
     return 0;
   }
   else

@@ -1,17 +1,17 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
-import { process } from "@progress/kendo-data-query";
+import { process } from '@progress/kendo-data-query';
 import { ExcelExport } from '@progress/kendo-react-excel-export';
-import { formatNumber, formatDate  } from '@telerik/kendo-intl';
-
-import { ColumnMenu } from "./columnMenu";
+import { formatNumber, formatDate } from '@telerik/kendo-intl';
+import { CustomColumnMenu } from './customColumnMenu';
+//import products from './products.json';
 
 import {
-    setGroupIds,
-    getGroupIds,
-    setExpandedState,
-  } from "@progress/kendo-react-data-tools";
+  setGroupIds,
+  getGroupIds,
+  setExpandedState,
+} from '@progress/kendo-react-data-tools';
   import {
     Sparkline,
     Chart,
@@ -66,16 +66,15 @@ import {
       aggregate: "sum",
     }
   ];
-  const initialGroup = [
-    {
-      field: "invstmntObj",
-    },
-    {
-      field: "account",
+  
+  const processWithGroups = (data, dataState) => {
+    const groups = dataState.group;
+  
+    if (groups) {
+      groups.map((group) => (group.aggregates = aggregates));
     }
   
-  ];
-  const processWithGroups = (data, dataState) => {
+    dataState.group = groups;
     const newDataState = process(data, dataState);
     setGroupIds({
       data: newDataState.data,
@@ -84,8 +83,254 @@ import {
     return newDataState;
   };
 const PortfolioHoldingsGrid = ({data}) => {
-    const [locked, setLocked] = React.useState(false);
-    const [group, setGroup] = React.useState(initialGroup);
+  const _export = React.useRef(null);
+  const excelExport = () => {
+    if (_export.current !== null) {
+      _export.current.save(data);
+    }
+  };
+  const [locked, setLocked] = React.useState(false);
+
+  const columnLocked = () => {
+    setLocked(!locked);
+  };
+  const totalSum = (props) => {
+    const field = props.field || '';
+    const total = data
+      .reduce((acc, current) => acc + current[field], 0)
+      .toFixed(2);
+    return (
+      <td colSpan={props.colSpan} style={props.style}>
+        {formatNumber(total, '##,#.00')}
+      </td>
+    );
+  };
+
+  const columns = [
+    {
+      title: 'Inv. Objective',
+      field: 'invstmntObj',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: true,
+    },
+    {
+      title: 'Acct Type',
+      field: 'accountType',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: true,
+    },
+    {
+      title: 'Account#',
+      field: 'account',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: true,
+    },
+    {
+      title: 'Ticker/Cusip',
+      field: 'tckerCusip',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+    {
+      title: 'Description',
+      field: 'assetShrtNm',
+      minWidth: 300,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+    {
+      title: 'Units',
+      field: 'units',
+      minWidth: 180,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+    },
+    {
+      title: 'Cost',
+      field: 'txcstAmt',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+    },
+    {
+      title: 'Price',
+      field: 'price',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Market',
+      field: 'totMarket',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell: totalSum ,
+    },
+    {
+      title: 'GainLoss',
+      field: 'gainLoss',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Income',
+      field: 'income',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Yield',
+      field: 'yield',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Principal',
+      field: 'p1CashBlncAmt',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Inv. Income',
+      field: 'p2P3CashBlncAmt',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'UnEx. Cash',
+      field: 'unExecCashAmt',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Trade Cash',
+      field: 'tradeCash',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Excld Cash',
+      field: 'excldCashAmt',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      
+    },
+    {
+      title: 'Equity %',
+      field: 'equityPercent',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      
+    },
+  ];
+
+  const [row, setRow] = useState(data);
+  const createDataState = (dataState) => {
+    return {
+      result: process(data.slice(0), dataState),
+      dataState: dataState,
+    };
+  };
+  let initialState = createDataState({
+    take: 20,
+    skip: 0,
+    group: [
+      {
+        field: 'tckerCusip',
+      },
+    ],
+  });
+
+  const [result, setResult] = React.useState(
+    processWithGroups(data, initialState.dataState)
+  );
+  
+  const [dataState, setDataState] = React.useState(initialState.dataState);
+  const [stateColumns, setStateColumns] = React.useState(columns);
+  const [currentColumns, setCurrentColumns] = React.useState(columns);
+  let pageSize = 20;
+  const [page, setPage] = React.useState({
+    skip: 0,
+    take: pageSize,
+  });
+  const dataStateChange = (event) => {
+    let updatedState = createDataState(event.dataState);
+
+    setResult(processWithGroups(data, updatedState.dataState));
+
+    setDataState(updatedState.dataState);
+  };
+
+  const onColumnsSubmit = (columnsState) => {
+    setStateColumns(columnsState);
+  };
+  const setWidth = (minWidth) => {
+    let width = minWidth;
+    return width;
+  };
+
+  const handleColumnLockToggle = (columnField, state) => {
+    let newColumns = currentColumns.map((column) => {
+      if (column.field === columnField) {
+        column.locked = state;
+      }
+
+      return column;
+    });
+    setCurrentColumns(newColumns);
+  }; // place all locked columns first
+
+  const expandChange = (event) => {
+    const isExpanded =
+      event.dataItem.expanded === undefined
+        ? event.dataItem.aggregates
+        : event.dataItem.expanded;
+    event.dataItem.expanded = !isExpanded;
+    setResult({ ...result });
+  };
+
+    
+    
     const [mnrRadioStat, setMnrRadioStat] = useState('checked');
     const defaultTooltipRender = ({ point }) => `${point.value.toFixed(2)}`;
     const labelContent = (e) => `${e.value.toFixed(2)}`;
@@ -95,49 +340,20 @@ const PortfolioHoldingsGrid = ({data}) => {
     };
     
     const _grid = React.useRef();
-    const _export = React.useRef(null);
-  
-      const excelExport = () => {
-      if (_export.current !== null) {
-          _export.current.save(data);
-      }
-    };
-  
-    const totalSum = (props) => {
-      const field = props.field || "";
-      const total = data.reduce((acc, current) => acc + current[field], 0).toFixed(2);
-      return (
-        <td colSpan={props.colSpan} style={{textAlign:'right'} } cell={NumberCell} >
-          {formatNumber(total, "##,#.00")}
-        </td>
-      );
-    };
-    const initialDataState = {
-      skip: 0,
-      take: 10,
-    };
+    
+    
     const [gridChartCheck, setgridChartCheck] = useState('checked');
-    const [row, setRow] = useState(data);
-    const [dataState, setDataState] = React.useState();
+    
     const [collapsedState, setCollapsedState] = React.useState([]);
-    const [resultState, setResultState] = React.useState(
-      processWithGroups(row, initialDataState)
-    );
-    //setResultState(process({data}, initialDataState))
-    let total = row.length;
-    let pageSize = 20;
-    const [page, setPage] = React.useState({
-      skip: 0,
-      take: pageSize,
-    });
+    
 
     const chartDefaultV4Colors = [
       "#0275d8",
-  "#5bc0de",
-  "#5cb85c",
-  "#f0ad4e",
-  "#e67d4a",
-  "#d9534f",
+      "#5bc0de",
+      "#5cb85c",
+      "#f0ad4e",
+      "#e67d4a",
+      "#d9534f",
     ];
 
     const handleSetDataChecked = () => {
@@ -151,19 +367,7 @@ const PortfolioHoldingsGrid = ({data}) => {
 
 }
 
-    const onDataStateChange = React.useCallback((e) => {
    
-      setDataState(e.dataState);
-      //let gridData = data;
-      const groups = e.dataState.group;
-  
-      if (groups) {
-        groups.map((group) => (group.aggregates = aggregates));
-      }
-      e.dataState.group = groups;
-      setResultState( processWithGroups(row,e.dataState));
-      setDataState(e.dataState);
-    }, []);
   
     
     const NumberCell = (props) => {
@@ -194,49 +398,82 @@ const PortfolioHoldingsGrid = ({data}) => {
     
   
     const cellRender = (tdElement, cellProps) => {
-  
-      
+      if (cellProps.rowType === 'groupFooter') {
+        if (cellProps.field === 'price') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.price.sum.toFixed(2)}
+            </td>
+          );
+        }
+        if (cellProps.field === 'totMarket') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.totMarket.sum.toFixed(2)}
+            </td>
+          );
+        }
+        if (cellProps.field === 'gainLoss') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.gainLoss.sum.toFixed(2)}
+            </td>
+          );
+          
+        }
+        if (cellProps.field === 'income') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.income.sum.toFixed(2)}
+            </td>
+          );
+          
+        }
+        if (cellProps.field === 'yield') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.yield.sum.toFixed(2)}
+            </td>
+          );
+          
+        }
+        if (cellProps.field === 'p1CashBlncAmt') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.p1CashBlncAmt.sum.toFixed(2)}
+            </td>
+          );
+          
+        }
+        if (cellProps.field === 'p2P3CashBlncAmt') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.p2P3CashBlncAmt.sum.toFixed(2)}
+            </td>
+          );
+          
+        }
+        if (cellProps.field === 'unExecCashAmt') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.unExecCashAmt.sum.toFixed(2)}
+            </td>
+          );
+          
+        }
+        if (cellProps.field === 'tradeCash') {
+          return (
+            <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+              {cellProps.dataItem.aggregates.tradeCash.sum.toFixed(2)}
+            </td>
+          );
+          
+        }
+      }
   
       return tdElement;
     };
-    const pageChange = (event) => {
-      setPage(event.page);
-    };
     
-    const onExpandChange = React.useCallback(
-      (event) => {
-        debugger;
-        const item = event.dataItem;
-  
-        if (item.groupId) {
-          const newCollapsedIds = !event.value
-            ? [...collapsedState, item.groupId]
-            : collapsedState.filter((groupId) => groupId !== item.groupId);
-            debugger;
-          setCollapsedState(newCollapsedIds);
-        }
-      },
-      [collapsedState]
-    );
-  
-    const newData = setExpandedState({
-      data: resultState.data,
-      collapsedIds: collapsedState,
-    });
-    const onGroupChange = React.useCallback((event) => {
-      const newDataState = processWithGroups(newData, event.group);
-      setGroup(event.group);
-      setResultState(newDataState);
-    }, []);
-
-  //   const labelContent1 = (props) => {
-
-  //     let formatedNumber = Number(props.dataItem.marketPercent).toLocaleString(undefined, {
-  //         style: "percent",
-  //         minimumFractionDigits: 2,
-  //     });
-  //     return `${props.category}  ${props.dataItem.marketPercent.toFixed(2)}%`;
-  // };
   const labelContent1 = (e) => `${e.value.toFixed(2)}`;
   const FormatLongNumber=({value})=> {
     debugger;
@@ -245,9 +482,7 @@ const PortfolioHoldingsGrid = ({data}) => {
     }
     else
     {
-          // for testing
-        //value = Math.floor(Math.random()*1001);
-   
+
         // hundreds
         if(value <= 999){
           return value;
@@ -301,52 +536,47 @@ const PortfolioHoldingsGrid = ({data}) => {
           <div className="card-body">
           <div className="mx-1 my-1 py-1">
           <ExcelExport data={data} ref={_export}> 
-            <Grid style={{ height: "600px" }}
-                  data={newData}
-                  // onGroupChange={onGroupChange}
-                  // group={group}
-                  groupable={{
-                    footer: "visible",
-                  }}
-                  sortable={true}
-                  skip={page.skip}
-                  pageable={{
-                    pageSizes: true,
-                  }}
-                  pageSize={page.take}
-                  total={data.length}
-                // total={total}
-                // filterable={true}
-                onDataStateChange={onDataStateChange}
-                {...dataState}
-                onExpandChange={onExpandChange}
-                expandField="expanded"
-                  cellRender={cellRender}
-                >
-                <Column field="invstmntObj" menu={true} title="Inv. Objective" width="150px" locked={true} columnMenu={ColumnMenu}/>
-                <Column field="accountType" menu={true} title="Acct Type" width="150px" locked={true} columnMenu={ColumnMenu}/>
-                <Column field="account" menu={true} title="Account#" width="150px" locked={true} columnMenu={ColumnMenu}/>
-                <Column field="tckerCusip" title="Ticker/Cusip " width="150px" locked={true} columnMenu={ColumnMenu}/>
-                
-                <Column field="assetShrtNm" title="Description" width="150px" columnMenu={ColumnMenu}/>
-                
-                <Column field="units" title="Units" width="150px" columnMenu={ColumnMenu} cell={NumberCell}  format="{0:n2}"/>
-                <Column field="txcstAmt" title="Cost" width="150px" columnMenu={ColumnMenu} cell={NumberCell} format="{0:n2}"/>
-                <Column field="price" title="Price" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="totMarket" title="Market" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}" filter="numeric"/>
-                <Column field="gainLoss" title="Gain Loss" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="income" title="Income" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/> 
-                <Column field="yield" title="Yield" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:p2}"/>
-                
-                <Column field="p1CashBlncAmt" title="Principal" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="p2P3CashBlncAmt" title="Invested Income" width="180px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="unExecCashAmt" title="UnEx. Cash" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="tradeCash" title="Trade Cash" width="150px" columnMenu={ColumnMenu} cell={NumberCell} footerCell={totalSum} format="{0:n2}"/>
-                <Column field="excldCashAmt" title="Excld Cash" width="150px" columnMenu={ColumnMenu} cell={NumberCell}  format="{0:n2}"/>
-                <Column field="equityPercent" title="Equity %" width="150px" columnMenu={ColumnMenu} cell={NumberCell}  format="{0:n2}"/>
-
-                
-                </Grid>
+          <Grid
+              style={{ height: '500px' }}
+              data={result}
+              {...dataState}
+              onDataStateChange={dataStateChange}
+              expandField="expanded"
+              onExpandChange={expandChange}
+              cellRender={cellRender}
+              sortable={true}
+              skip={page.skip}
+              pageable={{
+                pageSizes: true,
+              }}
+            pageSize={page.take}
+            total={data.length}
+              groupable={{
+                footer: 'visible',
+              }}
+            >
+              {stateColumns.map(
+                (column, idx) =>
+                  column.show && (
+                    <Column
+                      width={setWidth(column.minWidth)}
+                      locked={column.locked}
+                      key={idx}
+                      field={column.field}
+                      title={column.title}
+                      filter={column.filter}
+                      footerCell={column.footerCell}
+                      columnMenu={(props) => (
+                        <CustomColumnMenu
+                          {...props}
+                          columns={stateColumns}
+                          onColumnsSubmit={onColumnsSubmit}
+                        />
+                      )}
+                    />
+                  )
+              )}
+            </Grid>
             </ExcelExport> 
             </div>
             </div>

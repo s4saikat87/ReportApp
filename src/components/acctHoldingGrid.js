@@ -2,14 +2,16 @@ import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
 import { process } from "@progress/kendo-data-query";
+
 import { ExcelExport } from '@progress/kendo-react-excel-export';
-import { formatNumber, formatDate  } from '@telerik/kendo-intl';
-import { ColumnMenu } from "./columnMenu";
+import { formatNumber, formatDate } from '@telerik/kendo-intl';
+import { CustomColumnMenu } from './customColumnMenu';
+
 import {
   setGroupIds,
   getGroupIds,
   setExpandedState,
-} from "@progress/kendo-react-data-tools";
+} from '@progress/kendo-react-data-tools';
 const aggregates = [
   {
     field: "cost",
@@ -44,6 +46,13 @@ const initialGroup = [
 
 ];
 const processWithGroups = (data, dataState) => {
+  const groups = dataState.group;
+
+  if (groups) {
+    groups.map((group) => (group.aggregates = aggregates));
+  }
+
+  dataState.group = groups;
   const newDataState = process(data, dataState);
   setGroupIds({
     data: newDataState.data,
@@ -51,62 +60,299 @@ const processWithGroups = (data, dataState) => {
   });
   return newDataState;
 };
+
 const AcctHoldingGrid = ({data}) => {
-  const [locked, setLocked] = React.useState(false);
-
-  const handleClick = () => {
-    setLocked(!locked);
-  };
-  
-  const _grid = React.useRef();
   const _export = React.useRef(null);
-
-    const excelExport = () => {
+  const excelExport = () => {
     if (_export.current !== null) {
-        _export.current.save(data);
+      _export.current.save(data);
     }
   };
+  const [locked, setLocked] = React.useState(false);
 
+  const columnLocked = () => {
+    setLocked(!locked);
+  };
   const totalSum = (props) => {
-    const field = props.field || "";
-    const total = data.reduce((acc, current) => acc + current[field], 0).toFixed(2);
+    const field = props.field || '';
+    const total = data
+      .reduce((acc, current) => acc + current[field], 0)
+      .toFixed(2);
     return (
-      <td colSpan={props.colSpan} style={{textAlign:'right'}}>
-          {formatNumber(total, "##,#.00")}
+      <td colSpan={props.colSpan} style={props.style}>
+        {formatNumber(total, '##,#.00')}
       </td>
     );
   };
-  const initialDataState = {
-    skip: 0,
-    take: 10,
-  };
+
+  const columns = [
+    {
+      title: 'Branch',
+      field: 'branch',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: true,
+    },
+    {
+      title: 'Acct. Type',
+      field: 'accountType',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: true,
+    },
+    {
+      title: 'Account#',
+      field: 'accountName',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: true,
+    },
+    {
+      title: 'Description',
+      field: 'asset',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+    {
+      title: 'Ticker',
+      field: 'tckrSymbl',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+    {
+      title: 'Cusip',
+      field: 'cusip',
+      minWidth: 180,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+    {
+      title: 'PMR',
+      field: 'pmrDesc',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+    {
+      title: 'Shares',
+      field: 'shares',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      
+    },
+    {
+      title: 'Cost',
+      field: 'cost',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell: totalSum ,
+    },
+    {
+      title: 'Market',
+      field: 'market',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Unr Gain Loss',
+      field: 'unrGainLoss',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Est Ann Inc',
+      field: 'estAnnInc',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Yield',
+      field: 'yield',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Acc Int.',
+      field: 'accruedInterest',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'PCash',
+      field: 'principalCash',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'ICash',
+      field: 'incomeCash',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Inv. Income',
+      field: 'investedIncome',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      footerCell:  totalSum ,
+    },
+    {
+      title: 'Inv. Objective',
+      field: 'investmentObjective',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: false,
+      
+    },
+    {
+      title: 'Administrator',
+      field: 'administrator',
+      minWidth: 180,
+      show: true,
+      filter: 'text',
+      locked: false,
+      
+    },
+    {
+      title: 'Inv. Officer',
+      field: 'investmentOfficer',
+      minWidth: 150,
+      show: true,
+      filter: 'text',
+      locked: false,
+      
+    },
+    {
+      title: 'Rate',
+      field: 'rate',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      
+    },
+    {
+      title: 'Tax Cost',
+      field: 'txCstAmt',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      
+    },
+    {
+      title: 'Yield To Cost',
+      field: 'yldToCost',
+      minWidth: 150,
+      show: true,
+      filter: 'numeric',
+      locked: false,
+      
+    },
+  ];
   const [row, setRow] = useState(data);
-  const [dataState, setDataState] = React.useState();
-  const [collapsedState, setCollapsedState] = React.useState([]);
-  const [resultState, setResultState] = React.useState(
-    processWithGroups(row, initialDataState)
+  const createDataState = (dataState) => {
+    return {
+      result: process(data.slice(0), dataState),
+      dataState: dataState,
+    };
+  };
+  let initialState = createDataState({
+    take: 20,
+    skip: 0,
+    // group: [
+    //   {
+    //     field: 'tranTypNm',
+    //   },
+    // ],
+  });
+
+  const [result, setResult] = React.useState(
+    processWithGroups(data, initialState.dataState)
   );
-  //setResultState(process({data}, initialDataState))
-  let total = row.length;
+  
+  const [dataState, setDataState] = React.useState(initialState.dataState);
+  const [stateColumns, setStateColumns] = React.useState(columns);
+  const [currentColumns, setCurrentColumns] = React.useState(columns);
   let pageSize = 20;
   const [page, setPage] = React.useState({
     skip: 0,
     take: pageSize,
   });
-  const onDataStateChange = React.useCallback((e) => {
-   debugger;
-    setDataState(e.dataState);
-    //let gridData = data;
-    const groups = e.dataState.group;
+  const dataStateChange = (event) => {
+    let updatedState = createDataState(event.dataState);
 
-    if (groups) {
-      groups.map((group) => (group.aggregates = aggregates));
-    }
-    e.dataState.group = groups;
-    setResultState( processWithGroups(row,e.dataState));
-    setDataState(e.dataState);
-  }, []);
+    setResult(processWithGroups(data, updatedState.dataState));
 
+    setDataState(updatedState.dataState);
+  };
+
+  const onColumnsSubmit = (columnsState) => {
+    setStateColumns(columnsState);
+  };
+  const setWidth = (minWidth) => {
+    let width = minWidth;
+    return width;
+  };
+
+  const handleColumnLockToggle = (columnField, state) => {
+    let newColumns = currentColumns.map((column) => {
+      if (column.field === columnField) {
+        column.locked = state;
+      }
+
+      return column;
+    });
+    setCurrentColumns(newColumns);
+  }; // place all locked columns first
+
+  const expandChange = (event) => {
+    const isExpanded =
+      event.dataItem.expanded === undefined
+        ? event.dataItem.aggregates
+        : event.dataItem.expanded;
+    event.dataItem.expanded = !isExpanded;
+    setResult({ ...result });
+  };
+
+  
   
   const NumberCell = (props) => {
     return (
@@ -191,30 +437,7 @@ const AcctHoldingGrid = ({data}) => {
 
     return tdElement;
   };
-  const pageChange = (event) => {
-    setPage(event.page);
-  };
   
-  const onExpandChange = React.useCallback(
-    (event) => {
-      debugger;
-      const item = event.dataItem;
-
-      if (item.groupId) {
-        const newCollapsedIds = !event.value
-          ? [...collapsedState, item.groupId]
-          : collapsedState.filter((groupId) => groupId !== item.groupId);
-          debugger;
-        setCollapsedState(newCollapsedIds);
-      }
-    },
-    [collapsedState]
-  );
-
-  const newData = setExpandedState({
-    data: resultState.data,
-    collapsedIds: collapsedState,
-  });
   return (
     
     <div>
@@ -239,55 +462,50 @@ const AcctHoldingGrid = ({data}) => {
         <div className="card-body">
         <div className="mx-1 my-1 py-1">
         <ExcelExport data={data} ref={_export}> 
-       <Grid style={{ height: "600px" }}
-            data={newData}
-       
-            groupable={{
-              footer: "visible",
-            }}
-            sortable={true}
-            skip={page.skip}
+        <Grid
+              style={{ height: '500px' }}
+              data={result}
+              {...dataState}
+              onDataStateChange={dataStateChange}
+              expandField="expanded"
+              onExpandChange={expandChange}
+              cellRender={cellRender}
+              sortable={true}
+              // pageable={true}
+              // pageSize={20}
+              skip={page.skip}
             pageable={{
               pageSizes: true,
             }}
             pageSize={page.take}
             total={data.length}
-           // total={total}
-           // filterable={true}
-           onDataStateChange={onDataStateChange}
-           {...dataState}
-           onExpandChange={onExpandChange}
-           expandField="expanded"
-            cellRender={cellRender}
-          >
-            
-            <Column field="branch" menu={true} title="Branch" width="150px" locked={true} columnMenu={ColumnMenu}/>
-            <Column field="accountType" menu={true} title="Acct. Type" width="150px" locked={true} columnMenu={ColumnMenu}/>
-            <Column field="accountName" menu={true} title="Account#" width="150px"  locked={true} columnMenu={ColumnMenu}/>
-            <Column field="asset" menu={true} title="Description" width="150px" columnMenu={ColumnMenu}/>
-            <Column field="tckrSymbl" menu={true} title="Ticker" width="150px" columnMenu={ColumnMenu}/>
-            <Column field="cusip" menu={true} title="Cusip" width="150px" columnMenu={ColumnMenu}/>
-            <Column field="pmrDesc" menu={true} title="PMR" width="150px" columnMenu={ColumnMenu}/>
-            <Column field="shares" title="Shares" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="150px" filter="numeric" filterable={false} />
-            <Column field="cost" title="Cost" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
-            <Column field="market" title="Market" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
-
-            <Column field="unrGainLoss" title="Unr Gain Loss" cell={NumberCell} headerCell={RightNameHeader} footerCell={totalSum} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
-            <Column field="estAnnInc" title="Est Ann Inc" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
-            <Column field="yield" title="Yield" cell={NumberCell} headerCell={RightNameHeader} width="150px" format="{0:n2}" filter="numeric" filterable={false}/>
-            <Column field="accruedInterest" title="Acc Int" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
-            <Column field="principalCash" title="PCash" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
-            <Column field="incomeCash" title="ICash" cell={NumberCell} headerCell={RightNameHeader} width="150px" footerCell={totalSum} format="{0:n2}" filter="numeric" filterable={false}/>
-            <Column field="investedIncome" title="Invested Income" cell={NumberCell} headerCell={RightNameHeader} footerCell={totalSum} format="{0:n2}" width="150px" filter="numeric" filterable={false}/>
-            <Column field="investmentObjective" title="Inv Objective" width="150px" filter="numeric" filterable={false}/>
-            <Column field="administrator" title="Administrator" width="150px" />
-            <Column field="investmentOfficer" title="Inv Officer" width="150px" />
-            <Column field="rate" title="Rate" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" filter="numeric" filterable={false} width="150px" />
-            <Column field="txCstAmt" title="Tax Cost" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" filter="numeric" filterable={false} width="150px" />
-            <Column field="yldToCost" title="Yeild To Cost" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" filter="numeric" filterable={false} width="150px" />
-
-           
-          </Grid>
+              groupable={{
+                footer: 'visible',
+              }}
+            >
+              {stateColumns.map(
+                (column, idx) =>
+                  column.show && (
+                    <Column
+                      width={setWidth(column.minWidth)}
+                      locked={column.locked}
+                      key={idx}
+                      field={column.field}
+                      title={column.title}
+                      filter={column.filter}
+                      footerCell={column.footerCell}
+                      //cell={column.cell}
+                      columnMenu={(props) => (
+                        <CustomColumnMenu
+                          {...props}
+                          columns={stateColumns}
+                          onColumnsSubmit={onColumnsSubmit}
+                        />
+                      )}
+                    />
+                  )
+              )}
+            </Grid>
           </ExcelExport> 
           </div>
           </div>

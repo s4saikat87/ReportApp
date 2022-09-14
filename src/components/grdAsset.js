@@ -1,7 +1,7 @@
 import React from 'react'
 import { Grid, GridColumn as Column, GridToolbar } from "@progress/kendo-react-grid";
 import { formatNumber, formatDate  } from '@telerik/kendo-intl';
-const GrdAsset = ({ data }) => {
+const GrdAsset = ({ data,selMnrAsset }) => {
   
   const NumberCell = (props) => {
     return (
@@ -32,7 +32,9 @@ const GrdAsset = ({ data }) => {
     <div>
           <div className="row mx-1 my-2">
        <div className="col col-md-12 col-sm-12 py-2">
-       <div className="card-header tableheader">Asset Data</div>
+       <div className="card-header tableheader">Asset(s)
+       {selMnrAsset!==''?<> under Minor Asset {selMnrAsset}</>:<></>}
+       </div>
                     <div className="rounded">
                         
                         <div className="w-100">

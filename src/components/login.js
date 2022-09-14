@@ -32,7 +32,10 @@ import AccountProfile from './accountProfile';
 import PortfolioHoldingsRpt from './portfoliHoldingsRpt';
 import FixdIncmMaturityLadrRpt from './fixdIncmMtrtyLadrRpt';
 import AcctSectBenchRpt from './AcctSectBenchRpt';
-import ReportDesignerRpt from './reportDesignerRpt';
+import AcctPerfRpt from './AcctPerfRpt';
+import FixedIncomePortfolioOverviewRpt from './fixedIncomePortfolioOverviewRpt';
+
+
 function Login() {
       return (
         <Router>      
@@ -46,7 +49,8 @@ function Login() {
               <Route path='/portfoliHoldingsRpt' element={<PortfolioHoldingsRpt />}/>
               <Route path='/fixdIncmMtrtyLadrRpt' element={<FixdIncmMaturityLadrRpt />}/>
               <Route path='/AcctSectBenchRpt' element={<AcctSectBenchRpt />}/>
-              <Route path='/reportDesignerRpt' element={<ReportDesignerRpt />}/>
+              <Route path='/AcctPerfRpt' element={<AcctPerfRpt />}/>
+              <Route path='/fixedIncomePortfolioOverviewRpt' element={<FixedIncomePortfolioOverviewRpt />}/> 
               <Route path='*' element={<PageNotFound />}/>
               
               

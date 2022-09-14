@@ -19,8 +19,9 @@ import {
     ChartValueAxisItem,
     ChartTooltip,
 } from "@progress/kendo-react-charts";
+import 'hammerjs';
 import { formatNumber, formatDate  } from '@telerik/kendo-intl';
-const GridChartMnrAsset = ({ data, astData }) => {
+const GridChartMnrAsset = ({ data, astData,selMjrAsset }) => {
     
     const labelContent = (e) => `${e.value.toFixed(2)}`;
     const defaultTooltipRender = ({ point }) => `$${formatNumber(point.value, "##,#.00")}`;
@@ -29,15 +30,15 @@ const GridChartMnrAsset = ({ data, astData }) => {
     const [mnrLine, setMnrLine] = useState(0);
     const [mnrRadioStat, setMnrRadioStat] = useState('checked');
     const [updatedAssetData, setUpdatedAssetData] = useState(astData);
-    
+    const[selMnrAsset,SetSelMnrAsset]=useState('');
     const [assetFlag, setAssetFlag] = useState(JSON.parse(localStorage.getItem('changeSelect')));
     const chartDefaultV4Colors = [
-        "#00876c",
-    "#6e9b75",
-    "#a5af90",
-    "#cbc6b9",
-    "#c9a47e",
-    "#d07958",
+        "#014ce6",
+    "#9b9eb2",
+    "#bbbdcc",
+    "#505465",
+    "#d8dbe5",
+    "#f4f4f2",
       ];
     const handleSetBarMnr = () => {
         setMnrArea(0);
@@ -63,7 +64,8 @@ const GridChartMnrAsset = ({ data, astData }) => {
     const onRowClick = e => {
        
         var mnrAsetType = e.dataItem.mnrAstTypId;
-
+        debugger;
+        SetSelMnrAsset(e.dataItem.mnrAstType);
         var assetData = Enumerable.from(astData).where(w => w.mnrAstTypId === mnrAsetType)
             .toArray();
 
@@ -74,6 +76,8 @@ const GridChartMnrAsset = ({ data, astData }) => {
         //console.log( Data);
 
     };
+
+    
     const NumberCell = (props) => {
         return (
             <td style={{ textAlign: 'right' }}>
@@ -102,7 +106,6 @@ const GridChartMnrAsset = ({ data, astData }) => {
 
 
     const labelContentKM = (props) => {
-        debugger;
         
         return `${props.dataItem.mvPercent.toFixed(2)}%`;
     };
@@ -139,10 +142,28 @@ const GridChartMnrAsset = ({ data, astData }) => {
         }
       }
 
+      const plotareaclick=(e)=>{
+        var mnrAsetTypeNm = e.category;
+        SetSelMnrAsset(mnrAsetTypeNm);
+       // var mnrAsetType = e.dataItem.mnrAstTypId;
+        var mnrAsetTypeRow = Enumerable.from(data)
+        .where(w => w.mnrAstType === mnrAsetTypeNm).toArray();
+        var mnrAsetTypeId=mnrAsetTypeRow[0].mnrAstTypId;
+        var assetData = Enumerable.from(astData).where(w => w.mnrAstTypId === mnrAsetTypeId)
+            .toArray();
+
+        setUpdatedAssetData(assetData);
+        localStorage.setItem('changeSelect', "0");
+        localStorage.setItem('changeMinor', "1");
+
+      }
+
     return (
         <div>
             <div className="row mx-1 my-2">
-                <div className="col-md-12 card-header tableheader">Minor Asset</div>
+                <div className="col-md-12 card-header tableheader">Minor Asset(s)
+                {selMjrAsset!==''?<> under Major Asset {selMjrAsset}</>:<></>}
+                </div>
 
                 <div className="col col-md-6 col-sm-10 py-2">
                     <div className="card rounded">
@@ -209,7 +230,8 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                 mnrBar === 1
                                     ?
 
-                                    <Chart seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
+                                    <Chart onSeriesClick={plotareaclick}
+                                    seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
                                         {/* <ChartTitle text="Major Asset Chart" /> */}
                                         <ChartLegend position="bottom" />
 
@@ -255,7 +277,8 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                         </ChartSeries>
                                     </Chart>
                                     : mnrArea === 1 ?
-                                        <Chart seriesColors={chartDefaultV4Colors}  style={{ height: "500px" }}>
+                                        <Chart onSeriesClick={plotareaclick}
+                                         seriesColors={chartDefaultV4Colors}  style={{ height: "500px" }}>
                                             {/* <ChartTitle text="Major Asset Chart" /> */}
                                             <ChartLegend position="bottom" />
                                             <ChartValueAxis>
@@ -300,7 +323,8 @@ const GridChartMnrAsset = ({ data, astData }) => {
                                             </ChartSeries>
                                         </Chart>
                                         :
-                                        <Chart seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
+                                        <Chart onSeriesClick={plotareaclick}
+                                         seriesColors={chartDefaultV4Colors} style={{ height: "500px" }}>
                                             {/* <ChartTitle text="Major Asset Chart" /> */}
                                             <ChartLegend position="bottom" />
                                             <ChartValueAxis>
@@ -355,12 +379,12 @@ const GridChartMnrAsset = ({ data, astData }) => {
             {
                 localStorage.getItem('changeSelect') === "1"
                     ?
-                    <GrdAsset data={updatedAssetData} />
+                    <GrdAsset data={updatedAssetData} selMnrAsset={selMnrAsset} />
                     :
                  localStorage.getItem('changeMinor') === "1" ?
-                    <GrdAsset data={updatedAssetData} />
+                    <GrdAsset data={updatedAssetData} selMnrAsset={selMnrAsset} />
                     :
-                    <GrdAsset data={astData} />
+                    <GrdAsset data={astData} selMnrAsset={''} />
             }
         </div>
     )

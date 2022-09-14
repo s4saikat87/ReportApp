@@ -1,16 +1,16 @@
 import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
+
+import { process } from '@progress/kendo-data-query';
+import { ExcelExport } from '@progress/kendo-react-excel-export';
+import { formatNumber, formatDate } from '@telerik/kendo-intl';
+import { CustomColumnMenu } from './customColumnMenu';
 import {
   Grid,
   GridColumn as Column,
   GridToolbar,
 } from '@progress/kendo-react-grid';
-import { process } from '@progress/kendo-data-query';
-import { ExcelExport } from '@progress/kendo-react-excel-export';
-import { formatNumber, formatDate } from '@telerik/kendo-intl';
-import { CustomColumnMenu } from './customColumnMenu';
-//import products from './products.json';
 
 import {
   setGroupIds,
@@ -89,7 +89,7 @@ const AcctTransactionGrid = ({data}) => {
       locked: true,
     },
     {
-      title: 'Account',
+      title: 'Acct. Type',
       field: 'accountType',
       minWidth: 150,
       show: true,
@@ -143,7 +143,7 @@ const AcctTransactionGrid = ({data}) => {
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell: { totalSum },
+      footerCell:  totalSum ,
     },
     {
       title: 'Income($)',
@@ -152,6 +152,7 @@ const AcctTransactionGrid = ({data}) => {
       show: true,
       filter: 'numeric',
       locked: false,
+      footerCell: totalSum ,
     },
     {
       title: 'Shares',
@@ -159,8 +160,8 @@ const AcctTransactionGrid = ({data}) => {
       minWidth: 150,
       show: true,
       filter: 'numeric',
-
       locked: false,
+      footerCell:  totalSum ,
     },
   ];
   const [row, setRow] = useState(data);
@@ -306,7 +307,7 @@ const AcctTransactionGrid = ({data}) => {
                       field={column.field}
                       title={column.title}
                       filter={column.filter}
-                      
+                      footerCell={column.footerCell}
                       columnMenu={(props) => (
                         <CustomColumnMenu
                           {...props}
