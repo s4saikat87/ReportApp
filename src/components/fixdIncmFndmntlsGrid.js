@@ -89,7 +89,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     );
   };
   const avgYield = (props) => {
-    debugger;
+    //debugger;
     const field = props.field;
     const len=data.length;
     const average = data.reduce((acc, current) => acc + current[field],0)/len;
@@ -370,9 +370,16 @@ const RightNameHeader = (props) => {
     return tdElement;
   };
   const ShowMaturityCallPut=(e)=>{
-    debugger;
+    //debugger;
     setChkBoxState(e.target.checked);
-    setDataState(e.dataState);
+    // const groups = e.dataState.group;
+
+    // if (groups) {
+    //   groups.map((group) => (group.aggregates = aggregates));
+    // }
+    // e.dataState.group = groups;
+   setResultState( processWithGroups(row,e.dataState));
+   setDataState(e.dataState);
   };
 
   const pageChange = (event) => {
@@ -381,14 +388,14 @@ const RightNameHeader = (props) => {
 
   const onExpandChange = React.useCallback(
     (event) => {
-      debugger;
+      //debugger;
       const item = event.dataItem;
 
       if (item.groupId) {
         const newCollapsedIds = !event.value
           ? [...collapsedState, item.groupId]
           : collapsedState.filter((groupId) => groupId !== item.groupId);
-          debugger;
+          //debugger;
         setCollapsedState(newCollapsedIds);
       }
     },

@@ -38,7 +38,7 @@ const FixdIncmMaturityLadrRpt = () => {
     }, [])
 
     const GetFixdIncmMaturityLadrRptData = async () => {
-        debugger;
+        //debugger;
         setLoading(true);
       
          let token = JSON.parse(localStorage.getItem('token'));
@@ -70,7 +70,7 @@ const FixdIncmMaturityLadrRpt = () => {
             .then(response => {
               
                 //  console.log(response);
-      debugger;
+      //debugger;
                 const rowData = response.data;
                 populateFimlRptMainDataSet(rowData.fIM1);
                 populateFimlRptSecondDataSet(rowData.fIM2);

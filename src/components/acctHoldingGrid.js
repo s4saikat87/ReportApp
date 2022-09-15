@@ -39,12 +39,7 @@ const aggregates = [
   }
 
 ];
-const initialGroup = [
-  {
-    field: "branch",
-  }
 
-];
 const processWithGroups = (data, dataState) => {
   const groups = dataState.group;
 
@@ -172,7 +167,7 @@ const AcctHoldingGrid = ({data}) => {
     {
       title: 'Unr Gain Loss',
       field: 'unrGainLoss',
-      minWidth: 150,
+      minWidth: 180,
       show: true,
       filter: 'numeric',
       locked: false,
@@ -185,7 +180,7 @@ const AcctHoldingGrid = ({data}) => {
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell:  totalSum ,
+      //footerCell:  totalSum ,
     },
     {
       title: 'Yield',
@@ -194,7 +189,7 @@ const AcctHoldingGrid = ({data}) => {
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell:  totalSum ,
+      //footerCell:  totalSum ,
     },
     {
       title: 'Acc Int.',
@@ -203,7 +198,7 @@ const AcctHoldingGrid = ({data}) => {
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell:  totalSum ,
+      //footerCell:  totalSum ,
     },
     {
       title: 'PCash',
@@ -297,11 +292,7 @@ const AcctHoldingGrid = ({data}) => {
   let initialState = createDataState({
     take: 20,
     skip: 0,
-    // group: [
-    //   {
-    //     field: 'tranTypNm',
-    //   },
-    // ],
+    
   });
 
   const [result, setResult] = React.useState(
@@ -379,17 +370,74 @@ const AcctHoldingGrid = ({data}) => {
         </a>
       );
   };
-  
-
+  const getCells = (columns, cellProps) => {
+    let cells = [];
+    columns.forEach((column) => {
+      if (column.aggregate) {
+        cells.push(
+          <td>
+            {formatNumber(cellProps.dataItem.aggregates[column.field][column.aggregate], '##,#.00')}
+          </td>
+        );
+      } else {
+        cells.push(<td>&nbsp;</td>);
+      }
+    });
+    return cells;
+  };
   const cellRender = (tdElement, cellProps) => {
+    if (
+      cellProps.rowType === 'groupHeader' &&
+      tdElement &&
+      tdElement.props.role != 'presentation'
+    ) {
+      //IMPORTANT - You need to add collection with the columns and their field name
+      //you can define the Grid columns outside of the Grid and reuse them here.
+      const columns = [
+        { field: 'branch' },
+        { field: 'accountType' },
+        { field: 'accountName'},
+        { field: 'asset'},
+        { field: 'tckrSymbl'},
+        { field: 'cusip'},
+        { field: 'pmrDesc'},
+        { field: 'shares'},
+               
+        { field: 'cost', aggregate: 'sum' },
+        { field: 'market', aggregate: 'sum' },
+        { field: 'unrGainLoss', aggregate: 'sum' },
+        { field: 'estAnnInc' },
+        { field: 'yield' },
+        { field: 'accruedInterest' },
+        { field: 'principalCash', aggregate: 'sum' },
+        { field: 'incomeCash' , aggregate: 'sum'},
+        { field: 'investedIncome', aggregate: 'sum' },
+        { field: 'investmentObjective'},
+        { field: 'administrator'},
+        { field: 'investmentOfficer'},
+        { field: 'rate'},
+        { field: 'txCstAmt'},
+        { field: 'yldToCost'},
+       
 
-    if (cellProps.rowType === "groupFooter") {
+      ];
 
+      return (
+        <>
+          <td
+            {...tdElement.props}
+            colSpan={tdElement.props.colSpan - columns.length}
+          ></td>
+          {getCells(columns, cellProps)}
+        </>
+      );
+    }
+    if (cellProps.rowType === 'groupFooter') {
       if (cellProps.field === "cost") {
 
         return (
           <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.cost.sum.toFixed(2)}
+             {cellProps.dataItem.aggregates.cost.sum}
           </td>
         );
       }
@@ -397,7 +445,7 @@ const AcctHoldingGrid = ({data}) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.market.sum.toFixed(2)}
+             {cellProps.dataItem.aggregates.market.sum}
           </td>
         );
       }
@@ -405,7 +453,7 @@ const AcctHoldingGrid = ({data}) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
+             {cellProps.dataItem.aggregates.unrGainLoss.sum}
           </td>
         );
       }
@@ -413,7 +461,7 @@ const AcctHoldingGrid = ({data}) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
+             {cellProps.dataItem.aggregates.principalCash.sum}
           </td>
         );
       }
@@ -421,7 +469,7 @@ const AcctHoldingGrid = ({data}) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
+             {cellProps.dataItem.aggregates.incomeCash.sum}
           </td>
         );
       }
@@ -429,7 +477,7 @@ const AcctHoldingGrid = ({data}) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
+             {cellProps.dataItem.aggregates.investedIncome.sum}
           </td>
         );
       }
@@ -437,6 +485,63 @@ const AcctHoldingGrid = ({data}) => {
 
     return tdElement;
   };
+
+  // const cellRender = (tdElement, cellProps) => {
+
+  //   if (cellProps.rowType === "groupFooter") {
+
+  //     if (cellProps.field === "cost") {
+
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+  //            {cellProps.dataItem.aggregates.cost.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //     if (cellProps.field === "market") {
+
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+  //            {cellProps.dataItem.aggregates.market.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //     if (cellProps.field === "unrGainLoss") {
+
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+  //            {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //     if (cellProps.field === "principalCash") {
+
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+  //            {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //     if (cellProps.field === "incomeCash") {
+
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+  //            {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //     if (cellProps.field === "investedIncome") {
+
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+  //            {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //   }
+
+  //   return tdElement;
+  // };
   
   return (
     

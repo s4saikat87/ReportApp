@@ -31,6 +31,7 @@ import {
   ChartValueAxisItem,
   ChartTooltip,
 } from "@progress/kendo-react-charts";
+import Enumerable from 'linq';
 
 const aggregates = [
     {
@@ -110,8 +111,7 @@ const AcctPerfRptGrid = ({data, alloc}) => {
   
   const [page, setPage] = React.useState(initialDataState);
   const [collapsedState, setCollapsedState] = React.useState([]);
-  const[ChkBoxState,setChkBoxState]=useState(true);
-  const [rorData, setRorData] = React.useState(alloc);
+  const [allocData, setAllocData] = React.useState(alloc);
 
   const onDataStateChange = React.useCallback((e) => {
  
@@ -262,11 +262,22 @@ const RightNameHeader = (props) => {
   });
   const defaultTooltipRender = ({ point }) => `${point.value.toFixed(2)}`;
   const labelContent = (e) => `${e.value.toFixed(2)}`;
+  const ChangeLineChart=e=>
+  {
+    debugger;
+    var actId = e.dataItem.acctId;
+
+    var acctData = Enumerable.from(alloc).where(w => w.mainAcctId === actId)
+        .toArray();
+
+        setAllocData(acctData);  
+        setDataState(e.dataState);  
+  }
   return (
     
     <div>
         <div className="card mx-2 my-2">
-            <div className="card-header tableheader">Account Performance</div>
+            <div className="card-header tableheader">Account Performance Summary Report</div>
         </div>
         
         
@@ -274,6 +285,7 @@ const RightNameHeader = (props) => {
         <div className="row text-center">
        
         <ExcelExport data={resultState} ref={_export}> 
+
        <Grid style={{ height: "650px" }}
             data={newData}
             // data={resultState.slice(page.skip, page.skip + page.take)}
@@ -296,6 +308,7 @@ const RightNameHeader = (props) => {
            onExpandChange={onExpandChange}
            expandField="expanded"
             cellRender={cellRender}
+            onRowClick={ChangeLineChart}
           >
             <GridToolbar>
           <button
@@ -320,6 +333,7 @@ const RightNameHeader = (props) => {
             
             
           </Grid>
+          
           <Chart style={{ height: "350px" }}>
                                         {/* <ChartTitle text="Maturity Date Vs Call/Put Date" /> */}
                                         <ChartLegend position="bottom" />
@@ -336,8 +350,8 @@ const RightNameHeader = (props) => {
                                         <ChartTooltip render={defaultTooltipRender} />
                                         <ChartSeries>
                                             <ChartSeriesItem
-                                                type="column"
-                                                data={alloc}
+                                                type="line"
+                                                data={allocData}
                                                 categoryField="assetType"
                                                 field="startPercent"
                                                 labels={{
@@ -346,8 +360,8 @@ const RightNameHeader = (props) => {
                                                 }}
                                             />
                                             <ChartSeriesItem
-                                                type="column"
-                                                data={alloc}
+                                                type="line"
+                                                data={allocData}
                                                 categoryField="assetType"
                                                 field="endPercent"
                                                 labels={{
@@ -355,15 +369,16 @@ const RightNameHeader = (props) => {
                                                     content: labelContent,
                                                 }}
                                             />
+                                            
                                         </ChartSeries>
-                                    </Chart>
+          </Chart>
+          
+          
          
           </ExcelExport>   
-
-   
-
           </div>
-          </div>
+        </div>
+
     </div>
   )
 }

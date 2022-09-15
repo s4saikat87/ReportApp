@@ -174,11 +174,11 @@ const AcctTransactionGrid = ({data}) => {
   let initialState = createDataState({
     take: 20,
     skip: 0,
-    group: [
-      {
-        field: 'tranTypNm',
-      },
-    ],
+    // group: [
+    //   {
+    //     field: 'accountName',
+    //   },
+    // ],
   });
 
   const [result, setResult] = React.useState(
@@ -228,27 +228,72 @@ const AcctTransactionGrid = ({data}) => {
     event.dataItem.expanded = !isExpanded;
     setResult({ ...result });
   };
-
+  const getCells = (columns, cellProps) => {
+    let cells = [];
+    columns.forEach((column) => {
+      if (column.aggregate) {
+        cells.push(
+          <td>
+            {formatNumber(cellProps.dataItem.aggregates[column.field][column.aggregate], '##,#.00')}
+          </td>
+        );
+      } else {
+        cells.push(<td>&nbsp;</td>);
+      }
+    });
+    return cells;
+  };
   const cellRender = (tdElement, cellProps) => {
+    if (
+      cellProps.rowType === 'groupHeader' &&
+      tdElement &&
+      tdElement.props.role != 'presentation'
+    ) {
+      //IMPORTANT - You need to add collection with the columns and their field name
+      //you can define the Grid columns outside of the Grid and reuse them here.
+      const columns = [
+        { field: 'branchName' },
+        { field: 'accountType' },
+        { field: 'tranTypNm'},
+        { field: 'totalLine'},
+        { field: 'administrator'},
+        { field: 'investmentOfficer'},
+        
+        { field: 'pCash', aggregate: 'sum' },
+        { field: 'iCash', aggregate: 'sum' },
+        { field: 'shares', aggregate: 'sum' },
+      ];
+
+      return (
+        <>
+          <td
+            {...tdElement.props}
+            colSpan={tdElement.props.colSpan - columns.length}
+          ></td>
+          {getCells(columns, cellProps)}
+        </>
+      );
+    }
     if (cellProps.rowType === 'groupFooter') {
       if (cellProps.field === 'pCash') {
         return (
           <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-            {cellProps.dataItem.aggregates.pCash.sum.toFixed(2)}
+            {/* {formatNumber(cellProps.dataItem.aggregates.pCash.sum, '##,#.00')} */}
+            {cellProps.dataItem.aggregates.pCash.sum}
+          
+          </td>
+        );
+      } else if (cellProps.field === 'iCash') {
+        return (
+          <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+             {cellProps.dataItem.aggregates.iCash.sum}
           </td>
         );
       }
-      if (cellProps.field === 'iCash') {
+      else if (cellProps.field === 'shares') {
         return (
           <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-            {cellProps.dataItem.aggregates.iCash.sum.toFixed(2)}
-          </td>
-        );
-      }
-      if (cellProps.field === 'shares') {
-        return (
-          <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-            {cellProps.dataItem.aggregates.shares.sum.toFixed(2)}
+             {cellProps.dataItem.aggregates.shares.sum}
           </td>
         );
       }
@@ -256,6 +301,34 @@ const AcctTransactionGrid = ({data}) => {
 
     return tdElement;
   };
+
+  // const cellRender = (tdElement, cellProps) => {
+  //   if (cellProps.rowType === 'groupHeader') {
+  //     if (cellProps.field === 'pCash') {
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+  //           {cellProps.dataItem.aggregates.pCash.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //     if (cellProps.field === 'iCash') {
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+  //           {cellProps.dataItem.aggregates.iCash.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //     if (cellProps.field === 'shares') {
+  //       return (
+  //         <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+  //           {cellProps.dataItem.aggregates.shares.sum.toFixed(2)}
+  //         </td>
+  //       );
+  //     }
+  //   }
+
+  //   return tdElement;
+  // };
 
   return (
     <div>

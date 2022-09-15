@@ -8,7 +8,7 @@ import { ColumnMenu } from "./columnMenu";
 import { orderBy } from "@progress/kendo-data-query";
 
 //import BarChart from 'react-bar-chart';
-
+import Enumerable from 'linq';
 import {
     Sparkline,
     Chart,
@@ -25,6 +25,7 @@ import {
     ChartValueAxisItem,
     ChartTooltip,
 } from "@progress/kendo-react-charts";
+import { where } from 'firebase/firestore';
 const FixedIncomePortfolioOverviewGrid = ({data}) => {
     debugger;
     const chartDefaultV4Colors = [
@@ -35,7 +36,19 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
     "#c9a47e",
     "#d07958",
       ];
+    const [selAcct, SetselAcct] = useState(JSON.parse(localStorage.getItem('AcctSelected')));
+
+    debugger;
+    let table1=Enumerable.from(data.lstFixedIncomePortfolioOverviewT1).where(w => w.acctId === selAcct.acctId).toArray();;
+    let table2=Enumerable.from(data.lstFixedIncomePortfolioOverviewT2).where(w => w.acctId === selAcct.acctId).toArray();;
+    let table3=Enumerable.from(data.lstFixedIncomePortfolioOverviewT3).where(w => w.acctId === selAcct.acctId).toArray();;
+    let table4=Enumerable.from(data.lstFixedIncomePortfolioOverviewT4).where(w => w.acctId === selAcct.acctId).toArray();;
     
+    
+    const [tableChart1,setTableChart2]=useState(table1);
+    const [tableChart2,setTableChart1]=useState(table2);
+    const [tableChart3,setTableChart3]=useState(table3);
+    const [tableChart4,setTableChart4]=useState(table4);
     const [chartType,setChartType]=useState("pie");
     const [sort, setSort] = React.useState([]);
     const NumberCell = (props) => {
@@ -100,13 +113,14 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
         });
         return `${props.category}  ${(props.dataItem.rtngPercent*100).toFixed(2)}%`;
     };
+
     const labelContentMnr = (props) => {
 
         let formatedNumber = Number(props.dataItem.classPercent).toLocaleString(undefined, {
             style: "percent",
             minimumFractionDigits: 2,
         });
-        return `${props.category}  ${props.dataItem.classPercent.toFixed(2)}%`;
+        return `${props.category}  ${(props.dataItem.classPercent*100).toFixed(2)}%`;
     };
     const labelContentMjr = (props) => {
 
@@ -114,7 +128,7 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
             style: "percent",
             minimumFractionDigits: 2,
         });
-        return `${props.category}  ${props.dataItem.sectorPct.toFixed(2)}%`;
+        return `${props.category}  ${(props.dataItem.sectorPct*100).toFixed(2)}%`;
     };
     const totalSum = (props) => {
         const field = props.field || "";
@@ -149,7 +163,7 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
                 <ChartSeries>
                 <ChartSeriesItem
                 type={chartType}
-                data={data.lstFixedIncomePortfolioOverviewT2}
+                data={table2}
                 field="rtngPercent"
                 categoryField="rating"
                 labels={{
@@ -182,7 +196,7 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
                     
                     
                     <Grid style={{ height: "330px" }}
-                        data={orderBy(data.lstFixedIncomePortfolioOverviewT3.slice(), sort)}
+                        data={orderBy(table3.slice(), sort)}
                         sortable={true}
                         sort={sort}
                         onSortChange={(e) => {
@@ -242,7 +256,7 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
                                         <ChartSeries>
                                             <ChartSeriesItem
                                                 type="column"
-                                                data={data.lstFixedIncomePortfolioOverviewT3}
+                                                data={table3}
                                                 field="shares"
                                                 categoryField="ratingDesc"
 
@@ -279,7 +293,7 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
                 <ChartSeries>
                 <ChartSeriesItem
                 type={chartType}
-                data={data.lstFixedIncomePortfolioOverviewT4}
+                data={table4}
                 field="classPercent"
                 categoryField="minorClass"
                 labels={{

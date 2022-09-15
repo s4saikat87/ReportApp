@@ -90,7 +90,7 @@ const Home = () => {
     let IsSso = '0';
     const data = { Username, Password };
     
-    axios.post('/login', data)
+    axios.post('/auth/login', data)
       .then((response) => {
 
         console.log(response);
@@ -168,9 +168,9 @@ const Home = () => {
       let Username=user.email;
       let Password =tokenM; //process.env.REACT_APP_PASS;
      
-      const data = { email, Password};
-
-      axios.post('/login', data)
+      const data = { Username, Password};
+      debugger;
+      axios.post('/auth/login', data)
       .then((response) => {
         debugger;
         console.log(response);

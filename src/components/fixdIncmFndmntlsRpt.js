@@ -34,7 +34,7 @@ const FixdIncmFndmntlsRpt = () => {
     }, [])
 
     const GetFixdIncmFndmntlsReportData = async () => {
-        debugger;
+        //debugger;
         setLoading(true);
       
          let token = JSON.parse(localStorage.getItem('token'));
@@ -57,7 +57,7 @@ const FixdIncmFndmntlsRpt = () => {
             .then(response => {
               
                 //  console.log(response);
-      debugger;
+      //debugger;
                 const rowData = response.data;
                 populateFixedIncmFundmntlRptData(rowData)
                 setLoading(false);

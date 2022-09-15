@@ -50,9 +50,9 @@ const AcctPerfRpt = () => {
          let token = JSON.parse(localStorage.getItem('token'));
          let AsOfId = JSON.parse(localStorage.getItem('userId'));
          let PageId = 1;
-         let StartDate = "01/01/2021"
-         let EndDate = "03/31/2022"
-         const postData = {AsOfId, StartDate, EndDate, PageId};
+        //  let StartDate = "01/01/2021"
+        //  let EndDate = "03/31/2022"
+         const postData = {AsOfId,  PageId};
          const config = {
             headers: {
               'authorization': `Bearer ${token.token}`,

@@ -47,17 +47,9 @@ const aggregates = [
   take: 10,
   };
 
-  const processWithGroups = (data, dataState) => {
-    const newDataState = process(data, dataState);
-    setGroupIds({
-      data: newDataState.data,
-      group: dataState.group,
-    });
-    return newDataState;
-  };
 const FixdIncmMaturityLadrCallDetls = ({data, chkState}) => {
   
-    debugger;
+   //debugger;
   const totalSum = (props) => {
     const field = props.field || "";
     const total = data.reduce((acc, current) => acc + current[field], 0);
@@ -93,25 +85,13 @@ const FixdIncmMaturityLadrCallDetls = ({data, chkState}) => {
   
   const [row, setRow] = useState(data);
   const [dataState, setDataState] = React.useState();
-  const [resultState, setResultState] = React.useState(
-    processWithGroups(row, initialDataState)
-  );
+  const [resultState, setResultState] = React.useState(initialDataState);
   //setResultState(process({data}, initialDataState))
   
   const [page, setPage] = React.useState(initialDataState);
-  const [collapsedState, setCollapsedState] = React.useState([]);
   
-  const onDataStateChange = React.useCallback((e) => {
- 
-    
-    //let gridData = data;
-    const groups = e.dataState.group;
-
-    if (groups) {
-      groups.map((group) => (group.aggregates = aggregates));
-    }
-    e.dataState.group = groups;
-   setResultState( processWithGroups(row,e.dataState));
+  const onDataStateChange = React.useCallback((e) => { 
+   setResultState(e.resultState);
    setDataState(e.dataState);
   }, []);
 
@@ -122,32 +102,11 @@ const NumberCell = (props) => {
         </td>
     )
 }
-const PercentCell = (props) => {
-  debugger;
-  if (props.rowType === "data")
-  {
-  let mc=props.dataItem[props.field];
-  let reslt=mc*100;
-    
-  return (      
-    <td style={{ textAlign: 'right' }}>
-        {/* {formatNumber(reslt, "##,#.00")} */}
-        {(props.dataItem[props.field]*100).toFixed(2)}
-    </td>      
-)
-  }
-}
-const IntCell = (props) => {
-  return (
-      <td style={{ textAlign: 'right' }}>
-          {props.dataItem[props.field]}
-      </td>
-  )
-}
+
 const ftrText = (props) => {
     
     return (
-      <td colSpan={2} style={{textAlign:"left"}}>
+      <td  style={{textAlign:"left"}}>
         Total Fixed Income Portfolio
       </td>
     );
@@ -204,11 +163,11 @@ const RightNameHeader = (props) => {
       }
       if(cellProps.field==="marketPercent")
       {
-        debugger;
+        //debugger;
         return (
           
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            { (cellProps.dataItem[cellProps.field]).toFixed(2)}
+            { formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
           </td>          
       );
       }
@@ -216,7 +175,7 @@ const RightNameHeader = (props) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            { (cellProps.dataItem[cellProps.field]).toFixed(2)}
+            { formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
           </td>
         );
       }
@@ -261,7 +220,7 @@ const RightNameHeader = (props) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-            {(cellProps.dataItem.aggregates.marketPercent.sum).toFixed(2)}
+            { formatNumber(cellProps.dataItem.aggregates.marketPercent.sum, "##,#.00")}
           </td>
         );
       }
@@ -270,7 +229,7 @@ const RightNameHeader = (props) => {
 
         return (
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-           Avg:&nbsp; { (cellProps.dataItem.aggregates.yield.average).toFixed(2)}
+           { formatNumber(cellProps.dataItem.aggregates.yield.average, "##,#.00")}
           </td>
         );
       }
@@ -291,28 +250,6 @@ const RightNameHeader = (props) => {
     setPage(event.page);
   };
 
-  const onExpandChange = React.useCallback(
-    (event) => {
-      
-      const item = event.dataItem;
-
-      if (item.groupId) {
-        const newCollapsedIds = !event.value
-          ? [...collapsedState, item.groupId]
-          : collapsedState.filter((groupId) => groupId !== item.groupId);
-          
-        setCollapsedState(newCollapsedIds);
-      }
-    },
-    [collapsedState]
-  );
-
-  const newData = setExpandedState({
-    data: resultState.data,
-    collapsedIds: collapsedState,
-  });
- 
-
   return (
     
     <div>
@@ -322,10 +259,10 @@ const RightNameHeader = (props) => {
         <div className="row text-center">
         
        <Grid style={{ height: "450px" }}
-            data={newData}
-            groupable={{
-              footer: "visible",
-            }}
+            data={data}
+            // groupable={{
+            //   footer: "visible",
+            // }}
            
             sortable={true}
             skip={page.skip}
@@ -341,8 +278,8 @@ const RightNameHeader = (props) => {
            reorderable={true}
            onDataStateChange={onDataStateChange}
            {...dataState}
-           onExpandChange={onExpandChange}
-           expandField="expanded"
+          //  onExpandChange={onExpandChange}
+          //  expandField="expanded"
             cellRender={cellRender}
           >
             <Column field="callOrPutYr" menu={true}  title="Based On First Call" width="250px" columnMenu={ColumnMenu} footerCell={ftrText}/>

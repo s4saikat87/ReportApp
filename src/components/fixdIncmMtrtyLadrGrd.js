@@ -139,6 +139,7 @@ const FixdIncmMaturityLadrGrd = ({data, callDetails, matVsCallPut}) => {
   const [chartData, setSelectedData] = React.useState(data);
   const [callData, setCallDetails] = React.useState(callDetails);
   const [chartmatVsCallPutData, setmatVsCallPutData] = React.useState(matVsCallPut);
+  const [callFlag, setCallFlag]=useState(0);
   
   const onDataStateChange = React.useCallback((e) => {
  
@@ -162,7 +163,7 @@ const NumberCell = (props) => {
     )
 }
 const PercentCell = (props) => {
-  debugger;
+  //debugger;
   if (props.rowType === "data")
   {
   let mc=props.dataItem[props.field];
@@ -234,7 +235,7 @@ const RightNameHeader = (props) => {
       }
       if(cellProps.field==="marketPercent")
       {
-        debugger;
+       // debugger;
         let mb=100;
         let mc=cellProps.dataItem[cellProps.field];
         return (
@@ -321,6 +322,13 @@ const RightNameHeader = (props) => {
 
   const ShowCallPutDetails=(e)=>{
     setChkBoxState(e.target.checked);
+    const groups = e.dataState.group;
+
+    if (groups) {
+      groups.map((group) => (group.aggregates = aggregates));
+    }
+    e.dataState.group = groups;
+    setResultState( processWithGroups(row,e.dataState));
     setDataState(e.dataState);
   };
   
@@ -349,13 +357,21 @@ const RightNameHeader = (props) => {
     collapsedIds: collapsedState,
   });
   const defaultTooltipRender = ({ point }) => `${formatNumber(point.value, "##,#.00")}`;
-  const labelContent = (e) => `${formatNumber(e.value, "##,#.00")}`;
+  const labelContent = (e) => `$${formatNumber(e.value, "##,#.00")}`;
+  const labelContent1 = (props) => {
+
+    let formatedNumber = Number(props.dataItem.mvPercent).toLocaleString(undefined, {
+        style: "percent",
+        minimumFractionDigits: 2,
+    });
+    return `${props.category}  ${props.dataItem.mvPercent.toFixed(2)}%`;
+};
 
   const onRowClick = e => {
-    debugger;
+   //debugger;
     var myr = e.dataItem.acctId;
 
-    var acctData = Enumerable.from(newData).where(w => w.acctId === myr)
+    var acctData = Enumerable.from(data).where(w => w.acctId === myr)
         .toArray();
 
     setSelectedData(acctData);
@@ -365,6 +381,11 @@ const RightNameHeader = (props) => {
     var mVsCData = Enumerable.from(matVsCallPut).where(w => w.acctId === myr)
     .toArray();
     setmatVsCallPutData(mVsCData);
+    setCallFlag(1);    
+   
+    setResultState(processWithGroups(data,e.dataState));
+    setDataState(e.dataState);
+    
     
     //var Data = mnrData.find((mjrTypeDtls) => mjrTypeDtls.mjrAstTypId === mjrAsetType);
     //console.log( Data);
@@ -478,7 +499,7 @@ const FormatLongNumber=({value})=> {
                                             //  categories={categoryAxis} 
                                             />
                                         </ChartCategoryAxis>
-                                        <ChartTooltip render={defaultTooltipRender} />
+                                        {/* <ChartTooltip render={defaultTooltipRender} /> */}
                                         <ChartValueAxis>
                                         <ChartValueAxisItem
                                             // title={{
@@ -487,9 +508,6 @@ const FormatLongNumber=({value})=> {
                                             min={0}
                                            labels={{
                                             visible: true,
-                                          
-                                           // rotation: 85,
-                                            //format: "d",
                                            content:FormatLongNumber
                                          
                                         }}
@@ -503,7 +521,7 @@ const FormatLongNumber=({value})=> {
                                                 categoryField="mtrtyYr"
 
                                                 labels={{
-                                                    visible: false,
+                                                    visible: true,
                                                     content: labelContent,
                                                 }}
                                             />
@@ -512,11 +530,16 @@ const FormatLongNumber=({value})=> {
 :
 <div></div>
 }
+<div style={{width:"60%",float:"left"}}>
+  {callFlag===1?
                                     <FixdIncmMaturityLadrCallDetls data={callData} chkState={ChkBoxState} />
-
+                                    :
+                                    <FixdIncmMaturityLadrCallDetls data={callDetails} chkState={ChkBoxState} />
+                                    }
+                                    </div>
                                     {ChkBoxState?
                                     
-                                    <div className="card mx-2 my-2">
+                                    <div className="card mx-2 my-2" style={{width:"38%",float:"left"}}>
             <div className="card-header tableheader">Maturity Date Vs Call / Put Date</div>
             <Chart style={{ height: "350px" }}>
                                         {/* <ChartTitle text="Maturity Date Vs Call/Put Date" /> */}
@@ -540,9 +563,6 @@ const FormatLongNumber=({value})=> {
                                             min={0}
                                            labels={{
                                             visible: true,
-                                          
-                                           // rotation: 85,
-                                            //format: "d",
                                            content:FormatLongNumber
                                          
                                         }}
