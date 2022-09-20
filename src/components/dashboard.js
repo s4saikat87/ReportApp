@@ -25,6 +25,7 @@ import Enumerable from 'linq';
   const [loading, setLoading] = useState(true);
   const[initMV,setInitMV]=useState(0);
   const[initCash,setInitCash]=useState(0);
+  const [performDtls, setPerformDtls] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
          setLoading(true);
@@ -48,7 +49,7 @@ import Enumerable from 'linq';
 
 const GetDefaultData = async () => {
   setLoading(true);
-
+ 
    let token = JSON.parse(localStorage.getItem('token'));
  
   let EmailAdrs=JSON.parse(localStorage.getItem('email'));
@@ -116,7 +117,7 @@ const GetADVAccountProfile = async (roleId,cntctId) => {
           //  console.log(response);
 
           const rowData = response.data;
-         debugger;
+      
         
           setAccountGet(rowData.t1);
           localStorage.setItem('acctData', JSON.stringify(rowData.t1));
@@ -127,7 +128,7 @@ const GetADVAccountProfile = async (roleId,cntctId) => {
           .toArray();
           let assetData=Enumerable.from(rowData.t4).where(w => w.mvPercent !== 0)
           .toArray();
-          debugger;
+        
           let cash=rowData.t5[0].cash;
           let mv=rowData.t5[0].mv;
           setMjrAcctDtls(mjrData);
@@ -135,6 +136,8 @@ const GetADVAccountProfile = async (roleId,cntctId) => {
           setAssetDtls(assetData);
          setInitCash(cash);
          setInitMV(mv);
+       
+         setPerformDtls(rowData.t6)
           setLoading(false);
 
       })
@@ -155,7 +158,7 @@ if (loading) {
     <div>
       <Header></Header>
       
-     <BerryDash data={accountGet} mjrData={mjrAcctDtls} mnrData={mnrAcctDtls} astData={assetDtls} initMV={initMV} initCash={initCash}/>
+     <BerryDash data={accountGet} mjrData={mjrAcctDtls} mnrData={mnrAcctDtls} astData={assetDtls} initMV={initMV} initCash={initCash} performAll={performDtls}/>
 
 
 

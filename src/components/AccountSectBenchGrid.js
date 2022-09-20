@@ -6,11 +6,13 @@ import { ExcelExport } from '@progress/kendo-react-excel-export';
 import Moment from 'react-moment';
 import { formatNumber, formatDate  } from '@telerik/kendo-intl';
 import { ColumnMenu } from "./columnMenu";
+import { CustomColumnMenu } from './customColumnMenu';
 import {
   setGroupIds,
   getGroupIds,
   setExpandedState,
 } from "@progress/kendo-react-data-tools";
+
 import { textAlign } from '@mui/system';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -34,32 +36,29 @@ import {
 
 const aggregates = [
     {
-      field: "shares",
+      field: "marketPercent",
       aggregate: "sum",
     },
     {
-        field: "market",
+        field: "bmPcnt",
         aggregate: "sum",
     },
     {
-        field: "yield",
-        aggregate: "average",
+        field: "varBMPcnt",
+        aggregate: "sum",
     }
   
   ];
-  const initialGroup = [
-    {
-      field: "accountNumber",
-    }  
-  ];
 
-  const initialDataState = {
-    skip: 0,
-  take: 10,
-  };
 
   const processWithGroups = (data, dataState) => {
-    debugger;
+    const groups = dataState.group;
+  
+    if (groups) {
+      groups.map((group) => (group.aggregates = aggregates));
+    }
+  
+    dataState.group = groups;
     const newDataState = process(data, dataState);
     setGroupIds({
       data: newDataState.data,
@@ -67,235 +66,300 @@ const aggregates = [
     });
     return newDataState;
   };
+
 const AcctSectBenchRptGrid = ({data}) => {
     debugger;
     const _export = React.useRef(null);
-    const _grid = React.useRef();
-    const excelExport = () => {
+  const excelExport = () => {
     if (_export.current !== null) {
-        _export.current.save(data);
+      _export.current.save(data);
     }
   };
 
+  const [locked, setLocked] = React.useState(false);
 
-  // const totalSum = (props) => {
-  //   const field = props.field || "";
-  //   const total = data.reduce((acc, current) => acc + current[field], 0);
-  //   return (
-  //     <td colSpan={props.colSpan} style={{textAlign:"right"}}>
-  //      { formatNumber(total, "##,#.00")}
-        
-  //     </td>
-  //   );
-  // };
-  // const avgYield = (props) => {
-  //   //debugger;
-  //   const field = props.field;
-  //   const len=data.length;
-  //   const average = data.reduce((acc, current) => acc + current[field],0)/len;
-  //   return (
-  //     <td colSpan={props.colSpan} style={{textAlign:"right"}}>
-  //       Avg: { formatNumber(average, "##,#.00")}
-  //     </td>
-  //   );
-  // }; 
-
-  
-  const [row, setRow] = useState(data);
-  const [dataState, setDataState] = React.useState();
-  const [resultState, setResultState] = React.useState(
-    processWithGroups(row, initialDataState)
-  );
-  //setResultState(process({data}, initialDataState))
-  
-  const [page, setPage] = React.useState(initialDataState);
-  const [collapsedState, setCollapsedState] = React.useState([]);
-  const[ChkBoxState,setChkBoxState]=useState(true);
-  const onDataStateChange = React.useCallback((e) => {
- 
-    
-    {
-    //let gridData = data;
-    const groups = e.dataState.group;
-
-    if (groups) {
-      groups.map((group) => (group.aggregates = aggregates));
-    }
-  e.dataState.group = groups;}
-   setResultState( processWithGroups(row,e.dataState));
-   setDataState(e.dataState);
-   //setChkBoxState(true);
-  }, []);
+  const columnLocked = () => {
+    setLocked(!locked);
+  };
+  const totalSum = (props) => {
+    const field = props.field || '';
+    const total = data
+      .reduce((acc, current) => acc + current[field], 0)
+      .toFixed(2);
+    return (
+      <td colSpan={props.colSpan} style={props.style}>
+        {formatNumber(total, '##,#.00')}
+      </td>
+    );
+  };
 
   const NumberCell = (props) => {
+    //debugger;
+    if(props.field==='account'){
+      return (
+          <td style={{ textAlign: 'left' }}>
+              {props.dataItem[props.field]}
+          </td>
+      )
+      }
+      if(props.field==='groupHeader'){
+        return (
+            <td style={{ textAlign: 'left' }}>
+                {props.dataItem[props.field]}
+            </td>
+        )
+        }
+    if(props.field==='marketPercent'){
     return (
         <td style={{ textAlign: 'right' }}>
             {formatNumber(props.dataItem[props.field], "##,#.00")}
         </td>
     )
-}
-const IntCell = (props) => {
-  return (
-      <td style={{ textAlign: 'right' }}>
-          {props.dataItem[props.field]}
-      </td>
-  )
-}
+    }
+    if(props.field==='bmPcnt'){
+      return (
+          <td style={{ textAlign: 'right' }}>
+              {formatNumber(props.dataItem[props.field], "##,#.00")}
+          </td>
+      )
+      }
+      if(props.field==='varBMPcnt'){
+        return (
+            <td style={{ textAlign: 'right' }}>
+                {formatNumber(props.dataItem[props.field], "##,#.00")}
+            </td>
+        )
+        }
+        
+              
+  }
 
-const RightNameHeader = (props) => {
-    return (
-        <a className="k-link" style={{
-            float: "right",
-        }} onClick={props.onClick}>
-            {/* <span className="k-icon k-i-cart" /> */}
-            <span
-                style={{
-                    // color: "#53d2fa",
-                }}
-            >
-                {props.title}
-            </span>
-            {props.children}
-        </a>
-    );
-};
+  const columns = [
+    {
+      title: 'Account',
+      field: 'account',
+      minWidth: 300,
+      show: true,
+      filter: 'text',
+      locked: true,
+    },
+    {
+      title: 'Description',
+      field: 'groupHeader',
+      minWidth: 300,
+      show: true,
+      filter: 'text',
+      locked: true,
+    },
+    {
+      title: 'Portfolio Holdings %',
+      field: 'marketPercent',
+      minWidth: 250,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+    {
+      title: 'Model Weighting %',
+      field: 'bmPcnt',
+      minWidth: 250,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+    {
+      title: 'Variance to Model %',
+      field: 'varBMPcnt',
+      minWidth: 250,
+      show: true,
+      filter: 'text',
+      locked: false,
+    },
+   
+  ];
 
-  const cellRender = (tdElement, cellProps) => {    
-    
-    
-    // if (cellProps.rowType === "data")
-    // {
-    // let cpnRate="", matrtyDate="";
+  
+  const [row, setRow] = useState(data);
+  const createDataState = (dataState) => {
+    return {
+      result: process(data.slice(0), dataState),
+      dataState: dataState,
+    };
+  };
+  let initialState = createDataState({
+    take: 20,
+    skip: 0,
+    group: [
+      {
+        field: 'groupHeader',
+      },
+    ],
+  });
 
-    // if(cellProps.field==="yldToMtrty" || cellProps.field==="yldCalPut")
-    //   {
-    //     return (
-    //       (ChkBoxState===true)?
-    //       <>
-    //       <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-    //         { formatNumber(cellProps.dataItem["yldToMtrty"], "##,#.00")}
-    //       </td>
-    //       </>:
-    //       <>
-    //       <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-    //         { formatNumber(cellProps.dataItem["yldCalPut"], "##,#.00")}
-    //       </td>
-    //       </>
-    //   );
-    //   }
-      // if(cellProps.field==="duration" || cellProps.field==="calPutDuration")
-      // {
-      //   return (
-      //     (ChkBoxState===true)?
-      //     <>
-      //     <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-      //       { formatNumber(cellProps.dataItem["duration"], "##,#.00")}
-      //     </td>
-      //     </>:
-      //     <>
-      //     <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-      //       { formatNumber(cellProps.dataItem["calPutDuration"], "##,#.00")}
-      //     </td>
-      //     </>
-      // );
-      // }
-    
-    // if(cellProps.field==="maturityDt")
-    // {
-      
-    //   const value = cellProps.field;      
-    //   return (
-    //       <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-           
-    //           <Moment format="MM/DD/YYYY">
-    //           {cellProps.dataItem[value]}
-    //         </Moment>
-    //       </td>
-    //   );
-    // }
-    // if(cellProps.field==="astShrtNm")
-    // {
-    //   cpnRate=cellProps.dataItem["couponRate"];
-    //   matrtyDate=cellProps.dataItem["maturityDt"];
-    //   return (
-    //     <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-    //       {cellProps.dataItem[cellProps.field]}&nbsp;{ formatNumber(cpnRate, "##,#.00")}%&nbsp;
-    //         <Moment format="MM/DD/YYYY">
-    //         {matrtyDate}
-    //       </Moment>
-    //       &nbsp;
-    //     </td>
-    // );
-    // }
-  // }
+  const [result, setResult] = React.useState(
+    processWithGroups(data, initialState.dataState)
+  );
+  //setResultState(process({data}, initialDataState))
+  
+  const [dataState, setDataState] = React.useState(initialState.dataState);
+  const [stateColumns, setStateColumns] = React.useState(columns);
+  const [currentColumns, setCurrentColumns] = React.useState(columns);
+  let pageSize = 20;
+  const [page, setPage] = React.useState({
+    skip: 0,
+    take: pageSize,
+  });
+  const dataStateChange = (event) => {
+    let updatedState = createDataState(event.dataState);
 
+    setResult(processWithGroups(data, updatedState.dataState));
+
+    setDataState(updatedState.dataState);
+  };
+
+  const onColumnsSubmit = (columnsState) => {
+    setStateColumns(columnsState);
+  };
+  const setWidth = (minWidth) => {
+    let width = minWidth;
+    return width;
+  };
+
+  const handleColumnLockToggle = (columnField, state) => {
+    let newColumns = currentColumns.map((column) => {
+      if (column.field === columnField) {
+        column.locked = state;
+      }
+
+      return column;
+    });
+    setCurrentColumns(newColumns);
+  }; 
+
+  const expandChange = (event) => {
+    const isExpanded =
+      event.dataItem.expanded === undefined
+        ? event.dataItem.aggregates
+        : event.dataItem.expanded;
+    event.dataItem.expanded = !isExpanded;
+    setResult({ ...result });
+  };
+
+  const getCells = (columns, cellProps) => {
+    let cells = [];
+    columns.forEach((column) => {
+      if (column.aggregate) {
+        cells.push(
+          <td>
+            {formatNumber(cellProps.dataItem.aggregates[column.field][column.aggregate], '##,#.00')}
+          </td>
+        );
+      } else {
+        cells.push(<td>&nbsp;</td>);
+      }
+    });
+    return cells;
+  };
+
+  const cellRender = (tdElement, cellProps) => {
+    if (
+      cellProps.rowType === 'groupHeader' &&
+      tdElement &&
+      tdElement.props.role != 'presentation'
+    ) {
+      //IMPORTANT - You need to add collection with the columns and their field name
+      //you can define the Grid columns outside of the Grid and reuse them here.
+      const columns = [
+        { field: 'account' },
+        { field: 'groupHeader' },
+        
+        { field: 'marketPercent', aggregate: 'sum' },
+        { field: 'bmPcnt', aggregate: 'sum' },
+        { field: 'varBMPcnt', aggregate: 'sum' },
+      ];
+
+      return (
+        <>
+          <td
+            {...tdElement.props}
+            colSpan={tdElement.props.colSpan - columns.length}
+          ></td>
+          {getCells(columns, cellProps)}
+        </>
+      );
+    }
     
+    if (cellProps.rowType === 'groupFooter') {
+      if (cellProps.field === 'marketPercent') {
+        return (
+          <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+            {cellProps.dataItem.aggregates.marketPercent.sum}
+          </td>
+        );
+      }
+      if (cellProps.field === 'bmPcnt') {
+        return (
+          <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+            {cellProps.dataItem.aggregates.bmPcnt.sum}
+          </td>
+        );
+      }
+      if (cellProps.field === 'varBMPcnt') {
+        return (
+          <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
+            {cellProps.dataItem.aggregates.varBMPcnt.sum}
+          </td>
+        );
+      }
+    }
+
     return tdElement;
   };
-  
 
+ 
   const pageChange = (event) => {
     setPage(event.page);
   };
 
-  const onExpandChange = React.useCallback(
-    (event) => {
-      debugger;
-      const item = event.dataItem;
-
-      if (item.groupId) {
-        const newCollapsedIds = !event.value
-          ? [...collapsedState, item.groupId]
-          : collapsedState.filter((groupId) => groupId !== item.groupId);
-          debugger;
-        setCollapsedState(newCollapsedIds);
-      }
-    },
-    [collapsedState]
-  );
-
-  const newData = setExpandedState({
-    data: resultState.data,
-    collapsedIds: collapsedState,
-  });
+  
   const defaultTooltipRender = ({ point }) => `${point.value.toFixed(2)}`;
   const labelContent = (e) => `${e.value.toFixed(2)}`;
   return (
     
     <div>
-        <div className="card mx-2 my-2">
-            <div className="card-header tableheader">Account Sectors Comparison Report</div>
+        <div className="card-header row d-flex justify-content-between align-items-center my-2">
+        <div className="col">
+          <p className="tableheader h6">Account Sectors Comparison Report</p>
         </div>
-        
-        
-        <div className="container-fluid">
-        <div className="row text-center">
+        </div>
+      <div className="card-body">
+        <div className="mx-1 px-1 my-1 py-1">
        
-        <ExcelExport data={resultState} ref={_export}> 
-       <Grid style={{ height: "650px" }}
-            data={newData}
-            // data={resultState.slice(page.skip, page.skip + page.take)}
-            groupable={{
-              footer: "visible",
+        <ExcelExport data={data} ref={_export}> 
+        <Grid
+              style={{ height: '500px' }}
+              data={result}
+              {...dataState}
+              onDataStateChange={dataStateChange}
+              expandField="expanded"
+              onExpandChange={expandChange}
+              cellRender={cellRender}
+              sortable={true}
+              resizable={true}
+             //reorderable={true}
+              // pageable={true}
+              // pageSize={20}
+              skip={page.skip}
+            pageable={{
+              pageSizes: true,
             }}
-
-           
-            sortable={true}
-            skip={page.skip}
-            pageable={ true}
             pageSize={page.take}
             total={data.length}
-           
-            ref={_grid}
-           //total={total}
-          //  filterable={true}
-           onDataStateChange={onDataStateChange}
-           {...dataState}
-           onExpandChange={onExpandChange}
-           expandField="expanded"
-            cellRender={cellRender}
-          >
-            <GridToolbar>
+              groupable={{
+                footer: 'visible',
+              }}
+            >
+              <GridToolbar>
           <button
             title="Export Excel"
             className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
@@ -305,17 +369,29 @@ const RightNameHeader = (props) => {
           </button>
           
         </GridToolbar>
-            <Column field="accountNumber" menu={true} title="Account Number" columnMenu={ColumnMenu} locked={true} width="170px"  />
-            <Column field="accountName" menu={true} title="Account Name" columnMenu={ColumnMenu} locked={true} width="200px"  />
-            <Column field="groupHeader" menu={true} title="Desscription" columnMenu={ColumnMenu} locked={true} width="300px"  />
-            <Column field="marketPercent"  title="Portfolio Weightings" columnMenu={ColumnMenu} cell={NumberCell} width="170px" format="{0:n2}"  />
-            <Column field="bmPcnt"  title="Model Weightings" columnMenu={ColumnMenu} cell={NumberCell} width="170px" format="{0:n2}" />
-            <Column field="varBMPcnt"   title="Variance to Model" width="170px" columnMenu={ColumnMenu} cell={NumberCell} format="{0:n2}" />
-            <Column field="pcntOfBMPcnt"  title="% of Model percent" width="170px" columnMenu={ColumnMenu} cell={NumberCell} format="{0:n2}" />
-
-            
-            
-          </Grid>
+              {stateColumns.map(
+                (column, idx) =>
+                  column.show && (
+                    <Column
+                      width={setWidth(column.minWidth)}
+                      locked={column.locked}
+                      key={idx}
+                      field={column.field}
+                      title={column.title}
+                      filter={column.filter}
+                      footerCell={column.footerCell}
+                      cell={NumberCell}
+                      columnMenu={(props) => (
+                        <CustomColumnMenu
+                          {...props}
+                          columns={stateColumns}
+                          onColumnsSubmit={onColumnsSubmit}
+                        />
+                      )}
+                    />
+                  )
+              )}
+            </Grid>
           <Chart style={{ height: "350px" }}>
                                         {/* <ChartTitle text="Maturity Date Vs Call/Put Date" /> */}
                                         <ChartLegend position="bottom" />

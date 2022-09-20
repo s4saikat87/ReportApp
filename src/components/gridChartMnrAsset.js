@@ -64,7 +64,7 @@ const GridChartMnrAsset = ({ data, astData,selMjrAsset }) => {
     const onRowClick = e => {
        
         var mnrAsetType = e.dataItem.mnrAstTypId;
-        debugger;
+      
         SetSelMnrAsset(e.dataItem.mnrAstType);
         var assetData = Enumerable.from(astData).where(w => w.mnrAstTypId === mnrAsetType)
             .toArray();
@@ -161,8 +161,8 @@ const GridChartMnrAsset = ({ data, astData,selMjrAsset }) => {
     return (
         <div>
             <div className="row mx-1 my-2">
-                <div className="col-md-12 card-header tableheader">Minor Asset(s)
-                {selMjrAsset!==''?<> under Major Asset {selMjrAsset}</>:<></>}
+                <div className="col-md-12 card-header tableheader">Category
+                {selMjrAsset!==''?<>- {selMjrAsset}</>:<></>}
                 </div>
 
                 <div className="col col-md-6 col-sm-10 py-2">
@@ -186,7 +186,7 @@ const GridChartMnrAsset = ({ data, astData,selMjrAsset }) => {
                             //  cellRender={cellRender}
                             >
 
-                                <Column field="mnrAstType" menu={true} title="Minor Asset" width="220px" />
+                                <Column field="mnrAstType" menu={true} title="Category" width="220px" />
 
                                 <Column field="mv" title="Market Value($)" cell={NumberCell} headerCell={RightNameHeader} width="210px" format="{0:n2}" filter="numeric" filterable={false}
 

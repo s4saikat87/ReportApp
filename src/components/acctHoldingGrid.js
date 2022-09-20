@@ -13,30 +13,27 @@ import {
   setExpandedState,
 } from '@progress/kendo-react-data-tools';
 const aggregates = [
-  {
-    field: "cost",
-    aggregate: "sum",
-  },
+  // {
+  //   field: "cost",
+  //   aggregate: "sum",
+  // },
   {
     field: "market",
     aggregate: "sum",
   },
-  {
-    field: "unrGainLoss",
-    aggregate: "sum",
-  },
-  {
-    field: "principalCash",
-    aggregate: "sum",
-  },
-  {
-    field: "incomeCash",
-    aggregate: "sum",
-  },
-  {
-    field: "investedIncome",
-    aggregate: "sum",
-  }
+  
+  // {
+  //   field: "principalCash",
+  //   aggregate: "sum",
+  // },
+  // {
+  //   field: "incomeCash",
+  //   aggregate: "sum",
+  // },
+  // {
+  //   field: "investedIncome",
+  //   aggregate: "sum",
+  // }
 
 ];
 
@@ -74,12 +71,28 @@ const AcctHoldingGrid = ({data}) => {
       .reduce((acc, current) => acc + current[field], 0)
       .toFixed(2);
     return (
-      <td colSpan={props.colSpan} style={props.style}>
+      <td colSpan={props.colSpan} style={{ textAlign: "right" }}>
         {formatNumber(total, '##,#.00')}
       </td>
     );
   };
-
+  const RightNameHeader = (props) => {
+    return (
+        <a className="k-link" style={{
+            textAlign: "center",
+        }} onClick={props.onClick}>
+            {/* <span className="k-icon k-i-cart" /> */}
+            <span
+                style={{
+                    // color: "#53d2fa",
+                }}
+            >
+                {props.title}
+            </span>
+            {props.children}
+        </a>
+      );
+  };
   const columns = [
     {
       title: 'Branch',
@@ -144,19 +157,19 @@ const AcctHoldingGrid = ({data}) => {
       show: true,
       filter: 'numeric',
       locked: false,
-      
+      headerCell: RightNameHeader,
     },
     {
-      title: 'Cost',
+      title: 'Cost($)',
       field: 'cost',
       minWidth: 150,
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell: totalSum ,
+      
     },
     {
-      title: 'Market',
+      title: 'Market($)',
       field: 'market',
       minWidth: 150,
       show: true,
@@ -165,16 +178,16 @@ const AcctHoldingGrid = ({data}) => {
       footerCell:  totalSum ,
     },
     {
-      title: 'Unr Gain Loss',
+      title: 'Unr Gain Loss($)',
       field: 'unrGainLoss',
       minWidth: 180,
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell:  totalSum ,
+      //footerCell:  totalSum ,
     },
     {
-      title: 'Est Ann Inc',
+      title: 'Est Ann Inc($)',
       field: 'estAnnInc',
       minWidth: 150,
       show: true,
@@ -183,7 +196,7 @@ const AcctHoldingGrid = ({data}) => {
       //footerCell:  totalSum ,
     },
     {
-      title: 'Yield',
+      title: 'Yield(%)',
       field: 'yield',
       minWidth: 150,
       show: true,
@@ -192,7 +205,7 @@ const AcctHoldingGrid = ({data}) => {
       //footerCell:  totalSum ,
     },
     {
-      title: 'Acc Int.',
+      title: 'Acc Int.(%)',
       field: 'accruedInterest',
       minWidth: 150,
       show: true,
@@ -201,31 +214,31 @@ const AcctHoldingGrid = ({data}) => {
       //footerCell:  totalSum ,
     },
     {
-      title: 'PCash',
+      title: 'Principal($)',
       field: 'principalCash',
       minWidth: 150,
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell:  totalSum ,
+      //footerCell:  totalSum ,
     },
     {
-      title: 'ICash',
+      title: 'Income($)',
       field: 'incomeCash',
       minWidth: 150,
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell:  totalSum ,
+     // footerCell:  totalSum ,
     },
     {
-      title: 'Inv. Income',
+      title: 'Inv. Income($)',
       field: 'investedIncome',
       minWidth: 150,
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell:  totalSum ,
+      //footerCell:  totalSum ,
     },
     {
       title: 'Inv. Objective',
@@ -248,23 +261,23 @@ const AcctHoldingGrid = ({data}) => {
     {
       title: 'Inv. Officer',
       field: 'investmentOfficer',
-      minWidth: 150,
+      minWidth: 180,
       show: true,
       filter: 'text',
       locked: false,
       
     },
-    {
-      title: 'Rate',
-      field: 'rate',
-      minWidth: 150,
-      show: true,
-      filter: 'numeric',
-      locked: false,
+    // {
+    //   title: 'Rate',
+    //   field: 'rate',
+    //   minWidth: 150,
+    //   show: true,
+    //   filter: 'numeric',
+    //   locked: false,
       
-    },
+    // },
     {
-      title: 'Tax Cost',
+      title: 'Tax Cost($)',
       field: 'txCstAmt',
       minWidth: 150,
       show: true,
@@ -273,7 +286,7 @@ const AcctHoldingGrid = ({data}) => {
       
     },
     {
-      title: 'Yield To Cost',
+      title: 'Yield To Cost(%)',
       field: 'yldToCost',
       minWidth: 150,
       show: true,
@@ -345,37 +358,15 @@ const AcctHoldingGrid = ({data}) => {
 
   
   
-  const NumberCell = (props) => {
-    return (
-        <td style={{ textAlign: 'right' }}>
-            {formatNumber(props.dataItem[props.field], "##,#.00")}
-        </td>
-    )
-  }
+  
 
-  const RightNameHeader = (props) => {
-    return (
-        <a className="k-link" style={{
-            float: "right",
-        }} onClick={props.onClick}>
-            {/* <span className="k-icon k-i-cart" /> */}
-            <span
-                style={{
-                    // color: "#53d2fa",
-                }}
-            >
-                {props.title}
-            </span>
-            {props.children}
-        </a>
-      );
-  };
+  
   const getCells = (columns, cellProps) => {
     let cells = [];
     columns.forEach((column) => {
       if (column.aggregate) {
         cells.push(
-          <td>
+          <td style={{ textAlign: "right" }}>
             {formatNumber(cellProps.dataItem.aggregates[column.field][column.aggregate], '##,#.00')}
           </td>
         );
@@ -403,19 +394,19 @@ const AcctHoldingGrid = ({data}) => {
         { field: 'pmrDesc'},
         { field: 'shares'},
                
-        { field: 'cost', aggregate: 'sum' },
+        { field: 'cost' },
         { field: 'market', aggregate: 'sum' },
-        { field: 'unrGainLoss', aggregate: 'sum' },
+        { field: 'unrGainLoss' },
         { field: 'estAnnInc' },
         { field: 'yield' },
         { field: 'accruedInterest' },
-        { field: 'principalCash', aggregate: 'sum' },
-        { field: 'incomeCash' , aggregate: 'sum'},
-        { field: 'investedIncome', aggregate: 'sum' },
+        { field: 'principalCash'},
+        { field: 'incomeCash' },
+        { field: 'investedIncome'},
         { field: 'investmentObjective'},
         { field: 'administrator'},
         { field: 'investmentOfficer'},
-        { field: 'rate'},
+        
         { field: 'txCstAmt'},
         { field: 'yldToCost'},
        
@@ -433,14 +424,7 @@ const AcctHoldingGrid = ({data}) => {
       );
     }
     if (cellProps.rowType === 'groupFooter') {
-      if (cellProps.field === "cost") {
-
-        return (
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.cost.sum}
-          </td>
-        );
-      }
+     
       if (cellProps.field === "market") {
 
         return (
@@ -449,35 +433,96 @@ const AcctHoldingGrid = ({data}) => {
           </td>
         );
       }
+      
+      
+    }
+    if (cellProps.rowType === "data") {
+
+      if (cellProps.field === "market") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+              {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
       if (cellProps.field === "unrGainLoss") {
 
         return (
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.unrGainLoss.sum}
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+              {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
+      if (cellProps.field === "estAnnInc") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
+      if (cellProps.field === "yield") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
+      if (cellProps.field === "accruedInterest") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
           </td>
         );
       }
       if (cellProps.field === "principalCash") {
 
         return (
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.principalCash.sum}
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
           </td>
         );
       }
       if (cellProps.field === "incomeCash") {
 
         return (
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.incomeCash.sum}
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
           </td>
         );
       }
       if (cellProps.field === "investedIncome") {
 
         return (
-          <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-             {cellProps.dataItem.aggregates.investedIncome.sum}
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
+      if (cellProps.field === "investedIncome") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
+      if (cellProps.field === "cost") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
+      if (cellProps.field === "shares") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.000000")}
           </td>
         );
       }
@@ -486,62 +531,171 @@ const AcctHoldingGrid = ({data}) => {
     return tdElement;
   };
 
-  // const cellRender = (tdElement, cellProps) => {
-
-  //   if (cellProps.rowType === "groupFooter") {
-
-  //     if (cellProps.field === "cost") {
-
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-  //            {cellProps.dataItem.aggregates.cost.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //     if (cellProps.field === "market") {
-
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-  //            {cellProps.dataItem.aggregates.market.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //     if (cellProps.field === "unrGainLoss") {
-
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-  //            {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //     if (cellProps.field === "principalCash") {
-
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-  //            {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //     if (cellProps.field === "incomeCash") {
-
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-  //            {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //     if (cellProps.field === "investedIncome") {
-
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-  //            {cellProps.dataItem.aggregates.unrGainLoss.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //   }
-
-  //   return tdElement;
-  // };
+  const NumberCell = (props) => {
+    debugger;
+    if(props.field==='branch'){
+      return (
+          <td style={{ textAlign: 'left' }}>
+              {props.dataItem[props.field]}
+          </td>
+      )
+      }
+    if(props.field==='accountType'){
+      return (
+          <td style={{ textAlign: 'left' }}>
+              {props.dataItem[props.field]}
+          </td>
+      )
+      }
+      if(props.field==='accountName'){
+        return (
+            <td style={{ textAlign: 'left' }}>
+                {props.dataItem[props.field]}
+            </td>
+        )
+        }
+      if(props.field==='asset'){
+        return (
+            <td style={{ textAlign: 'left' }}>
+                {props.dataItem[props.field]}
+            </td>
+        )
+        }
+    if(props.field==='tckrSymbl'){
+    return (
+        <td style={{ textAlign: 'left' }}>
+            {props.dataItem[props.field]}
+        </td>
+    )
+    }
+    if(props.field==='cusip'){
+      return (
+          <td style={{ textAlign: 'left' }}>
+              {props.dataItem[props.field]}
+          </td>
+      )
+      }
+    if(props.field==='pmrDesc'){
+        return (
+            <td style={{ textAlign: 'left' }}>
+                {props.dataItem[props.field]}
+            </td>
+        )
+      }
+    if(props.field==='shares'){
+        return (
+          <td style={{ textAlign: 'right' }}>
+            {formatNumber(props.dataItem[props.field], "##,#.00")}
+          </td>
+          )
+      }
+    if(props.field==='cost'){
+         return (
+            <td style={{ textAlign: 'right' }}>
+                {formatNumber(props.dataItem[props.field], "##,#.00")}
+            </td>
+          )
+      }
+    if(props.field==='market'){
+              return (
+                  <td style={{ textAlign: 'right' }}>
+                      {formatNumber(props.dataItem[props.field], "##,#.00")}
+                  </td>
+              )
+              }
+    if(props.field==='unrGainLoss'){
+                return (
+                    <td style={{ textAlign: 'right' }}>
+                        {formatNumber(props.dataItem[props.field], "##,#.00")}
+                    </td>
+                )
+                }
+    if(props.field==='estAnnInc'){
+                  return (
+                      <td style={{ textAlign: 'right' }}>
+                          {formatNumber(props.dataItem[props.field], "##,#.00")}
+                      </td>
+                  )
+                  }
+    if(props.field==='yield'){
+                    return (
+                        <td style={{ textAlign: 'right' }}>
+                            {formatNumber(props.dataItem[props.field], "##,#.00")}
+                        </td>
+                    )
+                    }
+    if(props.field==='accruedInterest'){
+                      return (
+                          <td style={{ textAlign: 'right' }}>
+                              {formatNumber(props.dataItem[props.field], "##,#.00")}
+                          </td>
+                      )
+                      }
+    if(props.field==='principalCash'){
+                        return (
+                            <td style={{ textAlign: 'right' }}>
+                                {formatNumber(props.dataItem[props.field], "##,#.00")}
+                            </td>
+                        )
+                        }
+    if(props.field==='incomeCash'){
+                          return (
+                              <td style={{ textAlign: 'right' }}>
+                                  {formatNumber(props.dataItem[props.field], "##,#.00")}
+                              </td>
+                          )
+                          }
+    if(props.field==='investedIncome'){
+                            return (
+                                <td style={{ textAlign: 'right' }}>
+                                    {formatNumber(props.dataItem[props.field], "##,#.00")}
+                                </td>
+                            )
+                            }
+    if(props.field==='investmentObjective'){
+                              return (
+                                  <td style={{ textAlign: 'left' }}>
+                                      {props.dataItem[props.field]}
+                                  </td>
+                              )
+                              }
+    if(props.field==='administrator'){
+                                return (
+                                    <td style={{ textAlign: 'left' }}>
+                                        {props.dataItem[props.field]}
+                                    </td>
+                                )
+                                }
+    if(props.field==='investmentOfficer'){
+                                  return (
+                                      <td style={{ textAlign: 'left' }}>
+                                          {props.dataItem[props.field]}
+                                      </td>
+                                  )
+                                  }
+    if(props.field==='rate'){
+                                    return (
+                                        <td style={{ textAlign: 'right' }}>
+                                            {formatNumber(props.dataItem[props.field], "##,#.00")}
+                                        </td>
+                                    )
+                                    }
+    if(props.field==='txCstAmt'){
+                                      return (
+                                          <td style={{ textAlign: 'right' }}>
+                                              {formatNumber(props.dataItem[props.field], "##,#.00")}
+                                          </td>
+                                      )
+                                      }
+     if(props.field==='yldToCost'){
+                                        return (
+                                            <td style={{ textAlign: 'right' }}>
+                                                {formatNumber(props.dataItem[props.field], "##,#.00")}
+                                            </td>
+                                        )
+                                        }
+              
+  }
   
   return (
     
@@ -556,7 +710,9 @@ const AcctHoldingGrid = ({data}) => {
             <div className='col'></div>
           
           <div className='col'>
-          <button className='btn btn-outline-primary btn-sm' onClick={excelExport}>Export to Excel</button>
+          <button 
+          className='k-button k-button-sm k-rounded-sm k-button-solid k-button-solid-primary' 
+          onClick={excelExport}>Export to Excel</button>
 
             </div>
 
@@ -568,7 +724,7 @@ const AcctHoldingGrid = ({data}) => {
         <div className="mx-1 my-1 py-1">
         <ExcelExport data={data} ref={_export}> 
         <Grid
-              style={{ height: '500px' }}
+              style={{ height: '600px' }}
               data={result}
               {...dataState}
               onDataStateChange={dataStateChange}
@@ -576,6 +732,7 @@ const AcctHoldingGrid = ({data}) => {
               onExpandChange={expandChange}
               cellRender={cellRender}
               sortable={true}
+              resizable={true}
               // pageable={true}
               // pageSize={20}
               skip={page.skip}
@@ -599,7 +756,8 @@ const AcctHoldingGrid = ({data}) => {
                       title={column.title}
                       filter={column.filter}
                       footerCell={column.footerCell}
-                      //cell={column.cell}
+                      //headerCell={column.headerCell}
+                      //cell={NumberCell}
                       columnMenu={(props) => (
                         <CustomColumnMenu
                           {...props}

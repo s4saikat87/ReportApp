@@ -22,7 +22,7 @@ import {
     ChartTooltip,
 } from "@progress/kendo-react-charts";
 import { formatNumber, formatDate  } from '@telerik/kendo-intl';
-const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
+const GridMjrAsset = ({ data, mnrData, astData, loading,performData }) => {
    
     //const labelContent = (e) => `${e.category}: \n  ${e.value}%`;
     const labelContent = (e) => `$${formatNumber(e.value, "##,#.00")}`;
@@ -56,7 +56,7 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
             style: "percent",
             minimumFractionDigits: 2,
         });
-        return `${props.category}  ${props.dataItem.mvPercent.toFixed(2)}%`;
+        return `${props.category}  ${props.dataItem.mvPercent.toFixed(2)}% \n $${formatNumber(props.dataItem.mv, "##,#.00")}`;
     };
     const defaultTooltipRender = ({ point }) => `${point.value.toFixed(2)}`;
 
@@ -145,25 +145,35 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
         }
         else
         {
-              // for testing
-            //value = Math.floor(Math.random()*1001);
-       
-            // hundreds
-            if(value <= 999){
+            
+             
+            if(value <= 999 && value>=-999){
               return value;
             }
+
+           
             // thousands
-            else if(value >= 1000 && value <= 999999){
+            else if(value >= 1000 && value <= 999999 ){
               return (value / 1000) + 'K';
             }
             // millions
-            else if(value >= 1000000 && value <= 999999999){
+            else if(value >= 1000000 && value <= 999999999 ){
               return (value / 1000000) + 'M';
             }
             // billions
-            else if(value >= 1000000000 && value <= 999999999999){
+            else if(value >= 1000000000 && value <= 999999999999 ){
               return (value / 1000000000) + 'B';
             }
+
+            else if(value <= -1000 && value >= -999999 ){
+                return (value / 1000) + 'K';
+              }
+              else if(value <= -1000000 && value >= -999999999 ){
+                return (value / 1000) + 'M';
+              }
+              else if(value <= -1000000000 && value >= -999999999999 ){
+                return (value / 1000) + 'B';
+              }
             else
               return value;
         }
@@ -180,21 +190,16 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
         <div>
 
 
+<div className='row py-1 my-1 mx-1'>
+        <div className='col-sm-10 col-md-6 col-lg-6 my-1'>
 
+            <div className='card rounded'>
 
-            <div className="row mx-1 my-2">
-                <div className='card rounded'>
+                    <div className='card-header tableheader'>Class (^Exclude Quantity)</div>
+                    <div className='card-body'>
 
-                    <div className='card-header'>
-
-                    <div className='tableheader text-start'>Major Asset</div>
-                    
-                    </div>
-
-    <div className='card-body row'>                    
-     <div className="col h-100">
-    <Chart onSeriesClick={plotareaclick}
-     seriesColors={chartDefaultV4Colors} style={{ height: "350px" }}>
+                    <Chart onSeriesClick={plotareaclick}
+     seriesColors={chartDefaultV4Colors} style={{ height: "400px" }}>
         {/* <ChartTitle text="Major Asset Chart" /> */}
         <ChartLegend position="bottom" />
         <ChartValueAxis>
@@ -217,6 +222,9 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
         <ChartSeries>
             <ChartSeriesItem
                 type="pie"
+                overlay={{
+                    gradient: "sharpBevel",
+                  }}
                 data={data}
                 field="mv"
                 categoryField="mjrAstType"
@@ -229,58 +237,270 @@ const GridMjrAsset = ({ data, mnrData, astData, loading }) => {
             />
         </ChartSeries>
     </Chart>
-    </div>
+                    </div>
+
+            </div>
+
+
+        </div>
+
+
+        <div className='col-sm-10 col-md-6 col-lg-6 my-1'>
+
+            <div className='card rounded'>
+
+                    <div className='card-header tableheader'>Activities</div>
+                    <div className='card-body'>
+                    {performData.length===1?
+
+<Chart 
+   
     
-    <div className='col h-100'>
-    <Chart 
-    onSeriesClick={plotareaclick}
+seriesColors={chartDefaultV4Colors} style={{ height: "400px" }}>
     
-    seriesColors={chartDefaultV4Colors} style={{ height: "350px" }}>
-        {/* <ChartTitle text="Major Asset Chart" /> */}
-        <ChartLegend position="right" />
-        <ChartValueAxis>
-                                        <ChartValueAxisItem
-                                            // title={{
-                                            //     text: "Percentage",
-                                            // }}
-                                            min={0}
-                                           labels={{
-                                            visible: true,
-                                          
-                                           // rotation: 85,
-                                            //format: "d",
-                                           content:FormatLongNumber
-                                         
-                                        }}
+    <ChartLegend position="right" />
+    <ChartValueAxis>
+                                    <ChartValueAxisItem
+                                        // title={{
+                                        //     text: "Percentage",
+                                        // }}
+                                       // min={0}
+                                       labels={{
+                                        visible: true,
+                                      
+                                       // rotation: 85,
+                                        //format: "d",
+                                       content:FormatLongNumber
+                                     
+                                    }}
+                                    />
+                                </ChartValueAxis>
+                                <ChartCategoryAxis>
+                                        <ChartCategoryAxisItem
+                                            labels={{
+                                                visible: true,
+                                                rotation: 60,
+                                                format: "d",
+                                            }}
+                                        //  categories={categoryAxis} 
                                         />
-                                    </ChartValueAxis>
-        {/* <ChartTooltip  /> */}
-        <ChartSeries>
-            <ChartSeriesItem
-                type="column"
-                data={data}
-                field="mv"
-                categoryField="mjrAstType"
+                                    </ChartCategoryAxis>
+    <ChartTooltip  />
+    <ChartSeries>
+        <ChartSeriesItem
+            type="column"
+            data={performData}
+            field="income"
+            categoryField="shrtNm"
+            name="Income"                               
+            labels={{
+                visible: false,
+                content: labelContent,
+            }}
+        />
 
-                labels={{
-                    visible: true,
-                    content: labelContent,
-                }}
-            />
-        </ChartSeries>
-    </Chart>
+<ChartSeriesItem
+            type="column"
+            data={performData}
+            field="fees"
+            name="Fees"
+            //categoryField="shrtNm"
+
+            labels={{
+                visible: false,
+                content: labelContent,
+            }}
+        />
+
+<ChartSeriesItem
+            type="column"
+            data={performData}
+            field="disbursement"
+            categoryField="shrtNm"
+            name="Disbursement"
+            labels={{
+                visible: false,
+               // content: labelContent,
+            }}
+        />
+
+<ChartSeriesItem
+            type="column"
+            data={performData}
+            field="receipt"
+            categoryField="shrtNm"
+            name="Receipt"
+            labels={{
+                visible: false,
+               // content: labelContent,
+            }}
+        />
+
+<ChartSeriesItem
+            type="column"
+            data={performData}
+            field="rLGainLoss"
+            categoryField="shrtNm"
+            name="Realized Gain/Loss"
+            labels={{
+                visible: false,
+               // content: labelContent,
+            }}
+        />
+
+<ChartSeriesItem
+            type="column"
+            data={performData}
+            field="uLGainLoss"
+            categoryField="shrtNm"
+            name="Un-Realized Gain/Loss"
+            labels={{
+                visible: false,
+               // content: labelContent,
+            }}
+        />
+    </ChartSeries>
+    
+
+    
+
+    
+
+    
+</Chart>:
+ <Chart 
+   
+    
+ seriesColors={chartDefaultV4Colors} style={{ height: "370px" }}>
+     
+     <ChartLegend position="right" />
+     <ChartValueAxis>
+                                     <ChartValueAxisItem
+                                         // title={{
+                                         //     text: "Percentage",
+                                         // }}
+                                        // min={0}
+                                        labels={{
+                                         visible: true,
+                                       
+                                        // rotation: 85,
+                                         //format: "d",
+                                        content:FormatLongNumber
+                                      
+                                     }}
+                                     />
+                                 </ChartValueAxis>
+                                 <ChartCategoryAxis>
+                                         <ChartCategoryAxisItem
+                                             labels={{
+                                                 visible: true,
+                                                 rotation: 60,
+                                                 format: "d",
+                                             }}
+                                         //  categories={categoryAxis} 
+                                         />
+                                     </ChartCategoryAxis>
+     <ChartTooltip  />
+     <ChartSeries>
+         <ChartSeriesItem
+             type="area"
+             data={performData}
+             field="income"
+             categoryField="shrtNm"
+             name="Income"                               
+             labels={{
+                 visible: false,
+                 content: labelContent,
+             }}
+         />
+
+<ChartSeriesItem
+             type="area"
+             data={performData}
+             field="fees"
+             name="Fees"
+             //categoryField="shrtNm"
+
+             labels={{
+                 visible: false,
+                 content: labelContent,
+             }}
+         />
+
+<ChartSeriesItem
+             type="area"
+             data={performData}
+             field="disbursement"
+             categoryField="shrtNm"
+             name="Disbursement"
+             labels={{
+                 visible: false,
+                // content: labelContent,
+             }}
+         />
+
+<ChartSeriesItem
+             type="area"
+             data={performData}
+             field="receipt"
+             categoryField="shrtNm"
+             name="Receipt"
+             labels={{
+                 visible: false,
+                // content: labelContent,
+             }}
+         />
+
+<ChartSeriesItem
+             type="area"
+             data={performData}
+             field="rLGainLoss"
+             categoryField="shrtNm"
+             name="Realized Gain/Loss"
+             labels={{
+                 visible: false,
+                // content: labelContent,
+             }}
+         />
+
+<ChartSeriesItem
+             type="area"
+             data={performData}
+             field="uLGainLoss"
+             categoryField="shrtNm"
+             name="Un-Realized Gain/Loss"
+             labels={{
+                 visible: false,
+                // content: labelContent,
+             }}
+         />
+     </ChartSeries>
+     
+
+     
+
+     
+
+     
+ </Chart>
+        
+        }
+
+                    </div>
+
+            </div>
+
+
+        </div>
 
 
 
-                        </div>
-                        </div>
 
-                </div>
+</div>
 
 
 
-            
-         </div>
+           
             { 
            
 

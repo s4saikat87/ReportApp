@@ -23,12 +23,14 @@ import { useState, useEffect,useRef } from 'react';
 
 import { FaSignOutAlt, FaChalkboard, FaListAlt, FaRegChartBar,FaDonate,FaChartLine,FaDice, FaUserAlt, FaCogs } from 'react-icons/fa';
 
-const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCash }) => {
+const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCash,performAll }) => {
+ 
   const [selAcct, SetselAcct] = useState('');
   const [dataAcct, setDataAcct] = React.useState(data.slice());
   const [updatedMjrData, setUpdatedMjrData] = useState(mjrAllData);
   const [updatedMnrData, setUpdatedMnrData] = useState(mnrAllData);
   const [updatedAssetData, setUpdatedAssetData] = useState(assetAllData);
+  const [updatedPerformAllData, setUpdatedPerformAllData] = useState(performAll);
   const [loading, setLoading] = useState(false);
   const [availableCash, setAvailableCash] = useState(0);
   const [excludedCash, setExcludedCash] = useState(0);
@@ -99,6 +101,7 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCas
         setAvailableCash(rowData.t1[0].availableCash);
         setExcludedCash(rowData.t1[0].excludedCash);
         setMrktVlAmt(rowData.t1[0].mrktVlAmt);
+        setUpdatedPerformAllData(rowData.t6);
         debugger;
         localStorage.setItem('changeSelect', "1");
         if(AcctId===0)
@@ -265,7 +268,7 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCas
 
       {/* <UpdateControl updatedMjrData={updatedMjrData} updatedMnrData={updatedMnrData} updatedAssetData={updatedAssetData} /> */}
 
-      <GridMjrAsset data={updatedMjrData} mnrData={updatedMnrData} astData={updatedAssetData} loading={loading} />
+      <GridMjrAsset data={updatedMjrData} mnrData={updatedMnrData} astData={updatedAssetData} loading={loading} performData={updatedPerformAllData} />
 
 
 

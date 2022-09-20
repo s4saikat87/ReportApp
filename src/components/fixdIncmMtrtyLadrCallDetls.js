@@ -140,7 +140,7 @@ const RightNameHeader = (props) => {
         return (
          
           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }}  role={"gridcell"}>
-            { formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+            { formatNumber(cellProps.dataItem[cellProps.field], "##,#.000000")}
           </td>
       );
       }
@@ -282,12 +282,12 @@ const RightNameHeader = (props) => {
           //  expandField="expanded"
             cellRender={cellRender}
           >
-            <Column field="callOrPutYr" menu={true}  title="Based On First Call" width="250px" columnMenu={ColumnMenu} footerCell={ftrText}/>
+            <Column field="callOrPutYr" menu={true}  title="Based On First Call" width="250px" />
             
-            <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  filterable={false} footerCell={totalSum}/>
-            <Column field="market" title="Market Value" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} headerCell={RightNameHeader}   filterable={false} footerCell={totalSum}/>
-            <Column field="income" title="Income" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} headerCell={RightNameHeader}  filterable={false} footerCell={totalSum}/>
-            <Column field="yield" title="Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}   filterable={false} footerCell={avgYield}/>
+            <Column field="shares" title="Shares" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}  filterable={false}/>
+            <Column field="market" title="Market Value" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} headerCell={RightNameHeader}   filterable={false} />
+            <Column field="income" title="Income" width="150px" format="{0:n2}" filter="numeric" columnMenu={ColumnMenu} headerCell={RightNameHeader}  filterable={false}/>
+            <Column field="yield" title="Yield%" width="150px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu} headerCell={RightNameHeader}   filterable={false}/>
             <Column field="marketPercent" title="Percent" width="200px" filter="numeric" format="{0:n2}" columnMenu={ColumnMenu}  headerCell={RightNameHeader}  filterable={false} />
                         
           </Grid>

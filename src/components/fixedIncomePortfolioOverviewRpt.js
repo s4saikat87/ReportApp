@@ -5,6 +5,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import SelectControl from './selectcontrol';
 import { filterBy } from '@progress/kendo-data-query';
 
+import Enumerable from 'linq';
 import Loading from './loading';
 import Header  from './header';
 import FixedIncomePortfolioOverviewGrid from './fixedIncomePortfolioOverviewGrid';
@@ -21,18 +22,23 @@ import {
 import data from './selectcontrol';
 const FixedIncomePortfolioOverviewRpt = () => {
 
-  debugger;
-  const [selAcctData, setSelAcctData] = useState(JSON.parse(localStorage.getItem('acctData')).slice());
-const [selAcct, SetselAcct] = useState(JSON.parse(localStorage.getItem('AcctSelected')));
+  const [table1,setTableChart1]=useState([]);
+    const [table2,setTableChart2]=useState([]);
+    const [table3,setTableChart3]=useState([]);
+    const [table4,setTableChart4]=useState([]);
+    const [table5,setTableChart5]=useState([]);
   
+  const [selAcctData, setSelAcctData] = useState(JSON.parse(localStorage.getItem('acctData')).slice());
+  const [selAcct, SetselAcct] = useState(localStorage.getItem('IsAcctSelected')? JSON.parse(localStorage.getItem('AcctSelected')):JSON.parse(localStorage.getItem('acctData'))[0]);
+   
   const [FixedIncomePortfolioOverviewRptData, populateFixedIncomePortfolioOverviewRptData] = useState([]);
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    debugger;
+   
     
     const fetchData = async () => {
-      debugger;
+    
          setLoading(true);
         try {
             //let data = location.state;
@@ -62,22 +68,22 @@ const filterData = (filter) => {
    setSelAcctData(filterData(event.filter));
  };
 const handleChange = (event) => {
-
+debugger;
   if (event.target.value === null) {
-    SetselAcct('');
+    SetselAcct(JSON.parse(localStorage.getItem('acctData'))[0]);
     //GetUpdatedAccountProfile(0);
-    localStorage.setItem('IsAcctSelected', '0');
+    localStorage.setItem('IsAcctSelected', false);
+    localStorage.setItem('AcctSelected',JSON.stringify(JSON.parse(localStorage.getItem('acctData'))[0]));
     }
   else {
     SetselAcct(event.target.value);
+    localStorage.setItem('IsAcctSelected', true);
     localStorage.setItem('AcctSelected', JSON.stringify(event.target.value));
-    localStorage.setItem('IsAcctSelected', '1');
+    console.log(event.target.value);
     
     //GetUpdatedAccountProfile(event.target.value.acctId);
   }
-
-  console.log(selAcct);
-
+    
 };
 const FixedIncomePortfolioOverviewData = async () => {
     debugger;
@@ -101,11 +107,12 @@ const FixedIncomePortfolioOverviewData = async () => {
        config
     )
         .then(response => {
-          
+          debugger;
             //  console.log(response);
-  debugger;
+  
             const rowData = response.data;
-            populateFixedIncomePortfolioOverviewRptData(rowData)
+            populateFixedIncomePortfolioOverviewRptData(rowData);
+            
           setLoading(false);
   
         })

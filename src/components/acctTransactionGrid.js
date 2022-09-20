@@ -19,18 +19,18 @@ import {
 } from '@progress/kendo-react-data-tools';
 
 const aggregates = [
-  {
-    field: 'pCash',
-    aggregate: 'sum',
-  },
-  {
-    field: 'iCash',
-    aggregate: 'sum',
-  },
-  {
-    field: 'shares',
-    aggregate: 'sum',
-  },
+  // {
+  //   field: 'pCash',
+  //   aggregate: 'sum',
+  // },
+  // {
+  //   field: 'iCash',
+  //   aggregate: 'sum',
+  // },
+  // {
+  //   field: 'shares',
+  //   aggregate: 'sum',
+  // },
 ];
 const initialGroup = [
   {
@@ -73,7 +73,7 @@ const AcctTransactionGrid = ({data}) => {
       .reduce((acc, current) => acc + current[field], 0)
       .toFixed(2);
     return (
-      <td colSpan={props.colSpan} style={props.style}>
+      <td colSpan={props.colSpan} style={{ textAlign: "right" }}>
         {formatNumber(total, '##,#.00')}
       </td>
     );
@@ -89,7 +89,7 @@ const AcctTransactionGrid = ({data}) => {
       locked: true,
     },
     {
-      title: 'Acct. Type',
+      title: 'Account',
       field: 'accountType',
       minWidth: 150,
       show: true,
@@ -143,7 +143,8 @@ const AcctTransactionGrid = ({data}) => {
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell:  totalSum ,
+      
+      
     },
     {
       title: 'Income($)',
@@ -152,7 +153,7 @@ const AcctTransactionGrid = ({data}) => {
       show: true,
       filter: 'numeric',
       locked: false,
-      footerCell: totalSum ,
+      
     },
     {
       title: 'Shares',
@@ -160,11 +161,12 @@ const AcctTransactionGrid = ({data}) => {
       minWidth: 150,
       show: true,
       filter: 'numeric',
+      format:"{0:d6}" ,
       locked: false,
-      footerCell:  totalSum ,
+      
     },
   ];
-  const [row, setRow] = useState(data);
+
   const createDataState = (dataState) => {
     return {
       result: process(data.slice(0), dataState),
@@ -176,7 +178,7 @@ const AcctTransactionGrid = ({data}) => {
     skip: 0,
     // group: [
     //   {
-    //     field: 'accountName',
+    //     field: 'tranTypNm',
     //   },
     // ],
   });
@@ -184,7 +186,6 @@ const AcctTransactionGrid = ({data}) => {
   const [result, setResult] = React.useState(
     processWithGroups(data, initialState.dataState)
   );
-  
   const [dataState, setDataState] = React.useState(initialState.dataState);
   const [stateColumns, setStateColumns] = React.useState(columns);
   const [currentColumns, setCurrentColumns] = React.useState(columns);
@@ -228,13 +229,15 @@ const AcctTransactionGrid = ({data}) => {
     event.dataItem.expanded = !isExpanded;
     setResult({ ...result });
   };
+
+  
   const getCells = (columns, cellProps) => {
     let cells = [];
     columns.forEach((column) => {
       if (column.aggregate) {
         cells.push(
-          <td>
-            {formatNumber(cellProps.dataItem.aggregates[column.field][column.aggregate], '##,#.00')}
+          <td style={{ textAlign: "right" }}>
+            {formatNumber(cellProps.dataItem.aggregates[column.field][column.aggregate], '##,#.000000')}
           </td>
         );
       } else {
@@ -243,57 +246,166 @@ const AcctTransactionGrid = ({data}) => {
     });
     return cells;
   };
-  const cellRender = (tdElement, cellProps) => {
-    if (
-      cellProps.rowType === 'groupHeader' &&
-      tdElement &&
-      tdElement.props.role != 'presentation'
-    ) {
-      //IMPORTANT - You need to add collection with the columns and their field name
-      //you can define the Grid columns outside of the Grid and reuse them here.
-      const columns = [
-        { field: 'branchName' },
-        { field: 'accountType' },
-        { field: 'tranTypNm'},
-        { field: 'totalLine'},
-        { field: 'administrator'},
-        { field: 'investmentOfficer'},
+  // const cellRender = (tdElement, cellProps) => {
+  //   if (
+  //     cellProps.rowType === 'groupHeader' &&
+  //     tdElement &&
+  //     tdElement.props.role != 'presentation'
+  //   ) {
+  //     //IMPORTANT - You need to add collection with the columns and their field name
+  //     //you can define the Grid columns outside of the Grid and reuse them here.
+  //     const columns = [
+  //       { field: 'branchName' },
+  //       { field: 'accountType' },
+  //       { field: 'accountName' },
+  //       { field: 'tranTypNm'},
+  //       { field: 'totalLine'},
+  //       { field: 'administrator'},
+  //       { field: 'investmentOfficer'},
         
-        { field: 'pCash', aggregate: 'sum' },
-        { field: 'iCash', aggregate: 'sum' },
-        { field: 'shares', aggregate: 'sum' },
-      ];
+  //       { field: 'pCash' },
+  //       { field: 'iCash' },
+  //       { field: 'shares'},
+  //     ];
 
-      return (
-        <>
-          <td
-            {...tdElement.props}
-            colSpan={tdElement.props.colSpan - columns.length}
-          ></td>
-          {getCells(columns, cellProps)}
-        </>
-      );
-    }
-    if (cellProps.rowType === 'groupFooter') {
-      if (cellProps.field === 'pCash') {
-        return (
-          <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-            {/* {formatNumber(cellProps.dataItem.aggregates.pCash.sum, '##,#.00')} */}
-            {cellProps.dataItem.aggregates.pCash.sum}
+  //     return (
+  //       <>
+  //         <td
+  //           {...tdElement.props}
+  //           colSpan={tdElement.props.colSpan - columns.length}
+  //         ></td>
+  //         {getCells(columns, cellProps)}
+  //       </>
+  //     );
+  //   }
+  //   if (cellProps.rowType === 'groupFooter') {
+  //     // if (cellProps.field === 'pCash') {
+  //     //   return (
+  //     //     <td aria-colindex={cellProps.columnIndex} role={'gridcell'} >
+  //     //       {/* {formatNumber(cellProps.dataItem.aggregates.pCash.sum, '##,#.00')} */}
+  //     //       {cellProps.dataItem.aggregates.pCash.sum}
           
+  //     //     </td>
+  //     //   );
+  //     // } else if (cellProps.field === 'iCash') {
+  //     //   return (
+  //     //     <td aria-colindex={cellProps.columnIndex} role={'gridcell'} >
+  //     //        {cellProps.dataItem.aggregates.iCash.sum}
+  //     //     </td>
+  //     //   );
+  //     // }
+  //     // else if (cellProps.field === 'shares') {
+  //     //   return (
+  //     //     <td  aria-colindex={cellProps.columnIndex} role={'gridcell'} >
+  //     //        {cellProps.dataItem.aggregates.shares.sum}
+  //     //     </td>
+  //     //   );
+  //     // }
+  //   }
+
+  //   return tdElement;
+  // };
+  const NumberCell = (props) => {
+    debugger;
+    if(props.field==='branchName'){
+      return (
+          <td style={{ textAlign: 'left' }}>
+              {props.dataItem[props.field]}
           </td>
-        );
-      } else if (cellProps.field === 'iCash') {
+      )
+      }
+    if(props.field==='accountType'){
+      return (
+          <td style={{ textAlign: 'left' }}>
+              {props.dataItem[props.field]}
+          </td>
+      )
+      }
+      if(props.field==='accountName'){
         return (
-          <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-             {cellProps.dataItem.aggregates.iCash.sum}
+            <td style={{ textAlign: 'left' }}>
+                {props.dataItem[props.field]}
+            </td>
+        )
+        }
+      if(props.field==='tranTypNm'){
+        return (
+            <td style={{ textAlign: 'left' }}>
+                {props.dataItem[props.field]}
+            </td>
+        )
+        }
+    if(props.field==='totalLine'){
+    return (
+        <td style={{ textAlign: 'left' }}>
+            {props.dataItem[props.field]}
+        </td>
+    )
+    }
+    if(props.field==='administrator'){
+      return (
+          <td style={{ textAlign: 'left' }}>
+              {props.dataItem[props.field]}
+          </td>
+      )
+      }
+      if(props.field==='investmentOfficer'){
+        return (
+            <td style={{ textAlign: 'left' }}>
+                {props.dataItem[props.field]}
+            </td>
+        )
+        }
+        if(props.field==='pCash'){
+          return (
+              <td style={{ textAlign: 'right' }}>
+                  {formatNumber(props.dataItem[props.field], "##,#.00")}
+              </td>
+          )
+          }
+          if(props.field==='iCash'){
+            return (
+                <td style={{ textAlign: 'right' }}>
+                    {formatNumber(props.dataItem[props.field], "##,#.00")}
+                </td>
+            )
+            }
+            if(props.field==='shares'){
+              return (
+                  <td style={{ textAlign: 'right' }}>
+                      
+                      {formatNumber(props.dataItem[props.field], "##,#.000000")}
+                  </td>
+              )
+              }
+              
+  }
+  const cellRender = (tdElement, cellProps) => {
+    debugger;
+    
+    if (cellProps.rowType === "data") {
+
+      if (cellProps.field === "pCash") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+              {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
           </td>
         );
       }
-      else if (cellProps.field === 'shares') {
+      if (cellProps.field === "iCash") {
+
         return (
-          <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-             {cellProps.dataItem.aggregates.shares.sum}
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+              {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
+      if (cellProps.field === "shares") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.000000")}
           </td>
         );
       }
@@ -301,34 +413,6 @@ const AcctTransactionGrid = ({data}) => {
 
     return tdElement;
   };
-
-  // const cellRender = (tdElement, cellProps) => {
-  //   if (cellProps.rowType === 'groupHeader') {
-  //     if (cellProps.field === 'pCash') {
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-  //           {cellProps.dataItem.aggregates.pCash.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //     if (cellProps.field === 'iCash') {
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-  //           {cellProps.dataItem.aggregates.iCash.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //     if (cellProps.field === 'shares') {
-  //       return (
-  //         <td aria-colindex={cellProps.columnIndex} role={'gridcell'}>
-  //           {cellProps.dataItem.aggregates.shares.sum.toFixed(2)}
-  //         </td>
-  //       );
-  //     }
-  //   }
-
-  //   return tdElement;
-  // };
 
   return (
     <div>
@@ -358,14 +442,15 @@ const AcctTransactionGrid = ({data}) => {
               onExpandChange={expandChange}
               cellRender={cellRender}
               sortable={true}
-              // pageable={true}
-              // pageSize={20}
+              resizable={true}
+              //pageable={true}
+              //pageSize={20}
               skip={page.skip}
-            pageable={{
-              pageSizes: true,
-            }}
-            pageSize={page.take}
-            total={data.length}
+              pageable={{
+                pageSizes: true,
+              }}
+              pageSize={page.take}
+              total={data.length}
               groupable={{
                 footer: 'visible',
               }}
@@ -378,9 +463,10 @@ const AcctTransactionGrid = ({data}) => {
                       locked={column.locked}
                       key={idx}
                       field={column.field}
+                      footerCell={column.footerCell}
+                      //cell={NumberCell}
                       title={column.title}
                       filter={column.filter}
-                      footerCell={column.footerCell}
                       columnMenu={(props) => (
                         <CustomColumnMenu
                           {...props}

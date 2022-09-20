@@ -139,7 +139,7 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
         setSelChangeModel(e.target.value);
         // e.preventDefault();
         localStorage.setItem('StatusInv','false');
-        debugger;
+        
         localStorage.setItem('ModelNm',e.target.value.modelNm);
         
         getChangeInfo(e.target.value.modelId)
@@ -220,7 +220,7 @@ const AccountProfAssetClass = ({ data, astVsModelData, topHoldData, allmodelData
 
     useEffect(() => {
         // Good!
-        debugger;
+       
         setSelChangeModel(initialModelDropdown);
         localStorage.setItem('ModelNm',initialModelDropdown.modelNm);
         setLoadingChild(false);

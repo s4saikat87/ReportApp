@@ -27,28 +27,39 @@ import {
 } from "@progress/kendo-react-charts";
 import { where } from 'firebase/firestore';
 const FixedIncomePortfolioOverviewGrid = ({data}) => {
-    debugger;
+    
     const chartDefaultV4Colors = [
         "#00876c",
-    "#6e9b75",
-    "#a5af90",
-    "#cbc6b9",
-    "#c9a47e",
-    "#d07958",
+        "#6e9b75",
+        "#a5af90",
+        "#cbc6b9",
+        "#c9a47e",
+        "#d07958",
       ];
-    const [selAcct, SetselAcct] = useState(JSON.parse(localStorage.getItem('AcctSelected')));
-
     debugger;
-    let table1=Enumerable.from(data.lstFixedIncomePortfolioOverviewT1).where(w => w.acctId === selAcct.acctId).toArray();;
-    let table2=Enumerable.from(data.lstFixedIncomePortfolioOverviewT2).where(w => w.acctId === selAcct.acctId).toArray();;
-    let table3=Enumerable.from(data.lstFixedIncomePortfolioOverviewT3).where(w => w.acctId === selAcct.acctId).toArray();;
-    let table4=Enumerable.from(data.lstFixedIncomePortfolioOverviewT4).where(w => w.acctId === selAcct.acctId).toArray();;
+    //const [selAcct, SetselAcct] = useState((localStorage.getItem('IsAcctSelected'))?(JSON.parse(localStorage.getItem('AcctSelected'))):(JSON.parse(localStorage.getItem('acctData'))[0]));
+    let selAcct=JSON.parse(localStorage.getItem('AcctSelected'));
     
     
-    const [tableChart1,setTableChart2]=useState(table1);
-    const [tableChart2,setTableChart1]=useState(table2);
-    const [tableChart3,setTableChart3]=useState(table3);
-    const [tableChart4,setTableChart4]=useState(table4);
+    //const [selAcct, SetselAcct] = useState(selAcctVal);
+
+    let table1=[];
+    let table2=[];
+    let table3=[];
+    let table4=[];
+    let table5=[];
+    debugger;
+
+    table1=Enumerable.from(data.lstFixedIncomePortfolioOverviewT1).where(w => w.acctId === selAcct.acctId).toArray();
+    table2=Enumerable.from(data.lstFixedIncomePortfolioOverviewT2).where(w => w.acctId === selAcct.acctId).toArray();
+    table3=Enumerable.from(data.lstFixedIncomePortfolioOverviewT3).where(w => w.acctId === selAcct.acctId).toArray();
+    table4=Enumerable.from(data.lstFixedIncomePortfolioOverviewT4).where(w => w.acctId === selAcct.acctId).toArray();
+    table5=Enumerable.from(data.lstFixedIncomePortfolioOverviewT5).where(w => w.acctId === selAcct.acctId).toArray();
+    
+    
+    
+    
+    
     const [chartType,setChartType]=useState("pie");
     const [sort, setSort] = React.useState([]);
     const NumberCell = (props) => {
@@ -148,7 +159,7 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
   
             <div className='col'>
                 <p className='tableheader h6'>Bond Quality Sector:</p>
-                <p className='tableheader h6'>Rating</p>
+                
             </div>
             <div className='col'></div>
 
@@ -180,7 +191,7 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
   
             <div className='col'>
                 <p className='tableheader h6'>Maturity Ladder:</p>
-                <p className='tableheader h6'>Description</p>
+                
             </div>
             <div className='col'></div>
 
@@ -327,7 +338,7 @@ const FixedIncomePortfolioOverviewGrid = ({data}) => {
                 <ChartSeries>
                 <ChartSeriesItem
                 type={chartType}
-                data={data.lstFixedIncomePortfolioOverviewT5}
+                data={table5}
                 field="sectorPct"
                 categoryField="indSector"
                 labels={{

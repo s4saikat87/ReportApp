@@ -80,7 +80,7 @@ const FixdIncmFndmntlsRpt = () => {
   return (
     <div>
        <Header></Header>
-        <FixdIncmFndmntlsGrid data={FixedIncmFundmntlRptData} />
+        <FixdIncmFndmntlsGrid  data={FixedIncmFundmntlRptData}/>
     </div>
   )
 }

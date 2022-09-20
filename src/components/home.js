@@ -31,7 +31,7 @@ import {
 } from 'react-router-dom';
 
 import "../index.css";
-var CryptoJS = require("crypto-js");
+
 
 if (process.env.NODE_ENV != 'development') {
 
@@ -94,8 +94,8 @@ const Home = () => {
       .then((response) => {
 
         console.log(response);
-       
-        if (response.statusText === '') {
+      
+        if (response.statusText === 'OK') {
 
           let token = response.data;
 
@@ -159,7 +159,7 @@ const Home = () => {
 
     }
     else {
-      debugger;
+     
       let tokenM = user.accessToken+'==MS';
       localStorage.setItem('tokenMicrosoft', JSON.stringify(tokenM));
       
@@ -169,13 +169,13 @@ const Home = () => {
       let Password =tokenM; //process.env.REACT_APP_PASS;
      
       const data = { Username, Password};
-      debugger;
+    
       axios.post('/auth/login', data)
       .then((response) => {
-        debugger;
+      
         console.log(response);
        
-        if (response.statusText === '') {
+        if (response.statusText === 'OK') {
 
           let token = response.data;
 

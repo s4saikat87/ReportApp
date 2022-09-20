@@ -85,7 +85,12 @@ const FixdIncmMaturityLadrRpt = () => {
       
       }
       if (loading) {
-        return <Loading />
+        return(
+            <>
+              <Header></Header>
+            <Loading />
+         </>
+          )
       }
   return (
     <div>

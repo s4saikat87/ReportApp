@@ -33,7 +33,7 @@ const GrdAsset = ({ data,selMnrAsset }) => {
           <div className="row mx-1 my-2">
        <div className="col col-md-12 col-sm-12 py-2">
        <div className="card-header tableheader">Asset(s)
-       {selMnrAsset!==''?<> under Minor Asset {selMnrAsset}</>:<></>}
+       {selMnrAsset!==''?<> for {selMnrAsset}</>:<></>}
        </div>
                     <div className="rounded">
                         
