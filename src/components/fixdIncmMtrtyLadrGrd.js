@@ -135,12 +135,12 @@ const FixdIncmMaturityLadrGrd = ({data, callDetails, matVsCallPut}) => {
       locked: true,
     },
     {
-      title: 'Description(Based On Maturity Date)',
+      title: 'Particular',
       field: 'mtrtyYr',
       minWidth: 300,
       show: true,
       filter: 'text',
-      locked: true
+      locked: false,
     },
     {
       title: 'Par Value',
@@ -153,7 +153,7 @@ const FixdIncmMaturityLadrGrd = ({data, callDetails, matVsCallPut}) => {
       headerCell:RightNameHeader,
     },
     {
-      title: 'Market Value',
+      title: 'Market Value($)',
       field: 'market',
       minWidth: 150,
       show: true,
@@ -163,7 +163,7 @@ const FixdIncmMaturityLadrGrd = ({data, callDetails, matVsCallPut}) => {
       headerCell:RightNameHeader,  
     },
     {
-      title: 'Income',
+      title: 'Income($)',
       field: 'income',
       minWidth: 150,
       show: true,
@@ -203,11 +203,7 @@ const FixdIncmMaturityLadrGrd = ({data, callDetails, matVsCallPut}) => {
   let initialState = createDataState({
     take: 20,
     skip: 0,
-    // group: [
-    //   {
-    //     field: 'accountName',
-    //   },
-    // ],
+    sort: [{ field: 'mtrtyYr', dir: 'asc' }],
   });
   const [dataState, setDataState] = React.useState(initialState.dataState);
   const [resultState, setResultState] = React.useState(
@@ -255,33 +251,12 @@ const FixdIncmMaturityLadrGrd = ({data, callDetails, matVsCallPut}) => {
     setCurrentColumns(newColumns);
   }; // place all locked columns first
 
-const PercentCell = (props) => {
-  //debugger;
-  if (props.rowType === "data")
-  {
-  let mc=props.dataItem[props.field];
-  let reslt=mc*100;
+const cellRender = (tdElement, cellProps) => {        
     
-  return (      
-    <td style={{ textAlign: 'right' }}>
-        {formatNumber((props.dataItem[props.field]*100), "##,#.00")}
-    </td>      
-)
-  }
-}
-const IntCell = (props) => {
-  return (
-      <td style={{ textAlign: 'right' }}>
-          {props.dataItem[props.field]}
-      </td>
-  )
-}
-  
-  const NumberCell = (cellProps) => {
-    try{
-      if(cellProps.rowType==='data'){
+  if (cellProps.rowType === "data")
+  {
 
-    if(cellProps.field==="shares")
+  if(cellProps.field==="shares")
     {
       return (
        
@@ -290,7 +265,7 @@ const IntCell = (props) => {
         </td>
     );
     }
-    else if(cellProps.field==="market")
+    if(cellProps.field==="market")
     {
       return (
         
@@ -299,7 +274,7 @@ const IntCell = (props) => {
         </td>          
     );
     }
-    else if (cellProps.field === "income") {
+    if (cellProps.field === "income") {
 
       return (
         <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }}  role={"gridcell"}>
@@ -307,7 +282,7 @@ const IntCell = (props) => {
         </td>
       );
     }
-    else if(cellProps.field==="marketPercent")
+    if(cellProps.field==="marketPercent")
     {
      // debugger;
       let mb=100;
@@ -319,7 +294,7 @@ const IntCell = (props) => {
         </td>          
     );
     }
-    else if (cellProps.field === "yield") {
+    if (cellProps.field === "yield") {
 
       return (
         <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
@@ -328,25 +303,18 @@ const IntCell = (props) => {
       );
     }
   
-  else if(cellProps.field==="mtrtyYr" )
+  if(cellProps.field==="mtrtyYr")
   {
     return (
       <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
         Bonds Maturing In&nbsp;{ formatNumber(cellProps.dataItem[cellProps.field], "###")}
       </td>
   );
-  } 
-  else
-  {
-    return (
-      <td aria-colindex={cellProps.columnIndex} role={"gridcell"}>
-        {cellProps.dataItem[cellProps.field]}
-      </td>
-  );
-      
-  }}}
-  catch{}
+  }
 }
+
+  return tdElement;
+};
 
   const ShowCallPutDetails=(e)=>{
     setChkBoxState(e.target.checked);
@@ -453,21 +421,25 @@ const FormatLongNumber=({value})=> {
             onRowClick={onRowClick}
             groupable={true}
            
-            sortable={true}
-            skip={page.skip}
-            pageable={{
-              pageSizes: true,
-            }}
-            pageSize={page.take}
-            total={data.length}          
+            // sortable={true}
+            // skip={page.skip}
+            // pageable={{
+            //   pageSizes: true,
+            // }}
+            // pageSize={page.take}
+            // total={data.length}          
            
            // total={total}
            // filterable={true}
            resizable={true}
+           pageable={true}
+           pageSize={20}
            onDataStateChange={onDataStateChange}
            {...dataState}
            onExpandChange={onExpandChange}
-           expandField="expanded">
+           expandField="expanded"
+           cellRender={cellRender}
+           >
             <GridToolbar>
           <FormGroup>
       <FormControlLabel control={<Checkbox name='chkShwMtrtyCall' onChange={ShowCallPutDetails}/>} label="Show Call Details" />
@@ -482,8 +454,7 @@ const FormatLongNumber=({value})=> {
                       key={idx}
                       field={column.field}
                       title={column.title}
-                      filter={column.filter}                      
-                      cell={NumberCell}
+                      filter={column.filter}
                       headerCell={column.headerCell}
                       columnMenu={(props) => (
                         <CustomColumnMenu
@@ -496,8 +467,10 @@ const FormatLongNumber=({value})=> {
                   )
               )}
           </Grid>
-          </ExcelExport>   
+          </ExcelExport>  
+          <div className='card rounded my-2 mx-1'>
          {!ChkBoxState?
+         
          
           <Chart style={{ height: "350px" }}>
                                         {/* <ChartTitle text="Maturity Date Vs Call/Put Date" /> */}
@@ -543,7 +516,9 @@ const FormatLongNumber=({value})=> {
 :
 <div></div>
 }
-<div style={{width:"60%",float:"left"}}>
+</div> 
+<div className='row'>
+<div className='my-2 col-md-6 col-lg-6 col-sm-11'>
   {callFlag===1?
                                     <FixdIncmMaturityLadrCallDetls data={callData} chkState={ChkBoxState} />
                                     :
@@ -552,7 +527,7 @@ const FormatLongNumber=({value})=> {
                                     </div>
                                     {ChkBoxState?
                                     
-                                    <div className="card mx-2 my-2" style={{width:"38%",float:"left"}}>
+                                    <div className="card my-2 col-md-5 col-lg-5 col-sm-11'">
             <div className="card-header tableheader">Maturity Date Vs Call / Put Date</div>
             <Chart style={{ height: "350px" }}>
                                         {/* <ChartTitle text="Maturity Date Vs Call/Put Date" /> */}
@@ -605,9 +580,11 @@ const FormatLongNumber=({value})=> {
                                         </ChartSeries>
                                     </Chart>
         </div>
+        
         :
+        
         <div></div>
-}                         
+}         </div>                
           
 
           </div>

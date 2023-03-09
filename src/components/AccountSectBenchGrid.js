@@ -138,7 +138,7 @@ const AcctSectBenchRptGrid = ({data}) => {
     {
       title: 'Account',
       field: 'account',
-      minWidth: 300,
+      Width: "auto",
       show: true,
       filter: 'text',
       locked: true,
@@ -146,7 +146,7 @@ const AcctSectBenchRptGrid = ({data}) => {
     {
       title: 'Description',
       field: 'groupHeader',
-      minWidth: 300,
+      Width: "auto",
       show: true,
       filter: 'text',
       locked: true,
@@ -154,7 +154,7 @@ const AcctSectBenchRptGrid = ({data}) => {
     {
       title: 'Portfolio Holdings %',
       field: 'marketPercent',
-      minWidth: 250,
+      Width: "auto",
       show: true,
       filter: 'text',
       locked: false,
@@ -162,7 +162,7 @@ const AcctSectBenchRptGrid = ({data}) => {
     {
       title: 'Model Weighting %',
       field: 'bmPcnt',
-      minWidth: 250,
+      Width: "auto",
       show: true,
       filter: 'text',
       locked: false,
@@ -170,7 +170,7 @@ const AcctSectBenchRptGrid = ({data}) => {
     {
       title: 'Variance to Model %',
       field: 'varBMPcnt',
-      minWidth: 250,
+      Width: "auto",
       show: true,
       filter: 'text',
       locked: false,
@@ -189,11 +189,11 @@ const AcctSectBenchRptGrid = ({data}) => {
   let initialState = createDataState({
     take: 20,
     skip: 0,
-    group: [
-      {
-        field: 'groupHeader',
-      },
-    ],
+    // group: [
+    //   {
+    //     field: 'groupHeader',
+    //   },
+    // ],
   });
 
   const [result, setResult] = React.useState(
@@ -250,7 +250,7 @@ const AcctSectBenchRptGrid = ({data}) => {
     columns.forEach((column) => {
       if (column.aggregate) {
         cells.push(
-          <td>
+          <td style = {{textAlign : 'right'}}>
             {formatNumber(cellProps.dataItem.aggregates[column.field][column.aggregate], '##,#.00')}
           </td>
         );
@@ -360,13 +360,15 @@ const AcctSectBenchRptGrid = ({data}) => {
               }}
             >
               <GridToolbar>
+                
           <button
             title="Export Excel"
-            className="k-button k-button-md k-rounded-md k-button-solid k-button-solid-primary"
+            className="btn btn-outline-primary"
             onClick={excelExport}
           >
             Export to Excel
           </button>
+          
           
         </GridToolbar>
               {stateColumns.map(
@@ -392,9 +394,12 @@ const AcctSectBenchRptGrid = ({data}) => {
                   )
               )}
             </Grid>
-          <Chart style={{ height: "350px" }}>
+            <div className='row py-2'>
+              <div className='card'>
+                <div className='card-body'>
+            <Chart style={{ height: "550px" }}>
                                         {/* <ChartTitle text="Maturity Date Vs Call/Put Date" /> */}
-                                        <ChartLegend position="bottom" />
+                                        <ChartLegend position="top" />
                                         <ChartCategoryAxis>
                                             <ChartCategoryAxisItem
                                                 labels={{
@@ -408,27 +413,34 @@ const AcctSectBenchRptGrid = ({data}) => {
                                         <ChartTooltip render={defaultTooltipRender} />
                                         <ChartSeries>
                                             <ChartSeriesItem
+                                                name='Portfolio Holdings'
                                                 type="column"
                                                 data={data}
                                                 categoryField="groupHeader"
                                                 field="marketPercent"
                                                 labels={{
-                                                    visible: false,
+                                                    visible: true,
                                                     content: labelContent,
                                                 }}
                                             />
                                             <ChartSeriesItem
+                                            name='Model Weight'
                                                 type="column"
                                                 data={data}
                                                 categoryField="groupHeader"
                                                 field="bmPcnt"
                                                 labels={{
-                                                    visible: false,
+                                                    visible: true,
                                                     content: labelContent,
                                                 }}
                                             />
                                         </ChartSeries>
                                     </Chart>
+                                    </div>
+                                    </div>                       
+
+            </div>
+         
           </ExcelExport>   
 
    

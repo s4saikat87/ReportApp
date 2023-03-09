@@ -3,6 +3,7 @@ body {
   font-family:  'Segoe UI', 'Roboto';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+ 
 }
 
 code {
@@ -150,7 +151,13 @@ input[type="button"]:hover {
 
 .k-grid { 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+  font-size: 12px !important;
+  line-height: 16.5px !important;
 
+}
+
+.cursorp{
+  cursor: pointer;
 }
 
 

@@ -35,12 +35,13 @@ const GridMjrAsset = ({ data, mnrData, astData, loading,performData }) => {
    const[selMjrAsset,SetSelMjrAsset]=useState('');
     const[changeSelect,setChangeSelect]=useState(JSON.parse(localStorage.getItem('changeSelect')));
     const chartDefaultV4Colors = [
-        "#014ce6",
-    "#9b9eb2",
-    "#bbbdcc",
-    "#505465",
-    "#d8dbe5",
-    "#f4f4f2",
+        "#235ee7",
+        "#dce4ea",
+        "#4ac9c9",
+        "#d3dffb",
+        "#7c9ff2",
+        "#f3b021",
+        "#f8d0c0",
       ];
     
     // useEffect(() => {
@@ -58,7 +59,7 @@ const GridMjrAsset = ({ data, mnrData, astData, loading,performData }) => {
         });
         return `${props.category}  ${props.dataItem.mvPercent.toFixed(2)}% \n $${formatNumber(props.dataItem.mv, "##,#.00")}`;
     };
-    const defaultTooltipRender = ({ point }) => `${point.value.toFixed(2)}`;
+    const defaultTooltipRender = ({ point }) => `$${formatNumber(point.value, "##,#.00")}`;
 
     const plotareaclick=(e)=>{
        
@@ -139,44 +140,83 @@ const GridMjrAsset = ({ data, mnrData, astData, loading,performData }) => {
 
 
     const FormatLongNumber=({value})=> {
+
        
+
         if(value == 0) {
+
           return 0;
+
         }
+
         else
+
         {
-            
-             
-            if(value <= 999 && value>=-999){
-              return value;
-            }
 
            
-            // thousands
-            else if(value >= 1000 && value <= 999999 ){
-              return (value / 1000) + 'K';
-            }
-            // millions
-            else if(value >= 1000000 && value <= 999999999 ){
-              return (value / 1000000) + 'M';
-            }
-            // billions
-            else if(value >= 1000000000 && value <= 999999999999 ){
-              return (value / 1000000000) + 'B';
+
+             
+
+            if(value <= 999 && value>=-999){
+
+              return value;
+
             }
 
+ 
+
+           
+
+            // thousands
+
+            else if(value >= 1000 && value <= 999999 ){
+
+              return (value / 1000) + 'K';
+
+            }
+
+            // millions
+
+            else if(value >= 1000000 && value <= 999999999 ){
+
+              return (value / 1000000) + 'M';
+
+            }
+
+            // billions
+
+            else if(value >= 1000000000 && value <= 999999999999 ){
+
+              return (value / 1000000000) + 'B';
+
+            }
+
+ 
+
             else if(value <= -1000 && value >= -999999 ){
+
                 return (value / 1000) + 'K';
+
               }
+
               else if(value <= -1000000 && value >= -999999999 ){
+
                 return (value / 1000) + 'M';
+
               }
+
               else if(value <= -1000000000 && value >= -999999999999 ){
+
                 return (value / 1000) + 'B';
+
               }
+
             else
+
               return value;
+
         }
+
       }
 
 
@@ -193,9 +233,9 @@ const GridMjrAsset = ({ data, mnrData, astData, loading,performData }) => {
 <div className='row py-1 my-1 mx-1'>
         <div className='col-sm-10 col-md-6 col-lg-6 my-1'>
 
-            <div className='card rounded'>
+            <div className='card rounded h-100'>
 
-                    <div className='card-header tableheader'>Class (^Exclude Quantity)</div>
+                    <div className='card-header'><span className='tableheader'>Class</span> <small>(^Exclude Quantity)</small></div>
                     <div className='card-body'>
 
                     <Chart onSeriesClick={plotareaclick}
@@ -222,9 +262,9 @@ const GridMjrAsset = ({ data, mnrData, astData, loading,performData }) => {
         <ChartSeries>
             <ChartSeriesItem
                 type="pie"
-                overlay={{
-                    gradient: "sharpBevel",
-                  }}
+                // overlay={{
+                //     gradient: "sharpBevel",
+                //   }}
                 data={data}
                 field="mv"
                 categoryField="mjrAstType"
@@ -247,7 +287,7 @@ const GridMjrAsset = ({ data, mnrData, astData, loading,performData }) => {
 
         <div className='col-sm-10 col-md-6 col-lg-6 my-1'>
 
-            <div className='card rounded'>
+            <div className='card rounded h-100'>
 
                     <div className='card-header tableheader'>Activities</div>
                     <div className='card-body'>
@@ -258,7 +298,7 @@ const GridMjrAsset = ({ data, mnrData, astData, loading,performData }) => {
     
 seriesColors={chartDefaultV4Colors} style={{ height: "400px" }}>
     
-    <ChartLegend position="right" />
+    <ChartLegend position="bottom" />
     <ChartValueAxis>
                                     <ChartValueAxisItem
                                         // title={{
@@ -285,7 +325,7 @@ seriesColors={chartDefaultV4Colors} style={{ height: "400px" }}>
                                         //  categories={categoryAxis} 
                                         />
                                     </ChartCategoryAxis>
-    <ChartTooltip  />
+    <ChartTooltip render={defaultTooltipRender}  />
     <ChartSeries>
         <ChartSeriesItem
             type="column"
@@ -373,7 +413,7 @@ seriesColors={chartDefaultV4Colors} style={{ height: "400px" }}>
     
  seriesColors={chartDefaultV4Colors} style={{ height: "370px" }}>
      
-     <ChartLegend position="right" />
+     <ChartLegend position="bottom" />
      <ChartValueAxis>
                                      <ChartValueAxisItem
                                          // title={{

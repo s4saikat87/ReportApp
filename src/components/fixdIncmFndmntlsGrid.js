@@ -18,10 +18,28 @@ import {
   getGroupIds,
   setExpandedState,
 } from '@progress/kendo-react-data-tools';
+import {
+  Sparkline,
+  Chart,
+  ChartSeries,
+  ChartSeriesItem,
+  ChartAxisDefaults,
+  ChartCategoryAxis,
+  ChartSeriesDefaults,
+  ChartCategoryAxisItem,
+  ChartTitle,
+  ChartLegend,
+  LegendItemClickEvent,
+  ChartValueAxis,
+  ChartValueAxisItem,
+  ChartTooltip,
+} from "@progress/kendo-react-charts";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Moment from 'react-moment';
+import Enumerable from 'linq';
+import "hammerjs";
 
 const aggregates = [
   // {
@@ -65,9 +83,9 @@ const processWithGroups = (data, dataState) => {
   // debugger;
   const groups = dataState.group;
 
-  if (groups) {
-    groups.map((group) => (group.aggregates = aggregates));
-  }
+  // if (groups) {
+  //   groups.map((group) => (group.aggregates = aggregates));
+  // }
 
   dataState.group = groups;
   const newDataState = process(data, dataState);
@@ -85,6 +103,13 @@ const FixdIncmFundmntlsGrid = ({data}) => {
       _export.current.save(data);
     }
   };
+  
+  const clearFIGrid = () => {
+    let FiIntData=JSON.parse(localStorage.getItem("FIInitialData"));
+    setResult(processWithGroups(FiIntData, dataState));
+    setSelectedData(FiIntData);
+  };
+  
   const [locked, setLocked] = React.useState(false);
 
   const columnLocked = () => {
@@ -94,8 +119,8 @@ const FixdIncmFundmntlsGrid = ({data}) => {
   const RightNameHeader = (props) => {
     return (
         <a className="k-link" style={{
-            float: "right",
-        }} onClick={props.onClick}>
+          float: "right",
+      }}  onClick={props.onClick}>
             {/* <span className="k-icon k-i-cart" /> */}
             <span
                 style={{
@@ -131,10 +156,11 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     {
       title: 'Maturity Year',
       field: 'mtrtyYr',
-      minWidth: 130,
+      minWidth: 140,
       show: true,
       filter: 'numeric',
-      locked: true,
+      locked: true,      
+      headerCell:RightNameHeader, 
     },
     {
       title: 'Description',
@@ -227,10 +253,11 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     {
       title: 'Maturity Year',
       field: 'mtrtyYr',
-      minWidth: 130,
+      minWidth: 140,
       show: true,
       filter: 'numeric',
       locked: true,
+      headerCell:RightNameHeader, 
     },
     {
       title: 'Description',
@@ -331,11 +358,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
   let initialState = createDataState({
     take: 20,
     skip: 0,
-    // group: [
-    //   {
-    //     field: 'accountName',
-    //   },
-    // ],
+    sort: [{ field: 'mtrtyYr', dir: 'asc' }],
   });
 
   const [result, setResult] = React.useState(
@@ -346,6 +369,7 @@ const FixdIncmFundmntlsGrid = ({data}) => {
   const [stateColumns, setStateColumns] = React.useState(columns);
   const [currentColumns, setCurrentColumns] = React.useState(columns);
   const [ChkBoxState, setChkBoxState] = useState(false);
+  const [chartData, setSelectedData] = React.useState(data);
   let pageSize = 20;
   const [page, setPage] = React.useState({
     skip: 0,
@@ -394,14 +418,14 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     {
     let cpnRate="", matrtyDate="";
 
-    if(cellProps.field==="mtrtyYr")
-    {
-      return (
-        <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-           { formatNumber(cellProps.dataItem[cellProps.field], "###")}
-        </td>
-    );
-    }
+    // if(cellProps.field==="mtrtyYr")
+    // {
+    //   return (
+    //     <td aria-colindex={cellProps.columnIndex} className={'right-align'} role={"gridcell"}>
+    //        { formatNumber(cellProps.dataItem[cellProps.field], "###")}
+    //     </td>
+    // );
+    // }
 
     if(cellProps.field==="shares")
       {
@@ -502,98 +526,6 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     );
     }
   }
-//   if (tdElement && tdElement.props.children && cellProps.rowType === "groupHeader") {
-//     debugger;
-//     let children="";
-//     // children = (
-//     //   <span>
-//     //     {tdElement.props.children.props.children} 
-//     //   </span> 
-//     // );
-//     if (cellProps.field === "shares") {
-//       {
-//         children = (
-          
-//           <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"headercell"}>
-           
-//                 { formatNumber(cellProps.dataItem.aggregates.shares.sum, "##,#.00")}
-//               </td>
-//         );
-//       }
-     
-//     // tdElement= React.cloneElement(tdElement, tdElement.props, children);
-//   }
-// }
-  
-
-    // if (cellProps.rowType === "groupFooter") {
-
-    //   if (cellProps.field === "shares") {
-
-    //     return (
-    //       <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-    //         { formatNumber(cellProps.dataItem.aggregates.shares.sum, "##,#.00")}
-    //       </td>
-    //     );
-    //   }
-    //   if (cellProps.field === "market") {
-
-    //     return (
-    //       <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-    //         { formatNumber(cellProps.dataItem.aggregates.market.sum, "##,#.00")}
-    //       </td>
-    //     );
-    //   }
-    //   if (cellProps.field === "yield") {
-    //     return (
-    //       <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-    //         Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.yield.average, "##,#.00")}
-    //       </td>
-    //     );
-    //   }
-    //   if(cellProps.field==="yldToMtrty")
-    //   {
-    //     return (          
-    //       <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-    //         Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.yldToMtrty.average, "##,#.00")}
-    //       </td>          
-    //   );
-    //   }
-    //   if(cellProps.field==="yldCalPut")
-    //   {
-    //     return (
-    //       (ChkBoxState===true)?
-    //       <>
-    //       <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-    //         Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.yldCalPut.average, "##,#.00")}
-    //       </td>
-    //       </>:
-    //       <>
-    //       </>
-    //   );
-    //   }
-    //   if(cellProps.field==="duration")
-    //   {
-    //     return (          
-    //       <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-    //         Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.duration.average, "##,#.00")}
-    //       </td>
-    //   );
-    //   }
-    //   if(cellProps.field==="calPutDuration")
-    //   {
-    //     return (
-    //       (ChkBoxState===true)?
-    //       <>
-    //       <td aria-colindex={cellProps.columnIndex} style={{ textAlign: 'right' }} role={"gridcell"}>
-    //         Avg:&nbsp;{ formatNumber(cellProps.dataItem.aggregates.calPutDuration.average, "##,#.00")}
-    //       </td>
-    //       </>:
-    //       <>
-    //       </>
-    //   );
-    //   }
-    // }
 
     return tdElement;
   };
@@ -617,6 +549,49 @@ const FixdIncmFundmntlsGrid = ({data}) => {
     setDataState(dataState);
       
   };
+  const labelContent = (e) => `$${formatNumber(e.value, "##,#.00")}`;
+  const FormatLongNumber=({value})=> {
+       
+    if(value === 0) {
+      return 0;
+    }
+    else
+    {
+          // for testing
+        //value = Math.floor(Math.random()*1001);
+   
+        // hundreds
+        if(value <= 999){
+          return value;
+        }
+        // thousands
+        else if(value >= 1000 && value <= 999999){
+          return (value / 1000) + 'K';
+        }
+        // millions
+        else if(value >= 1000000 && value <= 999999999){
+          return (value / 1000000) + 'M';
+        }
+        // billions
+        else if(value >= 1000000000 && value <= 999999999999){
+          return (value / 1000000000) + 'B';
+        }
+        else
+          return value;
+    }
+  }
+  const onRowClick = e => {
+    //debugger;
+     var actId = e.dataItem.acctId;
+ 
+     var acctData = Enumerable.from(data).where(w => w.acctId === actId)
+         .toArray();
+ 
+     setSelectedData(acctData);
+     
+     setResult(processWithGroups(data,dataState));
+     setDataState(dataState);
+ };
 
   return (
     <div>
@@ -631,8 +606,15 @@ const FixdIncmFundmntlsGrid = ({data}) => {
             onClick={excelExport}
           >
             Export to Excel
+          </button>&nbsp;
+          <button
+            className="btn btn-outline-primary btn-sm"
+            onClick={clearFIGrid}
+          >
+            Clear Selection
           </button>
         </div>
+        
       </div>
       <div className="card-body">
         <div className="mx-1 px-1 my-1 py-1">
@@ -646,18 +628,19 @@ const FixdIncmFundmntlsGrid = ({data}) => {
               onExpandChange={expandChange}
               sortable={true}
               resizable={true}
-              // pageable={true}
-              // pageSize={20}
-              skip={page.skip}
-              pageable={{
-                pageSizes: true,
-              }}
-              pageSize={page.take}
-              total={data.length}
+              pageable={true}
+              pageSize={20}
+              // skip={page.skip}
+              // pageable={{
+              //   pageSizes: true,
+              // }}
+              // pageSize={page.take}
+              // total={data.length}
               groupable={{
                 footer: 'visible',
               }}
               cellRender={cellRender}
+              onRowClick={onRowClick}
             >
               <GridToolbar>
                 <FormGroup>
@@ -690,6 +673,46 @@ const FixdIncmFundmntlsGrid = ({data}) => {
             </Grid>
           </ExcelExport>
         </div>
+        <div className="mx-1 px-1 my-1 py-1 card-body border">
+        <Chart style={{ height: "400px" }}>
+                                        {/* <ChartTitle text="Maturity Date Vs Call/Put Date" /> */}
+                                        <ChartLegend position="bottom" />
+                                        <ChartCategoryAxis>
+                                            <ChartCategoryAxisItem
+                                                labels={{
+                                                    visible: true,
+                                                    rotation: 85,
+                                                    format: "d",
+                                                }}
+                                            />
+                                        </ChartCategoryAxis>
+                                        <ChartValueAxis>
+                                        <ChartValueAxisItem                                           
+                                            min={0}
+                                            max={1000000}
+                                           labels={{
+                                            visible: true,
+                                           content:FormatLongNumber,  
+                                           padding:35,                        
+                                        }}
+                                        />
+                                    </ChartValueAxis>
+                                        <ChartSeries>
+                                            <ChartSeriesItem
+                                                type="area"
+                                                min={5}
+                                                data={chartData}
+                                                field="market"
+                                                categoryField="mtrtyYr"
+                                                name='Market Value'
+                                                labels={{
+                                                    visible: true,
+                                                    content: labelContent,
+                                                }}
+                                            />
+                                        </ChartSeries>
+                                    </Chart>
+                                    </div>
       </div>
       <br />
     </div>

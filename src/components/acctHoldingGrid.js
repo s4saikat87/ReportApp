@@ -303,7 +303,7 @@ const AcctHoldingGrid = ({data}) => {
     };
   };
   let initialState = createDataState({
-    take: 20,
+    take: 5,
     skip: 0,
     
   });
@@ -315,11 +315,14 @@ const AcctHoldingGrid = ({data}) => {
   const [dataState, setDataState] = React.useState(initialState.dataState);
   const [stateColumns, setStateColumns] = React.useState(columns);
   const [currentColumns, setCurrentColumns] = React.useState(columns);
-  let pageSize = 20;
+  let pageSize = 10;
   const [page, setPage] = React.useState({
     skip: 0,
     take: pageSize,
   });
+
+  
+
   const dataStateChange = (event) => {
     let updatedState = createDataState(event.dataState);
 
@@ -463,6 +466,14 @@ const AcctHoldingGrid = ({data}) => {
         );
       }
       if (cellProps.field === "yield") {
+
+        return (
+          <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
+             {formatNumber(cellProps.dataItem[cellProps.field], "##,#.00")}
+          </td>
+        );
+      }
+      if (cellProps.field === "yldToCost") {
 
         return (
           <td style={{ textAlign: 'right' }} aria-colindex={cellProps.columnIndex} role={"gridcell"}>
@@ -705,13 +716,13 @@ const AcctHoldingGrid = ({data}) => {
         <div className='card-header row d-flex justify-content-between align-items-center my-2'>
 
           <div className='col'>
-            <p className='tableheader h6'>Account Holding Report</p>
+            <p className='tableheader h6'>Holding Report</p>
             </div>
             <div className='col'></div>
           
           <div className='col'>
           <button 
-          className='k-button k-button-sm k-rounded-sm k-button-solid k-button-solid-primary' 
+          className='btn btn-outline-primary' 
           onClick={excelExport}>Export to Excel</button>
 
             </div>
@@ -724,7 +735,7 @@ const AcctHoldingGrid = ({data}) => {
         <div className="mx-1 my-1 py-1">
         <ExcelExport data={data} ref={_export}> 
         <Grid
-              style={{ height: '600px' }}
+              style={{ height: 'auto' }}
               data={result}
               {...dataState}
               onDataStateChange={dataStateChange}
@@ -733,14 +744,10 @@ const AcctHoldingGrid = ({data}) => {
               cellRender={cellRender}
               sortable={true}
               resizable={true}
-              // pageable={true}
-              // pageSize={20}
-              skip={page.skip}
-            pageable={{
-              pageSizes: true,
-            }}
-            pageSize={page.take}
-            total={data.length}
+              pageable={true}
+              pageSize={10}
+
+            
               groupable={{
                 footer: 'visible',
               }}

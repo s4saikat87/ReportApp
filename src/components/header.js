@@ -15,7 +15,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import LogoPage from './logoPage';
 //import Sidebar from './sidebar';
-import { FaSignOutAlt, FaChalkboard, FaListAlt, FaRegChartBar, FaDonate, FaChartLine, FaDice, FaUserAlt, FaCogs } from 'react-icons/fa';
+import { FaSignOutAlt, FaGripHorizontal, FaUserAlt, FaCogs, FaFileInvoiceDollar } from 'react-icons/fa';
 
 const Header = () => {
   const location = useLocation();
@@ -84,45 +84,50 @@ const Header = () => {
 
     navigate("/fixedIncomePortfolioOverviewRpt");
   }
-  const signOut = () => {
-    let token={token:''};
-    localStorage.setItem('token',JSON.stringify(token));
-    navigate("/");
-  //   let token = JSON.parse(localStorage.getItem('token'));
-  //  debugger;
-  //   const postData = {};
-  //   const config = {
-  //     headers: {
-  //       'authorization': `Bearer ${token.token}`,
-  //       'Accept': 'application/json',
-  //       'Content-Type': 'application/json'
-  //     }
 
-  //   };
-  //   axios.post('/token/revoke',
-  //   postData,
-  //   config
-  //   )
-  //     .then((response) => {
-  //      debugger;
-  //      localStorage.setItem('token', '');
-  //      //console.log(response);
-  //     // navigate("/");
+  const openSectorReturnPerformanceRpt = () => {
+
+    navigate("/sctrReturnPerfrmnceRpt");
+  }
+
+  const signOut = () => {
+    
+    navigate("/");
+    let token = JSON.parse(localStorage.getItem('token'));
+    const postData = {};
+    const config = {
+      headers: {
+        'authorization': `Bearer ${token.token}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+
+    };
+    axios.post('/token/revoke',
+    postData,
+    config
+    )
+      .then((response) => {
+      // debugger;
+      // localStorage.setItem('token', '');
+       //console.log(response);
+      // navigate("/");
           
-  //       // if (response.statusText === '') {
+        // if (response.statusText === '') {
          
 
 
-  //       // }
+        // }
 
 
-  //     })
-  //     .catch((error) => {
-  //       // debugger;
-  //       console.log("my error is " + error);
-  //     })
+      })
+      .catch((error) => {
+        // debugger;
+        console.log("my error is " + error);
+      })
 
-
+      let tokenNew={token:''};
+      localStorage.setItem('token',JSON.stringify(tokenNew));
     //firebaseApp.auth.signOut();
 
   }
@@ -139,44 +144,54 @@ const Header = () => {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarsExample04">
-            <ul className="navbar-nav ms-auto mb-2 mb-md-0 mx-2">
+            <ul className="navbar-nav ms-auto mb-md-0 mx-2 my-1">
 
               <li className="nav-item dropdown dropdown-menu-end">
-                <a className="nav-link dropdown-toggle" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
+                <a className="nav-link dropdown-toggle btn border text-start px-1" href="#" id="dropdown04" data-bs-toggle="dropdown" aria-expanded="false"><span className='active'><FaGripHorizontal></FaGripHorizontal> Account</span> </a>
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown04">
-                  <li><a className="dropdown-item" onClick={openAccountProfilePage}>Profile</a></li>
-                  <hr />
-                  <li><a className="dropdown-item" onClick={openAcctTransactionRpt}>Transaction</a></li>
-                  <li><a className="dropdown-item" onClick={openAcctHoldingRpt}>Holding</a></li>
-                  <hr />
-                  <li><a className="dropdown-item" onClick={openAccountSectBenchRpt}>Sectors Comparison</a></li>
-                  <li><a className="dropdown-item" onClick={openAcctPerfRpt}>Performance</a></li>
+                  <li><a className="dropdown-item cursorp" onClick={openAccountProfilePage}>Profile</a></li>
+                  <li><hr className="dropdown-divider"></hr></li>
+                  <li><a className="dropdown-item cursorp" onClick={openAcctTransactionRpt}>Transactions & Holdings</a></li>
+                  
+                  <li><hr className="dropdown-divider"></hr></li>
+                  <li><a className="dropdown-item cursorp" onClick={openAccountSectBenchRpt}>Sectors Comparison</a></li>
+                  <li><a className="dropdown-item cursorp" onClick={openAcctPerfRpt}>Performance</a></li>
+                  <li><hr className="dropdown-divider"></hr></li>
+                  <li><a className="dropdown-item cursorp" onClick={openPortfolioHoldingsRpt}>Portfolio Holdings</a></li>
 
                 </ul>
               </li>
 
               <li className="nav-item dropdown dropdown-menu-end">
-                <a className="nav-link dropdown-toggle" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false">Fixed Income</a>
+                <a className="nav-link dropdown-toggle btn border text-start px-1" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false"><span className='active'><FaFileInvoiceDollar></FaFileInvoiceDollar>Fixed Income</span></a>
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown05">
-                  {/* <li><a className="dropdown-item" onClick={openFixedIncomePortfolioOverviewRpt}>Portfolio Overview</a></li>
-              <hr /> */}
-                  <li><a className="dropdown-item" onClick={openFixdIncmMaturityLadderRpt}>Maturity Ladder</a></li>
-                  <li><a className="dropdown-item" onClick={openFixdIncmFndmntlsRpt}>Fundementals</a></li>
+                  
+                  <li><a className="dropdown-item cursorp" onClick={openFixdIncmMaturityLadderRpt}>Maturity Ladder</a></li>
+                  <li><a className="dropdown-item cursorp" onClick={openFixdIncmFndmntlsRpt}>Fundementals</a></li>
+                </ul>
+              </li>
+              <li className="nav-item dropdown dropdown-menu-end">
+                <a className="nav-link dropdown-toggle btn border text-start px-1" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false"><span className='active'><FaFileInvoiceDollar></FaFileInvoiceDollar>Performance</span></a>
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown05">                  
+                  <li><a className="dropdown-item cursorp" onClick={openSectorReturnPerformanceRpt}>Sector Return</a></li>
                 </ul>
               </li>
 
-              <li className='nav-item'><a className='nav-link' onClick={openPortfolioHoldingsRpt}>Portfolio Holdings</a></li>
-              {/* <li className='nav-item'><a className='nav-link' onClick={openReportDesignerRpt}>Report Designer</a></li> */}
+
+              <li className="nav-item dropdown dropdown-menu-end">
+                <a className="nav-link dropdown-toggle btn px-2 border text-start px-1" href="#" id="dropdown07" data-bs-toggle="dropdown" aria-expanded="false"><span className='active'><FaUserAlt className='mx-2'></FaUserAlt></span></a>
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown07">
+               
+                  <li><a className="dropdown-item cursorp" href="#" ><span><FaCogs></FaCogs>Settings</span></a></li>
+                  <li><a className="dropdown-item" onClick={signOut}><FaSignOutAlt></FaSignOutAlt>Logout</a></li>
+                </ul>
+              </li>
+
+             
+              
             </ul>
 
-            <div className="nav-item dropdown dropdown-menu-end">
-              <a className="btn btn-outline-primary btn-sm dropdown-toggle px-1" href="#" id="dropdown05" data-bs-toggle="dropdown" aria-expanded="false"><FaUserAlt className='mx-2'></FaUserAlt></a>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown05">
-                <li><a className="dropdown-item" href="#"><FaCogs className='mx-2'></FaCogs>Settings</a></li>
-
-                <li><a className="dropdown-item" onClick={signOut}><FaSignOutAlt className='mx-2'></FaSignOutAlt>Logout</a></li>
-              </ul>
-            </div>
+            
 
 
 

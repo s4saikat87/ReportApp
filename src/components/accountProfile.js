@@ -16,7 +16,7 @@ import { filterBy } from '@progress/kendo-data-query';
 import Loading from './loading';
 import Header from './header';
 
-import { FaSignOutAlt, FaMoneyBill, FaPrint, FaFunnelDollar, FaChalkboard, FaListAlt, FaRegChartBar,FaDonate,FaChartLine,FaDice, FaUserAlt, FaCogs } from 'react-icons/fa';
+import { FaSignOutAlt, FaMoneyBill, FaPrint, FaFunnelDollar, FaChalkboard, FaListAlt, FaRegChartBar,FaDonate,FaChartLine,FaDice, FaUserAlt, FaCogs, FaWindowMinimize, FaBackward, FaFilePdf, FaFileExport } from 'react-icons/fa';
 
 import AcctHoldingGrid from './acctHoldingGrid';
 //import "@progress/kendo-theme-material/dist/all.css";
@@ -223,8 +223,9 @@ if (loading) {
 
          
          <div className='row d-flex justify-content-start align-items-center py-2 mt-1 px-2 mx-2 bg-light shadow-sm rounded'>
-        <div className='subheader text-end col-md-1'> &nbsp; Account(s):</div>
-        <div className='col-md-4 text-start'>
+       
+        <div className='col-md-4 col-lg-4 col-sm-11 text-start'>
+          <span className='px-2'>Account(s)</span>
           <ComboBox
             style={{
               width: "350px",
@@ -248,24 +249,24 @@ if (loading) {
 
 
           
-          <div className='col-sm-10 col-lg-3 card text-left m-1'>
+          <div className='col-sm-10 col-lg-4 col-md-4 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaChartLine /></div>
-            <div className='d-block'><label>Market Value:</label></div>
+            <div className='d-block text-primary'><label>Market Value:</label></div>
             <div className='d-block'><h4 id='lblMrktVal'>${selAcct.availableCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaMoneyBill /></div>
-            <div className='d-block'><label>Avaialble Cash:</label></div>
+            <div className='d-block text-primary'><label>Avaialble Cash:</label></div>
             <div className='d-block'><h4 id='lblAvlCash'>${selAcct.excludedCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaFunnelDollar /></div>
-            <div className='d-block'><label>Exclude Cash:</label></div>
+            <div className='d-block text-primary'><label>Exclude Cash:</label></div>
             <div className='d-block'><h4 id='lblExcludeCash'>${selAcct.mrktVlAmt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
@@ -295,9 +296,22 @@ if (loading) {
     <div>
       <Header />
       <div ref={container}>
-      <div className='row d-flex justify-content-start align-items-center py-2 mt-1 px-2 mx-2 bg-light shadow-sm rounded'>
-        <div className='subheader text-end col-md-1'> &nbsp; Account(s):</div>
-        <div className='col-md-4 text-start'>
+
+
+
+       
+
+
+
+
+       
+
+      <div className='row d-flex justify-content-start align-items-center py-2 mt-1 px-2 mx-2 rounded'>
+
+        <div className='row bg-light shadow-sm'>
+        
+        <div className='col-md-4 text-start my-1'>
+        <span className='px-2'>Account(s)</span>
           <ComboBox
             style={{
               width: "350px",
@@ -312,43 +326,45 @@ if (loading) {
           />
         </div>
         {
-           preview?<div className='col-md-2'>
-           <button className='btn btn-sm btn-outline-secondary px-2' onClick={exportPDFWithMethod}><FaPrint></FaPrint> &nbsp; Export to PDF</button>
+           preview?<div className='col-md-2 col-sm-6 col-lg-2 my-1'>
+           <button className='btn btn-sm btn-outline-primary px-2' onClick={exportPDFWithMethod}><FaFilePdf></FaFilePdf> &nbsp; Export to PDF</button>
          </div>
          :<></>
 
         }
         
-        <div className='col-md-2'>
+        <div className='col-md-2 col-sm-6 col-lg-2 my-1'>
           {
-            !preview? <button className='btn btn-sm btn-outline-secondary px-2' onClick={handlePreview} ><FaPrint></FaPrint> &nbsp; Preview</button>
-            : <button className='btn btn-sm btn-outline-secondary px-2' onClick={handlePage} ><FaPrint></FaPrint> &nbsp; Page</button>
+            !preview? <button className='btn btn-sm btn-outline-secondary px-2' onClick={handlePreview} ><FaFileExport></FaFileExport> &nbsp; Export Preview</button>
+            : <button className='btn btn-sm btn-outline-secondary px-2' onClick={handlePage} ><FaBackward></FaBackward> &nbsp; Exit Preview</button>
           }
           
         </div>
+        </div>
+       
 
-        <div  className='row d-flex justify-content-center align-item-center px-2 my-2'>
+        <div  className='row d-flex justify-content-center align-item-center px-2 my-2 bg-white'>
 
 
           
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaChartLine /></div>
-            <div className='d-block'><label>Market Value:</label></div>
+            <div className='d-block text-primary'><label>Market Value:</label></div>
             <div className='d-block'><h4 id='lblMrktVal'>${selAcct.availableCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaMoneyBill /></div>
-            <div className='d-block'><label>Avaialble Cash:</label></div>
+            <div className='d-block text-primary'><label>Avaialble Cash:</label></div>
             <div className='d-block'><h4 id='lblAvlCash'>${selAcct.excludedCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaFunnelDollar /></div>
-            <div className='d-block'><label>Exclude Cash:</label></div>
+            <div className='d-block text-primary'><label>Exclude Cash:</label></div>
             <div className='d-block'><h4 id='lblExcludeCash'>${selAcct.mrktVlAmt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>

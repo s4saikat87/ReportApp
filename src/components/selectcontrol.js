@@ -158,13 +158,13 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCas
   //   return <Loading />
   // }
   return (
-    <div className='my-1' ref={container}>
+    <div className='shadow-sm  py-2' ref={container}>
 
       <div className="rounded">
 
-        <div className='row d-flex justify-content-start align-items-center py-2 mt-1 px-2 mx-2 bg-light shadow-sm rounded'>
-        <div className='subheader text-end col-md-1'> &nbsp; Account(s):</div>
-        <div className='col-md-4 text-start'>
+        <div className='row bg-light d-flex align-content-center'>
+          <div className='col-md-5 col-lg-5 col-sm-11 mx-2 px-2 py-1'>
+            
           <ComboBox
             style={{
               width: "350px",
@@ -174,23 +174,28 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCas
             dataItemKey="acctId"
             filterable={true}
             value={selAcct}
+            placeholder="All Accounts"
             onChange={handleChange}
             onFilterChange={filterChange}
           />
-          {/* <MultiSelect
-          style={{
-            width: "300px",
-          }}
-          data={data}
-          textField="extrnlAcctId"
-        dataItemKey="acctId"
-         // defaultValue={["Basketball", "Cricket"]}
-        /> */}
+
+
+          </div>
+          <div className='col-md-5 col-lg-5 col-sm-11 text-end px-2 py-1'>
+            
+          <button className='btn btn-sm btn-outline-primary px-2 mx-2' onClick={exportPDFWithMethod}><FaPrint></FaPrint> Export to PDF</button>
+
+          </div>
+
+
+
+
+
+
+
         </div>
-        <div className='col-md-2'>
-          <button className='btn btn-sm btn-outline-secondary px-2' onClick={exportPDFWithMethod}><FaPrint></FaPrint> &nbsp; Export to PDF</button>
-        </div>
-        </div>
+
+        
         {
           chngeSelect===1 ?
           <>
@@ -201,21 +206,21 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCas
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaChartLine /></div>
-            <div className='d-block'><label>Market Value:</label></div>
+            <div className='d-block text-primary'><label>Market Value:</label></div>
             <div className='d-block'><h4 id='lblMrktVal'>${availableCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaMoneyBill /></div>
-            <div className='d-block'><label>Available Cash:</label></div>
+            <div className='d-block text-primary'><label>Available Cash:</label></div>
             <div className='d-block'><h4 id='lblAvlCash'>${excludedCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
           <div className='col-sm-10 col-lg-3 card text-left m-1'>
             <div className='card-body'>
             <div className='d-block'><FaFunnelDollar /></div>
-            <div className='d-block'><label>Exclude Cash:</label></div>
+            <div className='d-block text-primary'><label>Exclude Cash:</label></div>
             <div className='d-block'><h4 id='lblExcludeCash'>${mrktVlAmt.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
             </div>
           </div>
@@ -233,14 +238,14 @@ const SelectControl = ({ data, mjrAllData, mnrAllData, assetAllData,allMV,allCas
 <div className='col-sm-10 col-lg-3 card text-left m-1'>
   <div className='card-body'>
   <div className='d-block'><FaChartLine /></div>
-  <div className='d-block'><label>Market Value:</label></div>
+  <div className='d-block text-primary'><label>Market Value:</label></div>
   <div className='d-block'><h4 id='lblMrktVal'>${allMV.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
   </div>
 </div>
 <div className='col-sm-10 col-lg-3 card text-left m-1'>
   <div className='card-body'>
   <div className='d-block'><FaMoneyBill /></div>
-  <div className='d-block'><label>Available Cash:</label></div>
+  <div className='d-block text-primary'><label>Available Cash:</label></div>
   <div className='d-block'><h4 id='lblAvlCash'>${allCash.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</h4></div>
   </div>
 </div>

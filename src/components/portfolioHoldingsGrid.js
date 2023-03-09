@@ -266,6 +266,9 @@ const PortfolioHoldingsGrid = ({data}) => {
     skip: 0,
     take: pageSize,
   });
+
+  
+
   const dataStateChange = (event) => {
     let updatedState = createDataState(event.dataState);
 
@@ -708,7 +711,7 @@ const PortfolioHoldingsGrid = ({data}) => {
             <div className='col'></div>         
             <div className='col'>
               <button 
-              className='k-button k-button-sm k-rounded-sm k-button-solid k-button-solid-primary' 
+              className='btn btn-outline-primary' 
               onClick={excelExport}>Export to Excel</button>
             </div>
   
@@ -740,12 +743,9 @@ const PortfolioHoldingsGrid = ({data}) => {
               cellRender={cellRender}
               sortable={true}
               resizable={true}
-              skip={page.skip}
-              pageable={{
-                pageSizes: true,
-              }}
-            pageSize={page.take}
-            total={data.length}
+              pageable={true}
+              pageSize={20}
+              
               groupable={{
                 footer: 'visible',
               }}

@@ -173,7 +173,7 @@ const Home = () => {
       axios.post('/auth/login', data)
       .then((response) => {
       
-        console.log(response);
+       // console.log(response);
        
         if (response.statusText === 'OK') {
 

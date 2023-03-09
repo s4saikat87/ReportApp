@@ -34,7 +34,7 @@ import FixdIncmMaturityLadrRpt from './fixdIncmMtrtyLadrRpt';
 import AcctSectBenchRpt from './AcctSectBenchRpt';
 import AcctPerfRpt from './AcctPerfRpt';
 import FixedIncomePortfolioOverviewRpt from './fixedIncomePortfolioOverviewRpt';
-
+import SctrReturnPerformanceRpt from './sctrReturnPerfrmnceRpt';
 
 function Login() {
       return (
@@ -51,6 +51,7 @@ function Login() {
               <Route path='/AcctSectBenchRpt' element={<AcctSectBenchRpt />}/>
               <Route path='/AcctPerfRpt' element={<AcctPerfRpt />}/>
               <Route path='/fixedIncomePortfolioOverviewRpt' element={<FixedIncomePortfolioOverviewRpt />}/> 
+              <Route path='/sctrReturnPerfrmnceRpt' element={<SctrReturnPerformanceRpt/>}/> 
               <Route path='*' element={<PageNotFound />}/>
               
               

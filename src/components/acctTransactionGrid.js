@@ -194,6 +194,9 @@ const AcctTransactionGrid = ({data}) => {
     skip: 0,
     take: pageSize,
   });
+
+  
+
   const dataStateChange = (event) => {
     let updatedState = createDataState(event.dataState);
 
@@ -381,7 +384,7 @@ const AcctTransactionGrid = ({data}) => {
               
   }
   const cellRender = (tdElement, cellProps) => {
-    debugger;
+    
     
     if (cellProps.rowType === "data") {
 
@@ -416,14 +419,17 @@ const AcctTransactionGrid = ({data}) => {
 
   return (
     <div>
-      <div className="card-header row d-flex justify-content-between align-items-center my-2">
-        <div className="col">
-          <p className="tableheader h6">Account Transactions Report</p>
-        </div>
-        <div className="col"></div>
+      
+
+
+
+      <div className="row card-header text-center py-2">
+        
+        
         <div className="col">
           <button
-            className="btn btn-outline-primary btn-sm"
+          className='btn btn-outline-primary' 
+          
             onClick={excelExport}
           >
             Export to Excel
@@ -443,14 +449,9 @@ const AcctTransactionGrid = ({data}) => {
               cellRender={cellRender}
               sortable={true}
               resizable={true}
-              //pageable={true}
-              //pageSize={20}
-              skip={page.skip}
-              pageable={{
-                pageSizes: true,
-              }}
-              pageSize={page.take}
-              total={data.length}
+              pageable={true}
+              pageSize={20}
+        
               groupable={{
                 footer: 'visible',
               }}

@@ -8,12 +8,15 @@ import Loading from './loading';
 import Header  from './header';
 import DateRange  from './dateRange';
 import AcctTransactionGrid from './acctTransactionGrid';
-
+// import "@progress/kendo-theme-material/dist/all.css";
+//import "@progress/kendo-theme-default/dist/all.css";
 const AcctTransactionRpt = () => {
   
     const [AcctTransactionRptData, populateAcctTransactionRptData] = useState([]);
     const [loading, setLoading] = useState(true);
    
+    const [isClicked, setIsClicked] = useState(localStorage.getItem('isSearchClicked'));
+    const [searchData, setSearchData] = useState(JSON.parse(localStorage.getItem('searchedData')));
     const[firstFlag,setFirstFlag]=useState(0);
     useEffect(() => {
       
@@ -38,7 +41,7 @@ const AcctTransactionRpt = () => {
   
   
   const GetAcctTransactionData = async () => {
-    debugger;
+    
     setLoading(true);
     
      let token = JSON.parse(localStorage.getItem('token'));
@@ -61,7 +64,7 @@ const AcctTransactionRpt = () => {
         .then(response => {
           
             //  console.log(response);
-  debugger;
+ 
             const rowData = response.data;
             
             populateAcctTransactionRptData(rowData.ocAcctTransaction)
@@ -89,7 +92,7 @@ const AcctTransactionRpt = () => {
       <div>
         <Header></Header>
         
-       {firstFlag===1?<DateRange data={AcctTransactionRptData} loadFlag={firstFlag}/>:<></>}
+       {firstFlag===1?<DateRange data={AcctTransactionRptData} />:<></>}
          {/* {!isClicked?<AcctTransactionGrid data={AcctTransactionRptData} />:<></>}  */}
        
          

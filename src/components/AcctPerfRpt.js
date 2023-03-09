@@ -85,13 +85,18 @@ const AcctPerfRpt = () => {
       
       }
       if (loading) {
-        return <Loading />
+        return(
+          <>
+            <Header></Header>
+          <Loading />
+       </>
+        )
       }
   return (
     <div>
        <Header></Header>
        {
-            flag === 1? <AcctPerfRptGrid data={AcctPerfRptData1} alloc ={AcctPerfRptData2} /> : <></>
+            flag === 1? <AcctPerfRptGrid data={AcctPerfRptData1} alloc ={AcctPerfRptData2} ror = {AcctPerfRptData3}/> : <></>
 
        }
         

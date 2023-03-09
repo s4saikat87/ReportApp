@@ -33,12 +33,13 @@ const GridChartMnrAsset = ({ data, astData,selMjrAsset }) => {
     const[selMnrAsset,SetSelMnrAsset]=useState('');
     const [assetFlag, setAssetFlag] = useState(JSON.parse(localStorage.getItem('changeSelect')));
     const chartDefaultV4Colors = [
-        "#014ce6",
-    "#9b9eb2",
-    "#bbbdcc",
-    "#505465",
-    "#d8dbe5",
-    "#f4f4f2",
+        "#235ee7",
+        "#dce4ea",
+        "#4ac9c9",
+        "#d3dffb",
+        "#7c9ff2",
+        "#f3b021",
+        "#f8d0c0",
       ];
     const handleSetBarMnr = () => {
         setMnrArea(0);
@@ -166,7 +167,7 @@ const GridChartMnrAsset = ({ data, astData,selMjrAsset }) => {
                 </div>
 
                 <div className="col col-md-6 col-sm-10 py-2">
-                    <div className="card rounded">
+                    <div className="card rounded h-100">
 
                         <div className="">
 
@@ -186,9 +187,9 @@ const GridChartMnrAsset = ({ data, astData,selMjrAsset }) => {
                             //  cellRender={cellRender}
                             >
 
-                                <Column field="mnrAstType" menu={true} title="Category" width="220px" />
+                                <Column field="mnrAstType" menu={true} title="Category" width="auto" />
 
-                                <Column field="mv" title="Market Value($)" cell={NumberCell} headerCell={RightNameHeader} width="210px" format="{0:n2}" filter="numeric" filterable={false}
+                                <Column field="mv" title="Market Value($)" cell={NumberCell} headerCell={RightNameHeader} width="auto" format="{0:n2}" filter="numeric" filterable={false}
 
                                 // footerCell={TotalPaymentCell}
                                 />
@@ -205,7 +206,7 @@ const GridChartMnrAsset = ({ data, astData,selMjrAsset }) => {
                 </div>
 
                 <div className="col col-md-6 col-sm-10 py-2">
-                    <div className="card rounded">
+                    <div className="card rounded h-100">
                         <div className="">
 
                             <div className="form-check mt-1 k-text-center py-2 mb-2">

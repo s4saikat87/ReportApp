@@ -5,12 +5,12 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import SelectControl from './selectcontrol';
 import Loading from './loading';
 import Header  from './header';
-import FixdIncmFndmntlsGrid from './fixdIncmFndmntlsGrid';
-//import "@progress/kendo-theme-material/dist/all.css";
+import SctrReturnPerformanceGrid from './sctrReturnPerfrmnceGrid'
 
-const FixdIncmFndmntlsRpt = () => {
-    const [FixedIncmFundmntlRptData, populateFixedIncmFundmntlRptData] = useState([]);
+const SctrReturnPerformanceRpt = () => {
+    const [SctrReturnPerformanceRptData, populateSctrReturnPerformanceRptData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [flag, setFlag]=useState(0);
 
     useEffect(() => {
       
@@ -22,7 +22,7 @@ const FixdIncmFndmntlsRpt = () => {
                 let userId = JSON.parse(localStorage.getItem('userId'));// data.Email;
                
                 //setEmail(email);
-                GetFixdIncmFndmntlsReportData();
+                GetSctrReturnPerformanceData();
               
                 //  console.log(data);
             } catch (error) {
@@ -33,15 +33,15 @@ const FixdIncmFndmntlsRpt = () => {
         fetchData();
     }, [])
 
-    const GetFixdIncmFndmntlsReportData = async () => {
+    const GetSctrReturnPerformanceData = async () => {
         //debugger;
         setLoading(true);
       
          let token = JSON.parse(localStorage.getItem('token'));
-         let userId = JSON.parse(localStorage.getItem('userId'));
-         let acctIds = "";
-         let pageId = 1;
-         const postData = {userId, acctIds, pageId};
+         let AsOfId = JSON.parse(localStorage.getItem('userId'));
+         let acctIds = 0;
+         let PageId = 1;
+         const postData = {AsOfId, acctIds, PageId};
          const config = {
             headers: {
               'authorization': `Bearer ${token.token}`,
@@ -50,7 +50,7 @@ const FixdIncmFndmntlsRpt = () => {
             }
           
       };
-        await axios.post('/RTFixdIncmFndmntl',
+        await axios.post('/RTSectorRetPerfrmnce',
             postData,
            config
         )
@@ -59,10 +59,9 @@ const FixdIncmFndmntlsRpt = () => {
                 //  console.log(response);
       //debugger;
                 const rowData = response.data;
-                populateFixedIncmFundmntlRptData(rowData)
-                localStorage.setItem("FIInitialData",JSON.stringify(rowData));
+                populateSctrReturnPerformanceRptData(rowData);
                 setLoading(false);
-      
+                setFlag(1);      
             })
             .catch((error) => {
       
@@ -81,11 +80,14 @@ const FixdIncmFndmntlsRpt = () => {
   return (
     <div>
        <Header></Header>
-        <FixdIncmFndmntlsGrid  data={FixedIncmFundmntlRptData}/>
+       {flag===1?
+        <SctrReturnPerformanceGrid  data={SctrReturnPerformanceRptData}/>
+        :<></>
+       }
     </div>
   )
 }
 
-export default FixdIncmFndmntlsRpt
+export default SctrReturnPerformanceRpt
 
 

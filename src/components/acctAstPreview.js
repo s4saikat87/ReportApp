@@ -48,12 +48,13 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
         },
     ];
     const chartDefaultV4Colors = [
-        "#00876c",
-    "#6e9b75",
-    "#a5af90",
-    "#cbc6b9",
-    "#c9a47e",
-    "#d07958",
+        "#235ee7",
+        "#dce4ea",
+        "#4ac9c9",
+        "#d3dffb",
+        "#7c9ff2",
+        "#f3b021",
+        "#f8d0c0",
       ];
     
     const initialModelDropdown = {
@@ -116,6 +117,14 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
         return (
             <td style={{ textAlign: 'right' }}>
                 {formatNumber(props.dataItem[props.field], "##,#.00")}
+            </td>
+        )
+    }
+
+    const NumberCellSixDecimal = (props) => {
+        return (
+            <td style={{ textAlign: 'right' }}>
+                {formatNumber(props.dataItem[props.field], "##,#.000000")}
             </td>
         )
     }
@@ -239,11 +248,11 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
         return (
             <div>
                 <div className="mx-2 my-2">
-                    <div className="col-md-12 card-header tableheader">Account Summary</div>
+                <div className="col-md-12 card-header"><span className='tableheader'>Account Summary</span> <small>(^Exclude Quantity)</small></div>
                 </div>
                 <div className="container-fluid">
                     <div className="row text-center"></div>
-                    <Grid style={{ height: "330px" }}
+                    <Grid style={{ height: "auto" }}
                         data={orderBy(dataAcct.slice(), sort)}
                         sortable={true}
                         sort={sort}
@@ -253,13 +262,13 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
                     >
 
                         <Column field="groupName" menu={true} title="Asset Class" width="400px" />
-                        <Column field="txCstAmt" menu={true} title="Total Cost($)" width="180px" footerCell={totalSum} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
-                        <Column field="market" menu={true} title="Market Value($)" width="180px" footerCell={totalSum} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                        <Column field="txCstAmt" menu={true} title="Total Cost($)" width="auto" footerCell={totalSum} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                        <Column field="market" menu={true} title="Market Value($)" width="auto" footerCell={totalSum} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
 
-                        <Column field="income" menu={true} title="Income($)" width="180px" footerCell={totalSum} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                        <Column field="income" menu={true} title="Income($)" width="auto" footerCell={totalSum} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
 
-                        <Column field="yield" menu={true} title="Yield(%)" width="180px" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
-                        <Column field="marketPercent" title="Market Value(%)" width="180px" footerCell={totalSum} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                        <Column field="yield" menu={true} title="Yield(%)" width="auto" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                        <Column field="marketPercent" title="Market Value(%)" width="auto" footerCell={totalSum} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
 
 
                     </Grid>
@@ -473,7 +482,7 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
 
                             <div className="w-100">
 
-                                <Grid style={{ height: "400px" }}
+                                <Grid style={{ height: "auto" }}
                                     data={astModelData}
                                 //sortable={true}
                                 // sort={sort}
@@ -483,14 +492,14 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
                                 >
 
                                     <Column field="descption" menu={true} title="Description" width="250px" />
-                                    <Column field="prtfolio" menu={true} title="Portfolio($)" width="180px" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
-                                    <Column field="prtfolioWeigh" menu={true} title="Portfolio(%)" width="150px" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="prtfolio" menu={true} title="Portfolio($)" width="auto" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="prtfolioWeigh" menu={true} title="Portfolio(%)" width="auto" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
 
-                                    <Column field="mdl" menu={true} title="Model($)" width="180px" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="mdl" menu={true} title="Model($)" width="auto" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
 
-                                    <Column field="mdlWegh" menu={true} title="Model(%)" width="150px" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
-                                    <Column field="varitoMdl_Amt" menu={true} title="Variance($)" width="180px" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
-                                    <Column field="varitoMdl" menu={true} title="Variance(%)" width="150px" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="mdlWegh" menu={true} title="Model(%)" width="auto" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="varitoMdl_Amt" menu={true} title="Variance($)" width="auto" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="varitoMdl" menu={true} title="Variance(%)" width="auto" footerCell={totalAcVMdl} columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
                                 </Grid>
                             </div>
                         </div>
@@ -509,7 +518,7 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
 
                             <div className="w-100">
 
-                                <Grid style={{ height: "750px" }}
+                                <Grid style={{ height: "auto", width: "auto" }}
                                     data={topHoldingsData}
                                 //sortable={true}
                                 // sort={sort}
@@ -519,12 +528,12 @@ const AcctAstPreview = ({ data, astVsModelData, topHoldData, allmodelData, selMo
                                 >
 
                                     <Column field="tickerCusipConcate" menu={true} title="Ticker/Cusip : Asset" width="450px" />
-                                    <Column field="shares" menu={true} title="Shares" width="200px" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
-                                    <Column field="txcstAmt" menu={true} title="Total Cost($)" width="200px" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="shares" menu={true} title="Shares" width="auto" columnMenu={ColumnMenu} cell={NumberCellSixDecimal} headerCell={RightNameHeader} />
+                                    <Column field="txcstAmt" menu={true} title="Total Cost($)" width="auto" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
 
-                                    <Column field="market" menu={true} title="Market Value($)" width="200px" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="market" menu={true} title="Market Value($)" width="auto" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
 
-                                    <Column field="marketPercent" menu={true} title="Percentage(%)" width="200px" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
+                                    <Column field="marketPercent" menu={true} title="Percentage(%)" width="auto" columnMenu={ColumnMenu} cell={NumberCell} headerCell={RightNameHeader} />
 
                                 </Grid>
                             </div>

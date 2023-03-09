@@ -53,14 +53,14 @@ const GrdAsset = ({ data,selMnrAsset }) => {
             //  cellRender={cellRender}
             >
 
-                <Column field="symbol" menu={true} title="Symbol" width="300px" />
+                <Column field="symbol" menu={true} title="Symbol" width="auto" />
 
-                <Column field="astShrtNm" title="Short Name" width="370px" 
+                <Column field="astShrtNm" title="Short Name" width="380px" 
 
                 // footerCell={TotalPaymentCell}
                 />
-                 <Column field="mv" title="Market Value($)" cell={NumberCell} headerCell={RightNameHeader} width="210px" format="{0:n2}" filter="numeric" filterable={false} />
-                <Column field="mvPercent" menu={true} title="Market Value(%)" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="170px" />
+                 <Column field="mv" title="Market Value($)" cell={NumberCell} headerCell={RightNameHeader} width="auto" format="{0:n2}" filter="numeric" filterable={false} />
+                <Column field="mvPercent" menu={true} title="Market Value(%)" cell={NumberCell} headerCell={RightNameHeader} format="{0:n2}" width="auto" />
 
 
 
